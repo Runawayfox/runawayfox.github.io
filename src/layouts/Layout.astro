@@ -6,9 +6,10 @@ import Footer from '../components/Footer.astro';
 interface Props {
   title: string;
   description?: string;
+  wideContent?: boolean;
 }
 
-const { title, description = 'Kitsune Hideout — 개발 블로그' } = Astro.props;
+const { title, description = 'Kitsune Hideout — 개발 블로그', wideContent = false } = Astro.props;
 ---
 
 <!doctype html>
@@ -31,7 +32,7 @@ const { title, description = 'Kitsune Hideout — 개발 블로그' } = Astro.pr
   <body>
     <canvas id="bg-canvas"></canvas>
     <Sidebar />
-    <main class="main-content">
+    <main class:list={["main-content", { "main-wide": wideContent }]}>
       <slot />
       <Footer />
     </main>

@@ -376,7 +376,7 @@ body {
 }
 html.light .page-title { color: #111111; }
 
-/* ─────────────────── BLOG GRID ─────────────────── */
+/* ─────────────────── BLOG GRID (Home — 2 column) ─────────────────── */
 .blog-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -385,6 +385,44 @@ html.light .page-title { color: #111111; }
 
 @media (max-width: 580px) {
   .blog-grid { grid-template-columns: 1fr; }
+}
+
+/* ─────────────────── BLOG PAGE (wide single-column) ─────────────────── */
+.main-wide {
+  max-width: 1060px;
+}
+
+.blog-grid-wide {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 28px;
+}
+
+.blog-grid-wide .post-card-img-wrap {
+  aspect-ratio: 21 / 9;
+}
+
+.blog-grid-wide .post-card-body {
+  padding: 22px 26px 26px;
+  gap: 10px;
+}
+
+.blog-grid-wide .post-card-title {
+  font-size: 19px;
+  line-height: 1.4;
+}
+
+.blog-grid-wide .post-card-desc {
+  font-size: 13.5px;
+  -webkit-line-clamp: 3;
+}
+
+.blog-grid-wide .post-card-date {
+  font-size: 11px;
+}
+
+.blog-grid-wide .post-card-tag {
+  font-size: 11px;
 }
 
 /* ─────────────────── POST CARD ─────────────────── */
@@ -786,4 +824,9 @@ html.light .tag-cloud-link:hover .tag-cloud-name { color: #111111; }
   }
 
   .blog-grid { grid-template-columns: 1fr; }
+
+  /* Wide card: revert cinematic ratio and sizing on mobile */
+  .blog-grid-wide .post-card-img-wrap { aspect-ratio: 16 / 9; }
+  .blog-grid-wide .post-card-body     { padding: 16px 18px 18px; }
+  .blog-grid-wide .post-card-title    { font-size: 15px; }
 }

@@ -8,10 +8,10 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
 );
 ---
 
-<Layout title="Blog">
+<Layout title="Blog" wideContent={true}>
   <h1 class="page-title">Blog</h1>
   {posts.length > 0 ? (
-    <div class="blog-grid">
+    <div class="blog-grid-wide">
       {posts.map(post => <PostCard post={post} />)}
     </div>
   ) : (
