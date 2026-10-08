@@ -1,0 +1,43 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PostCard from '../components/PostCard.astro';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('blog', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .slice(0, 5);
+---
+
+<Layout title="RunawayFox" description="RunawayFox의 개발 블로그">
+  <main class="max-w-3xl mx-auto px-4 py-12">
+    <section class="mb-12">
+      <h1 class="text-3xl font-bold text-slate-900 dark:text-white mb-3">
+        안녕하세요, RunawayFox입니다
+      </h1>
+      <p class="text-slate-500 dark:text-slate-400 text-lg">
+        개발, 프로젝트, 그리고 배운 것들을 기록하는 공간입니다.
+      </p>
+    </section>
+
+    <section>
+      <h2 class="text-lg font-semibold text-slate-700 dark:text-slate-300 mb-6">최근 글</h2>
+      {
+        posts.length > 0 ? (
+          <div class="space-y-6">
+            {posts.map(post => (
+              <PostCard post={post} />
+            ))}
+          </div>
+        ) : (
+          <p class="text-slate-400 dark:text-slate-500">아직 작성된 글이 없습니다.</p>
+        )
+      }
+      <a
+        href="/blog"
+        class="inline-block mt-8 text-sm text-blue-600 dark:text-blue-400 hover:underline"
+      >
+        모든 글 보기 →
+      </a>
+    </section>
+  </main>
+</Layout>

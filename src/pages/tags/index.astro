@@ -1,0 +1,36 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+
+const posts = await getCollection('blog', ({ data }) => !data.draft);
+const tagCounts = new Map<string, number>();
+posts.forEach(post => {
+  post.data.tags.forEach(tag => {
+    tagCounts.set(tag, (tagCounts.get(tag) ?? 0) + 1);
+  });
+});
+const tags = [...tagCounts.entries()].sort((a, b) => b[1] - a[1]);
+---
+
+<Layout title="Tags">
+  <main class="max-w-3xl mx-auto px-4 py-12">
+    <h1 class="text-3xl font-bold text-slate-900 dark:text-white mb-8">Tags</h1>
+    {
+      tags.length > 0 ? (
+        <div class="flex flex-wrap gap-3">
+          {tags.map(([tag, count]) => (
+            <a
+              href={`/tags/${tag}`}
+              class="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-blue-100 dark:hover:bg-blue-900/50 hover:text-blue-700 dark:hover:text-blue-300 transition-colors"
+            >
+              <span class="font-medium">{tag}</span>
+              <span class="text-xs text-slate-400 dark:text-slate-500">({count})</span>
+            </a>
+          ))}
+        </div>
+      ) : (
+        <p class="text-slate-400 dark:text-slate-500">태그가 없습니다.</p>
+      )
+    }
+  </main>
+</Layout>
