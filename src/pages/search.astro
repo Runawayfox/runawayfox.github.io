@@ -19,31 +19,36 @@ import Layout from '../layouts/Layout.astro';
 
 <script is:inline>
   (function () {
-    function initSearch() {
-      import('/pagefind/pagefind-ui.js')
-        .then(function (m) {
-          var ui = new m.PagefindUI({
-            element: '#search',
-            showSubResults: true,
-            showEmptyFilters: false,
-            translations: {
-              placeholder: '검색어를 입력하세요...',
-              zero_results: '"[SEARCH_TERM]"에 대한 결과가 없습니다.',
-            },
-          });
+    function showNotice() {
+      var el = document.getElementById('search-notice');
+      if (el) el.style.display = 'block';
+    }
 
-          /* URLSearchParams의 q를 읽어 자동 검색 — UI 렌더링 후 한 프레임 기다림 */
-          var q = new URLSearchParams(window.location.search).get('q');
-          if (q) {
-            requestAnimationFrame(function () {
-              setTimeout(function () { ui.triggerSearch(q); }, 0);
-            });
-          }
-        })
-        .catch(function () {
-          var el = document.getElementById('search-notice');
-          if (el) el.style.display = 'block';
+    function initSearch() {
+      /* pagefind-ui.js is a classic IIFE script, not an ES module.
+         It sets window.PagefindUI — load it via <script> tag, not import(). */
+      var script = document.createElement('script');
+      script.src = '/pagefind/pagefind-ui.js';
+
+      script.onload = function () {
+        if (!window.PagefindUI) { showNotice(); return; }
+
+        var ui = new window.PagefindUI({
+          element: '#search',
+          showSubResults: true,
+          translations: {
+            placeholder: '검색어를 입력하세요...',
+            zero_results: '"[SEARCH_TERM]"에 대한 결과가 없습니다.',
+          },
         });
+
+        /* Auto-search from sidebar query param — wait one tick for UI to mount */
+        var q = new URLSearchParams(window.location.search).get('q');
+        if (q) setTimeout(function () { ui.triggerSearch(q); }, 50);
+      };
+
+      script.onerror = showNotice;
+      document.head.appendChild(script);
     }
 
     if (document.readyState === 'loading') {
