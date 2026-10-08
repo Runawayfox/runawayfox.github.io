@@ -29,9 +29,9 @@
   --bg:             #050508;
   --surface:        #0f0f0f;
   --border:         #2a2200;
-  --text-primary:   #f5e6b0;
-  --text-secondary: #7a6830;
-  --text-muted:     #4a3e20;
+  --text-primary:   #ffffff;
+  --text-secondary: #a0a0b0;
+  --text-muted:     #606070;
   --accent:         #c9a227;
   --accent-light:   #e2b93b;
   --font: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
@@ -249,21 +249,21 @@ body {
 .toggle-label-ko {
   font-size: 10px;
   letter-spacing: 0.4px;
-  color: rgba(201,162,39,0.30);
+  color: rgba(200,205,215,0.32);
   transition: color 0.28s;
   user-select: none;
 }
 
 .toggle-label-ko.active {
-  color: rgba(201,162,39,0.82);
+  color: rgba(210,218,230,0.88);
 }
 
 .theme-switch {
   position: relative;
   width: 40px;
   height: 22px;
-  background: rgba(8,6,2,0.8);
-  border: 1px solid rgba(201,162,39,0.28);
+  background: rgba(8,8,14,0.8);
+  border: 1px solid rgba(180,190,210,0.30);
   border-radius: 11px;
   cursor: pointer;
   padding: 0;
@@ -272,8 +272,8 @@ body {
 }
 
 .theme-switch:hover {
-  border-color: rgba(201,162,39,0.50);
-  box-shadow: 0 0 8px rgba(201,162,39,0.12);
+  border-color: rgba(200,210,230,0.55);
+  box-shadow: 0 0 8px rgba(180,195,220,0.14);
 }
 
 .theme-switch-thumb {
@@ -283,8 +283,8 @@ body {
   width: 14px;
   height: 14px;
   border-radius: 50%;
-  background: rgba(201,162,39,0.70);
-  box-shadow: 0 0 5px rgba(201,162,39,0.35);
+  background: rgba(195,205,220,0.80);
+  box-shadow: 0 0 6px rgba(180,195,220,0.50);
   transform: translateX(18px);
   transition: transform 0.28s cubic-bezier(.4,0,.2,1);
 }

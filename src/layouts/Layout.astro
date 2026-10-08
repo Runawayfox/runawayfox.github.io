@@ -21,9 +21,9 @@ const { title, description = 'Kitsune Hideout — 개발 블로그' } = Astro.pr
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={description} />
     <title>{title} | Kitsune Hideout</title>
-    <!-- theme init: runs before paint to prevent flash -->
+    <!-- theme init: runs before paint to prevent flash; light is default -->
     <script is:inline>
-      if (localStorage.getItem('theme') === 'light') {
+      if (localStorage.getItem('theme') !== 'dark') {
         document.documentElement.classList.add('light');
       }
     </script>
