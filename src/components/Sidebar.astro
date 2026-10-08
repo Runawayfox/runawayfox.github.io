@@ -18,8 +18,10 @@ function isActive(href: string) {
 
   <a href="/" class="fox-logo-wrap">
     <div class="fox-logo-img"></div>
-    <span class="brand-text">KITSUNE</span>
-    <span class="brand-sub">HIDEOUT</span>
+    <div class="brand-text-group">
+      <span class="brand-text">KITSUNE</span>
+      <span class="brand-sub">HIDEOUT</span>
+    </div>
   </a>
 
   <!-- Sidebar search (desktop) -->
@@ -41,8 +43,8 @@ function isActive(href: string) {
     ))}
   </nav>
 
-  <!-- Theme toggle -->
-  <div class="theme-toggle-wrap">
+  <!-- Theme toggle (desktop) -->
+  <div class="theme-toggle-wrap desktop-toggle">
     <span class="toggle-label-ko active" id="label-light">라이트</span>
     <button id="theme-toggle" class="theme-switch is-light" aria-label="테마 전환" aria-checked="true">
       <span class="theme-switch-thumb"></span>
@@ -60,6 +62,15 @@ function isActive(href: string) {
 
 <!-- Mobile dropdown (sibling of aside, outside overflow:hidden) -->
 <div class="mobile-menu" id="mobile-menu" aria-hidden="true">
+  <!-- Theme toggle (mobile, inside dropdown) -->
+  <div class="theme-toggle-wrap mobile-toggle">
+    <span class="toggle-label-ko active" id="label-light-m">라이트</span>
+    <button id="theme-toggle-m" class="theme-switch is-light" aria-label="테마 전환" aria-checked="true">
+      <span class="theme-switch-thumb"></span>
+    </button>
+    <span class="toggle-label-ko" id="label-dark-m">다크</span>
+  </div>
+
   <form class="mobile-search-form" action="/search" method="get" role="search">
     <div class="sidebar-search-wrap">
       <svg class="sidebar-search-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
@@ -202,33 +213,48 @@ function isActive(href: string) {
 </script>
 
 <script is:inline>
-  /* ── Theme toggle ── */
+  /* ── Theme toggle (syncs desktop + mobile instances) ── */
   (function () {
-    var html     = document.documentElement;
+    var html = document.documentElement;
+
     var btn      = document.getElementById('theme-toggle');
     var lblLight = document.getElementById('label-light');
     var lblDark  = document.getElementById('label-dark');
 
+    var btnM      = document.getElementById('theme-toggle-m');
+    var lblLightM = document.getElementById('label-light-m');
+    var lblDarkM  = document.getElementById('label-dark-m');
+
     function applyUI(isLight) {
-      btn.setAttribute('aria-checked', isLight ? 'true' : 'false');
-      if (isLight) {
-        btn.classList.add('is-light');
-        lblLight.classList.add('active');
-        lblDark.classList.remove('active');
-      } else {
-        btn.classList.remove('is-light');
-        lblLight.classList.remove('active');
-        lblDark.classList.add('active');
+      var buttons = [btn, btnM];
+      buttons.forEach(function (b) {
+        if (!b) return;
+        b.setAttribute('aria-checked', isLight ? 'true' : 'false');
+        if (isLight) b.classList.add('is-light');
+        else b.classList.remove('is-light');
+      });
+
+      function setLabel(lbl, active) {
+        if (!lbl) return;
+        if (active) lbl.classList.add('active');
+        else lbl.classList.remove('active');
       }
+      setLabel(lblLight,  isLight);
+      setLabel(lblDark,   !isLight);
+      setLabel(lblLightM, isLight);
+      setLabel(lblDarkM,  !isLight);
     }
 
     applyUI(html.classList.contains('light'));
 
-    btn.addEventListener('click', function () {
+    function handleClick() {
       var nowLight = html.classList.toggle('light');
       localStorage.setItem('theme', nowLight ? 'light' : 'dark');
       applyUI(nowLight);
-    });
+    }
+
+    if (btn)  btn.addEventListener('click', handleClick);
+    if (btnM) btnM.addEventListener('click', handleClick);
   })();
 </script>
 

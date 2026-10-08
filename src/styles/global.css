@@ -170,6 +170,13 @@ body {
   width: 100%;
 }
 
+.brand-text-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+
 .fox-logo-img {
   width: 82px; height: 82px;
   background: linear-gradient(90deg,
@@ -649,8 +656,9 @@ html.light .tag-cloud-link:hover .tag-cloud-name { color: #111111; }
 }
 
 /* ─────────────────── HAMBURGER / MOBILE-MENU defaults ─────────────────── */
-.hamburger-btn { display: none; }
-.mobile-menu   { display: none; }
+.hamburger-btn  { display: none; }
+.mobile-menu    { display: none; }
+.mobile-toggle  { display: none; }
 
 .mobile-nav-btn {
   display: block;
@@ -674,13 +682,15 @@ html.light .tag-cloud-link:hover .tag-cloud-name { color: #111111; }
 
 /* ─────────────────── RESPONSIVE ─────────────────── */
 @media (max-width: 1024px) {
-  #sidebar-canvas { display: none; }
+  /* Hide full-viewport cosmic on mobile — header bar has its own canvas */
+  #bg-canvas { display: none; }
 
   .app-brand {
     width: 100%;
     height: 56px;
-    position: sticky;
+    position: fixed;
     top: 0;
+    left: 0;
     flex-direction: row;
     align-items: center;
     justify-content: flex-start;
@@ -688,30 +698,32 @@ html.light .tag-cloud-link:hover .tag-cloud-name { color: #111111; }
     gap: 10px;
     border-right: none;
     border-bottom: 1px solid #2a2200;
-    overflow: visible;
+    overflow: hidden;
     z-index: 20;
   }
 
+  /* Fox icon + text group side by side; KITSUNE/HIDEOUT stacked inside group */
   .fox-logo-wrap {
     flex-direction: row;
     align-items: center;
     gap: 10px;
     width: auto;
   }
-  .fox-logo-img  { width: 34px; height: 34px; }
-  .brand-text    { font-size: 11px; letter-spacing: 6px; text-indent: 6px; }
-  .brand-sub     { display: inline-block; font-size: 8px; letter-spacing: 3px; text-indent: 3px; margin-top: 0; }
-
-  .sidebar-search { display: none; }
-  .nav-buttons    { display: none; }
-
-  .theme-toggle-wrap {
-    position: static;
-    transform: none;
-    margin-left: auto;
+  .brand-text-group {
+    align-items: flex-start;
   }
+  .fox-logo-img { width: 34px; height: 34px; }
+  .brand-text   { font-size: 11px; letter-spacing: 6px; text-indent: 6px; }
+  .brand-sub    { display: inline-block; font-size: 8px; letter-spacing: 3px; text-indent: 3px; margin-top: 1px; }
 
-  /* Hamburger button */
+  .sidebar-search  { display: none; }
+  .nav-buttons     { display: none; }
+
+  /* Theme toggle: hide from header, show in dropdown */
+  .desktop-toggle { display: none; }
+  .mobile-toggle  { display: flex; }
+
+  /* Hamburger: pushed to far right */
   .hamburger-btn {
     display: flex;
     flex-direction: column;
@@ -722,7 +734,7 @@ html.light .tag-cloud-link:hover .tag-cloud-name { color: #111111; }
     border: none;
     cursor: pointer;
     padding: 0;
-    margin-left: 12px;
+    margin-left: auto;
     flex-shrink: 0;
   }
   .hamburger-btn span {
@@ -743,20 +755,35 @@ html.light .tag-cloud-link:hover .tag-cloud-name { color: #111111; }
     position: fixed;
     top: 56px;
     left: 0;
-    right: 0;
+    width: 100%;
+    box-sizing: border-box;
     background: #04041c;
     border-bottom: 1px solid #2a2200;
     padding: 16px 20px 20px;
     z-index: 19;
     flex-direction: column;
     gap: 16px;
+    overflow-x: hidden;
   }
   .mobile-menu.is-open { display: flex; }
+
+  /* Theme toggle inside dropdown: reset absolute positioning */
+  .mobile-menu .theme-toggle-wrap {
+    position: static;
+    transform: none;
+    margin-left: 0;
+  }
 
   .mobile-search-form { width: 100%; }
   .mobile-nav { display: flex; flex-direction: column; gap: 2px; }
 
-  .main-content { margin-left: 0; max-width: 100%; padding: 28px 16px; }
+  /* Content area: offset by fixed header height */
+  .main-content {
+    margin-left: 0;
+    max-width: 100%;
+    padding: 28px 16px;
+    padding-top: calc(56px + 28px);
+  }
 
   .blog-grid { grid-template-columns: 1fr; }
 }
