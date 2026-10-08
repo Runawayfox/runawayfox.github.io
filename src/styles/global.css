@@ -913,8 +913,8 @@ html.light .tag-cloud-link:hover .tag-cloud-name { color: #111111; }
     align-items: flex-start;
   }
   .fox-logo-img { width: 34px; height: 34px; }
-  .brand-text   { font-size: 11px; letter-spacing: 6px; text-indent: 6px; }
-  .brand-sub    { display: inline-block; font-size: 8px; letter-spacing: 3px; text-indent: 3px; margin-top: 1px; }
+  .brand-text   { font-size: 11px; letter-spacing: 6px; text-indent: 0; }
+  .brand-sub    { display: inline-block; font-size: 8px; letter-spacing: 3px; text-indent: 0; margin-top: 1px; }
 
   .sidebar-search  { display: none; }
   .nav-buttons     { display: none; }
@@ -923,7 +923,8 @@ html.light .tag-cloud-link:hover .tag-cloud-name { color: #111111; }
   .desktop-toggle { display: none; }
   .mobile-toggle  { display: flex; }
 
-  /* Hamburger: pushed to far right */
+  /* Hamburger: pushed to far right; position:relative+z-index:1 to
+     paint above the sidebar-canvas (position:absolute, z-index:0) */
   .hamburger-btn {
     display: flex;
     flex-direction: column;
@@ -936,6 +937,8 @@ html.light .tag-cloud-link:hover .tag-cloud-name { color: #111111; }
     padding: 0;
     margin-left: auto;
     flex-shrink: 0;
+    position: relative;
+    z-index: 1;
   }
   .hamburger-btn span {
     display: block;
