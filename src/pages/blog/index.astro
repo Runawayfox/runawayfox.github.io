@@ -8,13 +8,76 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
 );
 ---
 
-<Layout title="Blog" wideContent={true}>
-  <h1 class="page-title">Blog</h1>
+<Layout title="Blog">
+  <div class="blog-view-header">
+    <h1 class="page-title">Blog</h1>
+    <div class="view-toggle">
+      <!-- Card view button -->
+      <button class="view-btn active" id="btn-card" aria-label="카드 보기" title="카드 보기">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="2" width="6.5" height="6.5" rx="1.2"/>
+          <rect x="11.5" y="2" width="6.5" height="6.5" rx="1.2"/>
+          <rect x="2" y="11.5" width="6.5" height="6.5" rx="1.2"/>
+          <rect x="11.5" y="11.5" width="6.5" height="6.5" rx="1.2"/>
+        </svg>
+      </button>
+      <!-- List view button -->
+      <button class="view-btn" id="btn-list" aria-label="리스트 보기" title="리스트 보기">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
+          <circle cx="3.5" cy="5.5" r="1.2" fill="currentColor" stroke="none"/>
+          <circle cx="3.5" cy="10" r="1.2" fill="currentColor" stroke="none"/>
+          <circle cx="3.5" cy="14.5" r="1.2" fill="currentColor" stroke="none"/>
+          <line x1="7.5" y1="5.5" x2="17.5" y2="5.5"/>
+          <line x1="7.5" y1="10" x2="17.5" y2="10"/>
+          <line x1="7.5" y1="14.5" x2="17.5" y2="14.5"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
   {posts.length > 0 ? (
-    <div class="blog-grid-wide">
+    <div class="blog-grid-wide" id="blog-post-grid">
       {posts.map(post => <PostCard post={post} />)}
     </div>
   ) : (
     <p style="color:var(--text-muted);font-size:13px;">아직 작성된 글이 없습니다.</p>
   )}
 </Layout>
+
+<script is:inline>
+  (function () {
+    var grid   = document.getElementById('blog-post-grid');
+    var btnCard = document.getElementById('btn-card');
+    var btnList = document.getElementById('btn-list');
+    if (!grid || !btnCard || !btnList) return;
+
+    function setCard() {
+      grid.classList.remove('blog-list');
+      grid.classList.add('blog-grid-wide');
+      btnCard.classList.add('active');
+      btnList.classList.remove('active');
+    }
+
+    function setList() {
+      grid.classList.remove('blog-grid-wide');
+      grid.classList.add('blog-list');
+      btnList.classList.add('active');
+      btnCard.classList.remove('active');
+    }
+
+    /* restore saved preference */
+    try {
+      if (localStorage.getItem('blog-view') === 'list') setList();
+    } catch (_) {}
+
+    btnCard.addEventListener('click', function () {
+      setCard();
+      try { localStorage.setItem('blog-view', 'card'); } catch (_) {}
+    });
+
+    btnList.addEventListener('click', function () {
+      setList();
+      try { localStorage.setItem('blog-view', 'list'); } catch (_) {}
+    });
+  })();
+</script>

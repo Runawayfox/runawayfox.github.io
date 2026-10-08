@@ -376,6 +376,112 @@ body {
 }
 html.light .page-title { color: #111111; }
 
+/* ─────────────────── BLOG VIEW HEADER + TOGGLE ─────────────────── */
+.blog-view-header {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  margin-bottom: 36px;
+}
+
+.blog-view-header .page-title {
+  margin-bottom: 0;
+  flex: 1;
+}
+
+.view-toggle {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.view-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  cursor: pointer;
+  color: var(--text-muted);
+  transition: color 0.22s, border-color 0.22s, background 0.22s;
+  padding: 0;
+  flex-shrink: 0;
+}
+
+.view-btn svg { width: 16px; height: 16px; }
+
+.view-btn:hover {
+  color: var(--text-secondary);
+  border-color: rgba(180,190,210,0.45);
+}
+
+.view-btn.active {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: rgba(201,162,39,0.08);
+}
+
+/* ─────────────────── BLOG LIST VIEW ─────────────────── */
+.blog-list {
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid var(--border);
+}
+
+.blog-list .post-card {
+  border-radius: 0;
+  border: none;
+  border-bottom: 1px solid var(--border);
+  background: transparent;
+  overflow: visible;
+  isolation: auto;
+}
+
+.blog-list .post-card::after { display: none; }
+
+.blog-list .post-card:hover {
+  transform: none;
+  box-shadow: none;
+  background: rgba(201,162,39,0.04);
+}
+
+html.light .blog-list .post-card:hover {
+  box-shadow: none;
+  background: rgba(0,0,0,0.03);
+}
+
+.blog-list .post-card-img-wrap { display: none; }
+
+.blog-list .post-card-body {
+  flex-direction: row;
+  align-items: center;
+  padding: 14px 16px;
+  gap: 20px;
+}
+
+.blog-list .post-card-title {
+  flex: 1;
+  font-size: 14.5px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.blog-list .post-card-desc { display: none; }
+
+.blog-list .post-card-meta {
+  flex-shrink: 0;
+  margin-top: 0;
+  padding-top: 0;
+  gap: 10px;
+  align-items: center;
+}
+
+.blog-list .post-card-date { font-size: 11px; white-space: nowrap; }
+
 /* ─────────────────── BLOG GRID (Home — 2 column) ─────────────────── */
 .blog-grid {
   display: grid;
