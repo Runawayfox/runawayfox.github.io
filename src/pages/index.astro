@@ -18,7 +18,7 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
   <section>
     <h2 class="page-title">Recent</h2>
     {posts.length > 0 ? (
-      <div>
+      <div class="blog-grid">
         {posts.map(post => <PostCard post={post} />)}
       </div>
     ) : (

@@ -30,7 +30,7 @@ const { posts } = Astro.props;
     <p style="color:var(--text-muted);font-size:11px;letter-spacing:1px;">{posts.length}개의 글</p>
   </div>
 
-  <div>
+  <div class="blog-grid">
     {posts.map(post => <PostCard post={post} />)}
   </div>
 </Layout>

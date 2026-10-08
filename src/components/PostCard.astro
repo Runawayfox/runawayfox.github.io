@@ -1,13 +1,12 @@
 ---
 import type { CollectionEntry } from 'astro:content';
-import TagPill from './TagPill.astro';
 
 interface Props {
   post: CollectionEntry<'blog'>;
 }
 
 const { post } = Astro.props;
-const { title, pubDate, description, tags } = post.data;
+const { title, pubDate, description, tags, image } = post.data;
 const slug = post.id.replace(/\.mdx?$/, '');
 const formattedDate = pubDate.toLocaleDateString('ko-KR', {
   year: 'numeric', month: 'long', day: 'numeric',
@@ -16,11 +15,24 @@ const formattedDate = pubDate.toLocaleDateString('ko-KR', {
 
 <article class="post-card">
   <a href={`/blog/${slug}`} class="post-card-link">
-    <h3 class="post-card-title">{title}</h3>
-    <p class="post-card-desc">{description}</p>
+    <div class="post-card-img-wrap">
+      {image ? (
+        <img src={image} alt={title} class="post-card-img" loading="lazy" />
+      ) : (
+        <div class="post-card-img-placeholder"></div>
+      )}
+    </div>
+    <div class="post-card-body">
+      <h3 class="post-card-title">{title}</h3>
+      {description && <p class="post-card-desc">{description}</p>}
+      <div class="post-card-meta">
+        <time class="post-card-date" datetime={pubDate.toISOString()}>{formattedDate}</time>
+        {tags.length > 0 && (
+          <div class="post-card-tags">
+            {tags.map(tag => <span class="post-card-tag">#{tag}</span>)}
+          </div>
+        )}
+      </div>
+    </div>
   </a>
-  <div class="post-card-meta">
-    <time class="post-card-date" datetime={pubDate.toISOString()}>{formattedDate}</time>
-    {tags.map(tag => <TagPill tag={tag} />)}
-  </div>
 </article>
