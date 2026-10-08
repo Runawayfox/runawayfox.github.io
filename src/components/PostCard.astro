@@ -10,23 +10,17 @@ const { post } = Astro.props;
 const { title, pubDate, description, tags } = post.data;
 const slug = post.id.replace(/\.mdx?$/, '');
 const formattedDate = pubDate.toLocaleDateString('ko-KR', {
-  year: 'numeric',
-  month: 'long',
-  day: 'numeric',
+  year: 'numeric', month: 'long', day: 'numeric',
 });
 ---
 
-<article class="border-b border-slate-200 dark:border-slate-700 pb-6 last:border-0">
-  <a href={`/blog/${slug}`} class="group block">
-    <h3 class="text-xl font-semibold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors mb-2">
-      {title}
-    </h3>
-    <p class="text-slate-500 dark:text-slate-400 text-sm mb-3 line-clamp-2">{description}</p>
+<article class="post-card">
+  <a href={`/blog/${slug}`} class="post-card-link">
+    <h3 class="post-card-title">{title}</h3>
+    <p class="post-card-desc">{description}</p>
   </a>
-  <div class="flex items-center gap-3 flex-wrap">
-    <time class="text-slate-400 dark:text-slate-500 text-xs" datetime={pubDate.toISOString()}>
-      {formattedDate}
-    </time>
+  <div class="post-card-meta">
+    <time class="post-card-date" datetime={pubDate.toISOString()}>{formattedDate}</time>
     {tags.map(tag => <TagPill tag={tag} />)}
   </div>
 </article>
