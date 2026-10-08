@@ -96,15 +96,18 @@ function isActive(href: string) {
     var ctx = canvas.getContext('2d');
     var W = 0, H = 0;
 
+    /* 8 star color types: cyan + magenta added */
     var TYPES = [
-      { r:215, g:225, b:255 },
-      { r:255, g:245, b:200 },
-      { r:245, g:200, b:65  },
-      { r:255, g:140, b:65  },
-      { r:255, g:80,  b:70  },
-      { r:185, g:150, b:255 },
+      { r:215, g:225, b:255 },  /* blue-white */
+      { r:255, g:245, b:200 },  /* warm white */
+      { r:245, g:200, b:65  },  /* gold       */
+      { r:255, g:140, b:65  },  /* orange     */
+      { r:255, g:80,  b:70  },  /* red        */
+      { r:185, g:150, b:255 },  /* violet     */
+      { r:75,  g:205, b:235 },  /* cyan       */
+      { r:255, g:110, b:185 },  /* magenta    */
     ];
-    var WEIGHTS = [0.34, 0.20, 0.20, 0.12, 0.09, 0.05];
+    var WEIGHTS = [0.24, 0.16, 0.16, 0.10, 0.08, 0.12, 0.08, 0.06];
 
     function pickType() {
       var v = Math.random(), sum = 0;
@@ -115,7 +118,7 @@ function isActive(href: string) {
       return 0;
     }
 
-    var STAR_COUNT = 110;
+    var STAR_COUNT = 120;
     var stars = [];
     for (var i = 0; i < STAR_COUNT; i++) {
       var ti = pickType();
@@ -123,19 +126,22 @@ function isActive(href: string) {
         x:     Math.random(),
         y:     Math.random(),
         r:     Math.random() * 1.4 + 0.25,
-        speed: 0.000014 + Math.random() * 0.000026,
+        speed: 0.000013 + Math.random() * 0.000022,
         phase: Math.random() * 6.28,
         ti:    ti,
-        base:  0.10 + Math.random() * 0.55,
-        glow:  Math.random() < 0.28,
+        base:  0.12 + Math.random() * 0.52,
+        glow:  Math.random() < 0.38,
       });
     }
 
+    /* 6 nebulae: violet, rose, cyan, gold, deep-purple, emerald */
     var nebulae = [
-      { nx:0.30, ny:0.18, nr:0.90, r:85,  g:115, b:255, sp:0.0000028, ph:0.0  },
-      { nx:0.68, ny:0.52, nr:0.82, r:215, g:50,  b:90,  sp:0.0000022, ph:2.1  },
-      { nx:0.42, ny:0.80, nr:0.75, r:210, g:170, b:50,  sp:0.0000018, ph:4.2  },
-      { nx:0.75, ny:0.08, nr:0.65, r:140, g:70,  b:215, sp:0.0000033, ph:1.0  },
+      { nx:0.45, ny:0.12, nr:1.00, r:115, g:65,  b:230, sp:0.0000025, ph:0.0  },
+      { nx:0.72, ny:0.38, nr:0.88, r:220, g:55,  b:120, sp:0.0000020, ph:2.1  },
+      { nx:0.28, ny:0.65, nr:0.82, r:45,  g:170, b:215, sp:0.0000016, ph:4.2  },
+      { nx:0.82, ny:0.06, nr:0.72, r:210, g:158, b:48,  sp:0.0000030, ph:1.0  },
+      { nx:0.18, ny:0.88, nr:0.68, r:130, g:50,  b:205, sp:0.0000022, ph:3.0  },
+      { nx:0.88, ny:0.55, nr:0.62, r:45,  g:185, b:148, sp:0.0000018, ph:5.5  },
     ];
 
     function resize() {
@@ -148,14 +154,18 @@ function isActive(href: string) {
       var dt = prev ? Math.min(ts - prev, 50) : 16;
       prev = ts;
 
-      var cp   = ts * 0.000018;
-      var rAdd = Math.max(0, Math.sin(cp))        * 16;
-      var bAdd = Math.max(0, Math.sin(cp + 1.57)) * 10;
-      var gAdd = Math.max(0, Math.sin(cp + 3.14)) * 6;
+      /* Multi-wave colour cycle: violet / teal / indigo */
+      var t  = ts * 0.000013;
+      var c1 = Math.max(0, Math.sin(t));
+      var c2 = Math.max(0, Math.sin(t * 0.68 + 2.0));
+      var c3 = Math.max(0, Math.sin(t * 0.45 + 4.1));
+      var br = Math.round(4  + c1 * 22 + c3 * 8);
+      var bg = Math.round(5  + c2 * 14 + c1 * 4);
+      var bb = Math.round(22 + c2 * 24 + c3 * 16);
       var skyGrad = ctx.createLinearGradient(0, 0, 0, H);
-      skyGrad.addColorStop(0,   'rgb('+Math.round(4+rAdd)+','+Math.round(4+gAdd)+','+Math.round(30+bAdd)+')');
-      skyGrad.addColorStop(0.5, 'rgb('+Math.round(6+rAdd)+','+Math.round(4+gAdd)+','+Math.round(22+bAdd)+')');
-      skyGrad.addColorStop(1,   'rgb('+Math.round(8+rAdd)+','+Math.round(5+gAdd)+','+Math.round(16+bAdd)+')');
+      skyGrad.addColorStop(0,   'rgb('+(br+8)+','+(bg+3)+','+(bb+10)+')');
+      skyGrad.addColorStop(0.5, 'rgb('+br+','+bg+','+bb+')');
+      skyGrad.addColorStop(1,   'rgb('+Math.max(br-2,2)+','+Math.max(bg-2,2)+','+Math.max(bb-4,16)+')');
       ctx.fillStyle = skyGrad;
       ctx.fillRect(0, 0, W, H);
 
@@ -163,10 +173,10 @@ function isActive(href: string) {
         var nb = nebulae[n];
         nb.ny -= nb.sp * dt;
         if (nb.ny < -nb.nr * 0.6) nb.ny = 1 + nb.nr * 0.6;
-        var pulse = 0.58 + 0.42 * Math.sin(ts * 0.00026 + nb.ph);
+        var pulse = 0.46 + 0.54 * Math.sin(ts * 0.00022 + nb.ph);
         var ng = ctx.createRadialGradient(nb.nx*W, nb.ny*H, 0, nb.nx*W, nb.ny*H, nb.nr*W);
-        ng.addColorStop(0,    'rgba('+nb.r+','+nb.g+','+nb.b+','+(0.062*pulse)+')');
-        ng.addColorStop(0.45, 'rgba('+nb.r+','+nb.g+','+nb.b+','+(0.026*pulse)+')');
+        ng.addColorStop(0,    'rgba('+nb.r+','+nb.g+','+nb.b+','+(0.082*pulse)+')');
+        ng.addColorStop(0.42, 'rgba('+nb.r+','+nb.g+','+nb.b+','+(0.034*pulse)+')');
         ng.addColorStop(1,    'rgba('+nb.r+','+nb.g+','+nb.b+',0)');
         ctx.fillStyle = ng;
         ctx.beginPath();
@@ -179,7 +189,7 @@ function isActive(href: string) {
         s.y -= s.speed * dt;
         if (s.y < 0) { s.y = 1; s.x = Math.random(); }
 
-        var flicker = 0.55 + 0.45 * Math.sin(ts * 0.0012 + s.phase);
+        var flicker = 0.52 + 0.48 * Math.sin(ts * 0.0012 + s.phase);
         var a = s.base * flicker;
         var col = TYPES[s.ti];
         var px = s.x * W;
@@ -187,13 +197,13 @@ function isActive(href: string) {
 
         ctx.save();
         if (s.glow) {
-          var grd = ctx.createRadialGradient(px, py, 0, px, py, s.r * 4.5);
-          grd.addColorStop(0,   'rgba('+col.r+','+col.g+','+col.b+','+a+')');
-          grd.addColorStop(0.4, 'rgba('+col.r+','+col.g+','+col.b+','+(a*0.22)+')');
-          grd.addColorStop(1,   'rgba('+col.r+','+col.g+','+col.b+',0)');
+          var grd = ctx.createRadialGradient(px, py, 0, px, py, s.r * 5);
+          grd.addColorStop(0,    'rgba('+col.r+','+col.g+','+col.b+','+a+')');
+          grd.addColorStop(0.38, 'rgba('+col.r+','+col.g+','+col.b+','+(a*0.25)+')');
+          grd.addColorStop(1,    'rgba('+col.r+','+col.g+','+col.b+',0)');
           ctx.fillStyle = grd;
           ctx.beginPath();
-          ctx.arc(px, py, s.r * 4.5, 0, 6.28);
+          ctx.arc(px, py, s.r * 5, 0, 6.28);
           ctx.fill();
         }
         ctx.fillStyle = 'rgba('+col.r+','+col.g+','+col.b+','+a+')';
