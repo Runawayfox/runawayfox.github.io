@@ -9,10 +9,11 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
 ---
 
 <Layout title="Kitsune Hideout">
-  <section style="margin-bottom:52px;">
-    <p style="color:var(--text-secondary);font-size:13px;line-height:1.8;max-width:440px;">
-      개발, 프로젝트, 그리고 배운 것들을 기록하는 공간입니다.
-    </p>
+  <section class="about-section">
+    <h2 class="page-title">About Kitsune</h2>
+    <div class="about-placeholder">
+      <!-- 소개 내용을 이후에 작성합니다 -->
+    </div>
   </section>
 
   <section>
