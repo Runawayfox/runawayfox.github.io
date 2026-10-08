@@ -31,9 +31,6 @@ jobs:
       - name: Build site
         run: npm run build
 
-      - name: Build search index
-        run: npx pagefind --site dist
-
       - uses: actions/configure-pages@v5
 
       - uses: actions/upload-pages-artifact@v3
