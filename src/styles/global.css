@@ -602,6 +602,13 @@ html.light .post-card:hover {
   animation: cardBorderShine 5s linear infinite;
 }
 
+html.light .post-card::after {
+  background: linear-gradient(135deg,
+    #2266bb 0%, #55aaee 20%, #88ccff 40%,
+    #cceeff 50%, #88ccff 60%, #55aaee 80%, #2266bb 100%);
+  background-size: 400% 400%;
+}
+
 .post-card-link {
   text-decoration: none;
   display: flex;
