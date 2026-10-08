@@ -15,41 +15,33 @@ function isActive(href: string) {
 
 <aside class="app-brand">
   <canvas id="sidebar-canvas"></canvas>
+
   <a href="/" class="fox-logo-wrap">
     <div class="fox-logo-img"></div>
     <span class="brand-text">KITSUNE</span>
     <span class="brand-sub">HIDEOUT</span>
   </a>
 
-  <!-- Sidebar search bar -->
+  <!-- Sidebar search (desktop) -->
   <form class="sidebar-search" action="/search" method="get" role="search">
     <div class="sidebar-search-wrap">
       <svg class="sidebar-search-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
       </svg>
-      <input
-        type="text"
-        name="q"
-        class="sidebar-search-input"
-        placeholder="Search..."
-        autocomplete="off"
-        spellcheck="false"
-      />
+      <input type="text" name="q" class="sidebar-search-input" placeholder="Search..." autocomplete="off" spellcheck="false" />
     </div>
   </form>
 
+  <!-- Nav (desktop) -->
   <nav class="nav-buttons">
     {nav.map(item => (
-      <a
-        href={item.href}
-        class:list={['nav-btn', { active: isActive(item.href) }]}
-      >
+      <a href={item.href} class:list={['nav-btn', { active: isActive(item.href) }]}>
         {item.label}
       </a>
     ))}
   </nav>
 
-  <!-- Theme toggle switch (bottom of sidebar) -->
+  <!-- Theme toggle -->
   <div class="theme-toggle-wrap">
     <span class="toggle-label-ko active" id="label-light">라이트</span>
     <button id="theme-toggle" class="theme-switch is-light" aria-label="테마 전환" aria-checked="true">
@@ -57,7 +49,33 @@ function isActive(href: string) {
     </button>
     <span class="toggle-label-ko" id="label-dark">다크</span>
   </div>
+
+  <!-- Hamburger button (mobile only) -->
+  <button class="hamburger-btn" id="hamburger-btn" aria-label="메뉴 열기" aria-expanded="false">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
 </aside>
+
+<!-- Mobile dropdown (sibling of aside, outside overflow:hidden) -->
+<div class="mobile-menu" id="mobile-menu" aria-hidden="true">
+  <form class="mobile-search-form" action="/search" method="get" role="search">
+    <div class="sidebar-search-wrap">
+      <svg class="sidebar-search-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+      </svg>
+      <input type="text" name="q" class="sidebar-search-input" placeholder="Search..." autocomplete="off" spellcheck="false" />
+    </div>
+  </form>
+  <nav class="mobile-nav">
+    {nav.map(item => (
+      <a href={item.href} class:list={['mobile-nav-btn', { active: isActive(item.href) }]}>
+        {item.label}
+      </a>
+    ))}
+  </nav>
+</div>
 
 <script is:inline>
   /* ── Sidebar cosmic canvas ── */
@@ -67,7 +85,6 @@ function isActive(href: string) {
     var ctx = canvas.getContext('2d');
     var W = 0, H = 0;
 
-    /* 별 색상 유형: 청백 / 따뜻한백 / 황금 / 주황 / 적색 / 보라 */
     var TYPES = [
       { r:215, g:225, b:255 },
       { r:255, g:245, b:200 },
@@ -103,7 +120,6 @@ function isActive(href: string) {
       });
     }
 
-    /* 성운: 청색 / 적색 / 황금 / 보라 */
     var nebulae = [
       { nx:0.30, ny:0.18, nr:0.90, r:85,  g:115, b:255, sp:0.0000028, ph:0.0  },
       { nx:0.68, ny:0.52, nr:0.82, r:215, g:50,  b:90,  sp:0.0000022, ph:2.1  },
@@ -121,7 +137,6 @@ function isActive(href: string) {
       var dt = prev ? Math.min(ts - prev, 50) : 16;
       prev = ts;
 
-      /* 배경: 서서히 색조가 바뀌는 심우주 그라디언트 */
       var cp   = ts * 0.000018;
       var rAdd = Math.max(0, Math.sin(cp))        * 16;
       var bAdd = Math.max(0, Math.sin(cp + 1.57)) * 10;
@@ -133,7 +148,6 @@ function isActive(href: string) {
       ctx.fillStyle = skyGrad;
       ctx.fillRect(0, 0, W, H);
 
-      /* 성운 구름 */
       for (var n = 0; n < nebulae.length; n++) {
         var nb = nebulae[n];
         nb.ny -= nb.sp * dt;
@@ -149,7 +163,6 @@ function isActive(href: string) {
         ctx.fill();
       }
 
-      /* 별 */
       for (var i = 0; i < stars.length; i++) {
         var s = stars[i];
         s.y -= s.speed * dt;
@@ -189,6 +202,7 @@ function isActive(href: string) {
 </script>
 
 <script is:inline>
+  /* ── Theme toggle ── */
   (function () {
     var html     = document.documentElement;
     var btn      = document.getElementById('theme-toggle');
@@ -215,5 +229,34 @@ function isActive(href: string) {
       localStorage.setItem('theme', nowLight ? 'light' : 'dark');
       applyUI(nowLight);
     });
+  })();
+</script>
+
+<script is:inline>
+  /* ── Hamburger menu ── */
+  (function () {
+    var hBtn = document.getElementById('hamburger-btn');
+    var menu = document.getElementById('mobile-menu');
+    if (!hBtn || !menu) return;
+
+    function closeMenu() {
+      menu.classList.remove('is-open');
+      hBtn.classList.remove('is-open');
+      hBtn.setAttribute('aria-expanded', 'false');
+      menu.setAttribute('aria-hidden', 'true');
+    }
+
+    hBtn.addEventListener('click', function () {
+      var isOpen = !menu.classList.contains('is-open');
+      menu.classList.toggle('is-open', isOpen);
+      hBtn.classList.toggle('is-open', isOpen);
+      hBtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      menu.setAttribute('aria-hidden', isOpen ? 'false' : 'true');
+    });
+
+    var links = menu.querySelectorAll('a');
+    for (var i = 0; i < links.length; i++) {
+      links[i].addEventListener('click', closeMenu);
+    }
   })();
 </script>

@@ -648,33 +648,115 @@ html.light .tag-cloud-link:hover .tag-cloud-name { color: #111111; }
          filter: drop-shadow(0 0 5px rgba(200,230,255,.45)) drop-shadow(0 0 12px rgba(160,200,255,.25)); }
 }
 
+/* ─────────────────── HAMBURGER / MOBILE-MENU defaults ─────────────────── */
+.hamburger-btn { display: none; }
+.mobile-menu   { display: none; }
+
+.mobile-nav-btn {
+  display: block;
+  padding: 10px 14px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #7a6830;
+  text-decoration: none;
+  border-left: 2px solid transparent;
+  border-radius: 0 6px 6px 0;
+  font-family: var(--font);
+  transition: color 0.25s;
+}
+.mobile-nav-btn.active {
+  border-left-color: rgba(200,230,255,.55);
+  color: rgba(210,218,230,0.85);
+}
+.mobile-nav-btn:hover:not(.active) { color: rgba(201,162,39,0.85); }
+
 /* ─────────────────── RESPONSIVE ─────────────────── */
 @media (max-width: 1024px) {
+  #sidebar-canvas { display: none; }
+
   .app-brand {
-    width: 100%; height: auto; position: sticky;
-    flex-direction: row; align-items: center;
-    padding: 10px 20px; gap: 20px;
-    border-right: none; border-bottom: 1px solid #2a2200;
+    width: 100%;
+    height: 56px;
+    position: sticky;
+    top: 0;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 0 16px;
+    gap: 10px;
+    border-right: none;
+    border-bottom: 1px solid #2a2200;
+    overflow: visible;
+    z-index: 20;
   }
-  .fox-logo-wrap { flex-direction: row; align-items: center; gap: 10px; width: auto; }
-  .fox-logo-img  { width: 32px; height: 32px; }
-  .brand-text    { font-size: 10px; }
-  .brand-sub     { display: none; }
-  .nav-buttons   { flex-direction: row; gap: 2px; margin-left: auto; width: auto; }
-  .nav-btn {
-    border-left: none; border-bottom: 2px solid transparent;
-    border-radius: 6px 6px 0 0; padding: 6px 10px; font-size: 10px;
+
+  .fox-logo-wrap {
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    width: auto;
   }
-  .nav-btn.active {
-    border-left-color: transparent;
-    border-bottom-color: rgba(200,230,255,.55);
-    box-shadow: none;
-  }
+  .fox-logo-img  { width: 34px; height: 34px; }
+  .brand-text    { font-size: 11px; letter-spacing: 6px; text-indent: 6px; }
+  .brand-sub     { display: inline-block; font-size: 8px; letter-spacing: 3px; text-indent: 3px; margin-top: 0; }
+
   .sidebar-search { display: none; }
+  .nav-buttons    { display: none; }
+
   .theme-toggle-wrap {
     position: static;
     transform: none;
-    margin-left: 8px;
+    margin-left: auto;
   }
-  .main-content { margin-left: 0; max-width: 100%; padding: 28px 20px; }
+
+  /* Hamburger button */
+  .hamburger-btn {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 22px;
+    height: 15px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    margin-left: 12px;
+    flex-shrink: 0;
+  }
+  .hamburger-btn span {
+    display: block;
+    width: 100%;
+    height: 2px;
+    background: rgba(200,205,215,0.65);
+    border-radius: 1px;
+    transition: transform 0.25s, opacity 0.25s;
+    transform-origin: center;
+  }
+  .hamburger-btn.is-open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+  .hamburger-btn.is-open span:nth-child(2) { opacity: 0; }
+  .hamburger-btn.is-open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+  /* Mobile dropdown */
+  .mobile-menu {
+    position: fixed;
+    top: 56px;
+    left: 0;
+    right: 0;
+    background: #04041c;
+    border-bottom: 1px solid #2a2200;
+    padding: 16px 20px 20px;
+    z-index: 19;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .mobile-menu.is-open { display: flex; }
+
+  .mobile-search-form { width: 100%; }
+  .mobile-nav { display: flex; flex-direction: column; gap: 2px; }
+
+  .main-content { margin-left: 0; max-width: 100%; padding: 28px 16px; }
+
+  .blog-grid { grid-template-columns: 1fr; }
 }
