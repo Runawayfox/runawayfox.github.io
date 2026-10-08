@@ -36,7 +36,7 @@
   --accent-light:   #e2b93b;
   --font: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
   --font-content: 'NanumHuman', -apple-system, BlinkMacSystemFont, 'Malgun Gothic', sans-serif;
-  --sidebar-w: 220px;
+  --sidebar-w: 280px;
 }
 
 /* ─────────────────── LIGHT MODE (content only) ─────────────────── */
@@ -83,8 +83,8 @@ body {
   flex-direction: column;
   align-items: flex-start;
   justify-content: center;
-  padding: 0 28px;
-  gap: 24px;
+  padding: 0 34px;
+  gap: 20px;
   z-index: 20;
   border-right: 1px solid #2a2200;
   background: #04041c;
@@ -101,10 +101,52 @@ body {
 }
 
 .fox-logo-wrap,
+.sidebar-search,
 .nav-buttons,
 .theme-toggle-wrap {
   position: relative;
   z-index: 1;
+}
+
+/* ─────────────────── SIDEBAR SEARCH ─────────────────── */
+.sidebar-search { width: 100%; }
+
+.sidebar-search-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border: 1px solid rgba(201,162,39,0.18);
+  border-radius: 6px;
+  background: rgba(255,255,255,0.03);
+  transition: border-color 0.25s, box-shadow 0.25s;
+}
+
+.sidebar-search-wrap:focus-within {
+  border-color: rgba(201,162,39,0.42);
+  box-shadow: 0 0 10px rgba(201,162,39,0.08),
+              inset 0 0 10px rgba(201,162,39,0.04);
+}
+
+.sidebar-search-icon {
+  width: 13px; height: 13px;
+  color: #7a6830;
+  flex-shrink: 0;
+}
+
+.sidebar-search-input {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: rgba(201,162,39,0.82);
+  font-size: 11px; font-weight: 500;
+  letter-spacing: 0.8px;
+  font-family: var(--font);
+  width: 100%;
+}
+
+.sidebar-search-input::placeholder {
+  color: rgba(201,162,39,0.28);
 }
 
 /* ─────────────────── FOX LOGO ─────────────────── */
@@ -119,7 +161,7 @@ body {
 }
 
 .fox-logo-img {
-  width: 64px; height: 64px;
+  width: 82px; height: 82px;
   background: linear-gradient(90deg,
     #c9a227 0%, #f5e080 30%, #fff8c0 50%, #f5e080 70%, #c9a227 100%);
   background-size: 200% 100%;
@@ -143,8 +185,8 @@ body {
 
 .brand-text {
   display: inline-block;
-  font-size: 13px; font-weight: 800;
-  letter-spacing: 7px; text-indent: 7px;
+  font-size: 15px; font-weight: 800;
+  letter-spacing: 9px; text-indent: 9px;
   background: linear-gradient(90deg,
     #c9a227 0%, #f5e080 30%, #fff8c0 50%, #f5e080 70%, #c9a227 100%);
   background-size: 200% 100%;
@@ -168,8 +210,8 @@ body {
 }
 
 .brand-sub {
-  font-size: 8.5px; font-weight: 600;
-  letter-spacing: 4.5px; text-indent: 4.5px;
+  font-size: 10px; font-weight: 600;
+  letter-spacing: 5.5px; text-indent: 5.5px;
   color: rgba(90,165,255,.82);
   cursor: default; margin-top: 1px;
   transition: color .3s, filter .3s;
@@ -187,9 +229,9 @@ body {
   display: block;
   border: none; border-left: 2px solid transparent;
   color: #7a6830;
-  font-size: 11px; font-weight: 700;
-  letter-spacing: 2.5px; text-transform: uppercase;
-  padding: 9px 14px;
+  font-size: 12px; font-weight: 700;
+  letter-spacing: 3px; text-transform: uppercase;
+  padding: 10px 16px;
   border-radius: 0 6px 6px 0;
   cursor: pointer; font-family: var(--font);
   text-align: left; text-decoration: none;
@@ -373,7 +415,7 @@ html.light .post-card:hover {
 
 .post-card:hover::after {
   opacity: 1;
-  animation: cardBorderShine 2s linear infinite;
+  animation: cardBorderShine 5s linear infinite;
 }
 
 .post-card-link {
@@ -609,6 +651,7 @@ html.light .tag-cloud-link:hover .tag-cloud-name { color: #111111; }
     border-bottom-color: rgba(200,230,255,.55);
     box-shadow: none;
   }
+  .sidebar-search { display: none; }
   .theme-toggle-wrap {
     position: static;
     transform: none;

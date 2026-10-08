@@ -18,7 +18,7 @@ import Layout from '../layouts/Layout.astro';
   window.addEventListener('load', function () {
     import('/pagefind/pagefind-ui.js')
       .then(function (m) {
-        new m.PagefindUI({
+        var ui = new m.PagefindUI({
           element: '#search',
           showSubResults: true,
           translations: {
@@ -26,6 +26,8 @@ import Layout from '../layouts/Layout.astro';
             zero_results: '"[SEARCH_TERM]"에 대한 결과가 없습니다.',
           },
         });
+        var q = new URLSearchParams(window.location.search).get('q');
+        if (q) ui.triggerSearch(q);
       })
       .catch(function () {
         var el = document.getElementById('search-notice');
