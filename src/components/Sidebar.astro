@@ -48,26 +48,56 @@ function isActive(href: string) {
 </aside>
 
 <script is:inline>
-  /* ── Sidebar star-drift canvas ── */
+  /* ── Sidebar cosmic canvas ── */
   (function () {
     var canvas = document.getElementById('sidebar-canvas');
     if (!canvas) return;
     var ctx = canvas.getContext('2d');
     var W = 0, H = 0;
 
-    var STAR_COUNT = 85;
+    /* 별 색상 유형: 청백 / 따뜻한백 / 황금 / 주황 / 적색 / 보라 */
+    var TYPES = [
+      { r:215, g:225, b:255 },
+      { r:255, g:245, b:200 },
+      { r:245, g:200, b:65  },
+      { r:255, g:140, b:65  },
+      { r:255, g:80,  b:70  },
+      { r:185, g:150, b:255 },
+    ];
+    var WEIGHTS = [0.34, 0.20, 0.20, 0.12, 0.09, 0.05];
+
+    function pickType() {
+      var v = Math.random(), sum = 0;
+      for (var k = 0; k < WEIGHTS.length; k++) {
+        sum += WEIGHTS[k];
+        if (v < sum) return k;
+      }
+      return 0;
+    }
+
+    var STAR_COUNT = 110;
     var stars = [];
     for (var i = 0; i < STAR_COUNT; i++) {
+      var ti = pickType();
       stars.push({
         x:     Math.random(),
         y:     Math.random(),
-        r:     Math.random() * 1.1 + 0.3,
-        speed: 0.000018 + Math.random() * 0.000032,  /* normalized/ms */
+        r:     Math.random() * 1.4 + 0.25,
+        speed: 0.000014 + Math.random() * 0.000026,
         phase: Math.random() * 6.28,
-        gold:  Math.random() < 0.25,
-        base:  0.12 + Math.random() * 0.45,
+        ti:    ti,
+        base:  0.10 + Math.random() * 0.55,
+        glow:  Math.random() < 0.28,
       });
     }
+
+    /* 성운: 청색 / 적색 / 황금 / 보라 */
+    var nebulae = [
+      { nx:0.30, ny:0.18, nr:0.90, r:85,  g:115, b:255, sp:0.0000028, ph:0.0  },
+      { nx:0.68, ny:0.52, nr:0.82, r:215, g:50,  b:90,  sp:0.0000022, ph:2.1  },
+      { nx:0.42, ny:0.80, nr:0.75, r:210, g:170, b:50,  sp:0.0000018, ph:4.2  },
+      { nx:0.75, ny:0.08, nr:0.65, r:140, g:70,  b:215, sp:0.0000033, ph:1.0  },
+    ];
 
     function resize() {
       W = canvas.width  = canvas.offsetWidth;
@@ -76,35 +106,67 @@ function isActive(href: string) {
 
     var prev = null;
     function frame(ts) {
-      var dt = prev ? ts - prev : 16;
+      var dt = prev ? Math.min(ts - prev, 50) : 16;
       prev = ts;
-      ctx.clearRect(0, 0, W, H);
 
+      /* 배경: 서서히 색조가 바뀌는 심우주 그라디언트 */
+      var cp   = ts * 0.000018;
+      var rAdd = Math.max(0, Math.sin(cp))        * 16;
+      var bAdd = Math.max(0, Math.sin(cp + 1.57)) * 10;
+      var gAdd = Math.max(0, Math.sin(cp + 3.14)) * 6;
+      var skyGrad = ctx.createLinearGradient(0, 0, 0, H);
+      skyGrad.addColorStop(0,   'rgb('+Math.round(4+rAdd)+','+Math.round(4+gAdd)+','+Math.round(30+bAdd)+')');
+      skyGrad.addColorStop(0.5, 'rgb('+Math.round(6+rAdd)+','+Math.round(4+gAdd)+','+Math.round(22+bAdd)+')');
+      skyGrad.addColorStop(1,   'rgb('+Math.round(8+rAdd)+','+Math.round(5+gAdd)+','+Math.round(16+bAdd)+')');
+      ctx.fillStyle = skyGrad;
+      ctx.fillRect(0, 0, W, H);
+
+      /* 성운 구름 */
+      for (var n = 0; n < nebulae.length; n++) {
+        var nb = nebulae[n];
+        nb.ny -= nb.sp * dt;
+        if (nb.ny < -nb.nr * 0.6) nb.ny = 1 + nb.nr * 0.6;
+        var pulse = 0.58 + 0.42 * Math.sin(ts * 0.00026 + nb.ph);
+        var ng = ctx.createRadialGradient(nb.nx*W, nb.ny*H, 0, nb.nx*W, nb.ny*H, nb.nr*W);
+        ng.addColorStop(0,    'rgba('+nb.r+','+nb.g+','+nb.b+','+(0.062*pulse)+')');
+        ng.addColorStop(0.45, 'rgba('+nb.r+','+nb.g+','+nb.b+','+(0.026*pulse)+')');
+        ng.addColorStop(1,    'rgba('+nb.r+','+nb.g+','+nb.b+',0)');
+        ctx.fillStyle = ng;
+        ctx.beginPath();
+        ctx.arc(nb.nx*W, nb.ny*H, nb.nr*W, 0, 6.28);
+        ctx.fill();
+      }
+
+      /* 별 */
       for (var i = 0; i < stars.length; i++) {
         var s = stars[i];
         s.y -= s.speed * dt;
         if (s.y < 0) { s.y = 1; s.x = Math.random(); }
 
-        var flicker = 0.55 + 0.45 * Math.sin(ts * 0.0012 * (s.gold ? 0.7 : 1.1) + s.phase);
+        var flicker = 0.55 + 0.45 * Math.sin(ts * 0.0012 + s.phase);
         var a = s.base * flicker;
+        var col = TYPES[s.ti];
         var px = s.x * W;
         var py = s.y * H;
 
         ctx.save();
-        if (s.gold) {
-          var g = ctx.createRadialGradient(px, py, 0, px, py, s.r * 4);
-          g.addColorStop(0,   'rgba(245,215,80,'  + a + ')');
-          g.addColorStop(0.5, 'rgba(201,162,39,'  + (a * 0.3) + ')');
-          g.addColorStop(1,   'rgba(201,162,39,0)');
-          ctx.fillStyle = g;
-          ctx.beginPath(); ctx.arc(px, py, s.r * 4, 0, 6.28); ctx.fill();
-          ctx.fillStyle = 'rgba(255,240,160,' + a + ')';
-        } else {
-          ctx.fillStyle = 'rgba(200,210,255,' + (a * 0.75) + ')';
+        if (s.glow) {
+          var grd = ctx.createRadialGradient(px, py, 0, px, py, s.r * 4.5);
+          grd.addColorStop(0,   'rgba('+col.r+','+col.g+','+col.b+','+a+')');
+          grd.addColorStop(0.4, 'rgba('+col.r+','+col.g+','+col.b+','+(a*0.22)+')');
+          grd.addColorStop(1,   'rgba('+col.r+','+col.g+','+col.b+',0)');
+          ctx.fillStyle = grd;
+          ctx.beginPath();
+          ctx.arc(px, py, s.r * 4.5, 0, 6.28);
+          ctx.fill();
         }
-        ctx.beginPath(); ctx.arc(px, py, s.r, 0, 6.28); ctx.fill();
+        ctx.fillStyle = 'rgba('+col.r+','+col.g+','+col.b+','+a+')';
+        ctx.beginPath();
+        ctx.arc(px, py, s.r, 0, 6.28);
+        ctx.fill();
         ctx.restore();
       }
+
       requestAnimationFrame(frame);
     }
 
