@@ -15,6 +15,7 @@ function isActive(href: string) {
 ---
 
 <aside class="app-brand">
+  <canvas id="sidebar-canvas"></canvas>
   <a href="/" class="fox-logo-wrap">
     <div class="fox-logo-img"></div>
     <span class="brand-text">KITSUNE</span>
@@ -45,6 +46,73 @@ function isActive(href: string) {
     <span class="toggle-label" id="toggle-label">LIGHT</span>
   </button>
 </aside>
+
+<script is:inline>
+  /* ── Sidebar star-drift canvas ── */
+  (function () {
+    var canvas = document.getElementById('sidebar-canvas');
+    if (!canvas) return;
+    var ctx = canvas.getContext('2d');
+    var W = 0, H = 0;
+
+    var STAR_COUNT = 85;
+    var stars = [];
+    for (var i = 0; i < STAR_COUNT; i++) {
+      stars.push({
+        x:     Math.random(),
+        y:     Math.random(),
+        r:     Math.random() * 1.1 + 0.3,
+        speed: 0.000018 + Math.random() * 0.000032,  /* normalized/ms */
+        phase: Math.random() * 6.28,
+        gold:  Math.random() < 0.25,
+        base:  0.12 + Math.random() * 0.45,
+      });
+    }
+
+    function resize() {
+      W = canvas.width  = canvas.offsetWidth;
+      H = canvas.height = canvas.offsetHeight;
+    }
+
+    var prev = null;
+    function frame(ts) {
+      var dt = prev ? ts - prev : 16;
+      prev = ts;
+      ctx.clearRect(0, 0, W, H);
+
+      for (var i = 0; i < stars.length; i++) {
+        var s = stars[i];
+        s.y -= s.speed * dt;
+        if (s.y < 0) { s.y = 1; s.x = Math.random(); }
+
+        var flicker = 0.55 + 0.45 * Math.sin(ts * 0.0012 * (s.gold ? 0.7 : 1.1) + s.phase);
+        var a = s.base * flicker;
+        var px = s.x * W;
+        var py = s.y * H;
+
+        ctx.save();
+        if (s.gold) {
+          var g = ctx.createRadialGradient(px, py, 0, px, py, s.r * 4);
+          g.addColorStop(0,   'rgba(245,215,80,'  + a + ')');
+          g.addColorStop(0.5, 'rgba(201,162,39,'  + (a * 0.3) + ')');
+          g.addColorStop(1,   'rgba(201,162,39,0)');
+          ctx.fillStyle = g;
+          ctx.beginPath(); ctx.arc(px, py, s.r * 4, 0, 6.28); ctx.fill();
+          ctx.fillStyle = 'rgba(255,240,160,' + a + ')';
+        } else {
+          ctx.fillStyle = 'rgba(200,210,255,' + (a * 0.75) + ')';
+        }
+        ctx.beginPath(); ctx.arc(px, py, s.r, 0, 6.28); ctx.fill();
+        ctx.restore();
+      }
+      requestAnimationFrame(frame);
+    }
+
+    window.addEventListener('resize', resize);
+    resize();
+    requestAnimationFrame(frame);
+  })();
+</script>
 
 <script is:inline>
   (function () {

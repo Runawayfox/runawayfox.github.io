@@ -64,6 +64,23 @@ body {
   z-index: 20;
   border-right: 1px solid #2a2200;
   background: #050508;
+  overflow: hidden;
+}
+
+#sidebar-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.fox-logo-wrap,
+.nav-buttons,
+.theme-toggle-btn {
+  position: relative;
+  z-index: 1;
 }
 
 /* ─────────────────── FOX LOGO ─────────────────── */
@@ -242,16 +259,11 @@ body {
 .page-title {
   font-size: 20px; font-weight: 800;
   letter-spacing: 4px; text-transform: uppercase;
-  background: linear-gradient(90deg,
-    #c9a227 0%, #f5e080 30%, #fff8c0 50%, #f5e080 70%, #c9a227 100%);
-  background-size: 200% 100%;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  animation: goldShine 3s ease-in-out infinite;
+  color: var(--accent);
   margin-bottom: 36px;
   display: inline-block;
 }
+html.light .page-title { color: #111111; }
 
 /* ─────────────────── POST CARD ─────────────────── */
 .post-card {
@@ -270,15 +282,8 @@ body {
   transition: color 0.25s;
 }
 
-.post-card-link:hover .post-card-title {
-  background: linear-gradient(90deg,
-    #c9a227 0%, #f5e080 30%, #fff8c0 50%, #f5e080 70%, #c9a227 100%);
-  background-size: 200% 100%;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  animation: goldShine 3s ease-in-out infinite;
-}
+.post-card-link:hover .post-card-title { color: var(--accent); }
+html.light .post-card-link:hover .post-card-title { color: #111111; }
 
 .post-card-desc {
   color: var(--text-secondary); font-size: 13px;
@@ -301,16 +306,8 @@ body {
   font-family: var(--font);
 }
 
-.tag-pill:hover {
-  border-color: var(--accent);
-  background: linear-gradient(90deg,
-    #c9a227 0%, #f5e080 30%, #fff8c0 50%, #f5e080 70%, #c9a227 100%);
-  background-size: 200% 100%;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  animation: goldShine 3s ease-in-out infinite;
-}
+.tag-pill:hover { border-color: var(--accent); color: var(--accent); }
+html.light .tag-pill:hover { color: #111111; }
 
 /* ─────────────────── TAG CLOUD ─────────────────── */
 .tag-cloud { display: flex; flex-wrap: wrap; gap: 10px; }
@@ -332,15 +329,8 @@ body {
 
 .tag-cloud-link:hover { border-color: var(--accent); }
 
-.tag-cloud-link:hover .tag-cloud-name {
-  background: linear-gradient(90deg,
-    #c9a227 0%, #f5e080 30%, #fff8c0 50%, #f5e080 70%, #c9a227 100%);
-  background-size: 200% 100%;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  animation: goldShine 3s ease-in-out infinite;
-}
+.tag-cloud-link:hover .tag-cloud-name { color: var(--accent); }
+html.light .tag-cloud-link:hover .tag-cloud-name { color: #111111; }
 
 /* ─────────────────── BACK LINK ─────────────────── */
 .back-link {
