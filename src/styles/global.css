@@ -1,6 +1,29 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
+/* ─────────────────── NANUM HUMAN FONT ─────────────────── */
+@font-face {
+  font-family: 'NanumHuman';
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  src: url('/fonts/NanumHumanRegular.woff') format('woff');
+}
+@font-face {
+  font-family: 'NanumHuman';
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+  src: url('/fonts/NanumHumanBold.woff') format('woff');
+}
+@font-face {
+  font-family: 'NanumHuman';
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+  src: url('/fonts/NanumHumanEB.woff') format('woff');
+}
+
 /* ─────────────────── VARIABLES ─────────────────── */
 :root {
   --bg:             #050508;
@@ -12,6 +35,7 @@
   --accent:         #c9a227;
   --accent-light:   #e2b93b;
   --font: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
+  --font-content: 'NanumHuman', -apple-system, BlinkMacSystemFont, 'Malgun Gothic', sans-serif;
   --sidebar-w: 220px;
 }
 
@@ -78,7 +102,7 @@ body {
 
 .fox-logo-wrap,
 .nav-buttons,
-.theme-toggle-btn {
+.theme-toggle-wrap {
   position: relative;
   z-index: 1;
 }
@@ -210,41 +234,63 @@ body {
     0 0 12px rgba(200,230,255,0.07);
 }
 
-/* ─────────────────── THEME TOGGLE BUTTON ─────────────────── */
-.theme-toggle-btn {
+/* ─────────────────── THEME TOGGLE SWITCH ─────────────────── */
+.theme-toggle-wrap {
   position: absolute;
   bottom: 28px;
   left: 50%;
   transform: translateX(-50%);
-  background: transparent;
-  border: 1px solid rgba(201,162,39,0.22);
-  border-radius: 6px;
-  padding: 6px 12px;
-  cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 6px;
-  transition: border-color 0.25s, box-shadow 0.25s;
+  gap: 8px;
   white-space: nowrap;
 }
 
-.theme-toggle-btn:hover {
-  border-color: rgba(201,162,39,0.45);
-  box-shadow: 0 0 12px rgba(201,162,39,0.10),
-              inset 0 0 12px rgba(201,162,39,0.05);
+.toggle-label-ko {
+  font-size: 10px;
+  letter-spacing: 0.4px;
+  color: rgba(201,162,39,0.30);
+  transition: color 0.28s;
+  user-select: none;
 }
 
-.toggle-icon {
-  width: 13px; height: 13px;
-  color: #7a6830;
+.toggle-label-ko.active {
+  color: rgba(201,162,39,0.82);
+}
+
+.theme-switch {
+  position: relative;
+  width: 40px;
+  height: 22px;
+  background: rgba(8,6,2,0.8);
+  border: 1px solid rgba(201,162,39,0.28);
+  border-radius: 11px;
+  cursor: pointer;
+  padding: 0;
   flex-shrink: 0;
+  transition: border-color 0.28s, box-shadow 0.28s;
 }
 
-.toggle-label {
-  font-size: 9px; font-weight: 700;
-  letter-spacing: 2px; text-transform: uppercase;
-  color: #7a6830;
-  font-family: var(--font);
+.theme-switch:hover {
+  border-color: rgba(201,162,39,0.50);
+  box-shadow: 0 0 8px rgba(201,162,39,0.12);
+}
+
+.theme-switch-thumb {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: rgba(201,162,39,0.70);
+  box-shadow: 0 0 5px rgba(201,162,39,0.35);
+  transform: translateX(18px);
+  transition: transform 0.28s cubic-bezier(.4,0,.2,1);
+}
+
+.theme-switch.is-light .theme-switch-thumb {
+  transform: translateX(0);
 }
 
 /* ─────────────────── MAIN CONTENT ─────────────────── */
@@ -253,6 +299,7 @@ body {
   flex: 1; min-height: 100vh;
   padding: 60px 80px;
   max-width: 880px;
+  font-family: var(--font-content);
 }
 
 /* ─────────────────── PAGE TITLE ─────────────────── */
@@ -446,11 +493,10 @@ html.light .tag-cloud-link:hover .tag-cloud-name { color: #111111; }
     border-bottom-color: rgba(200,230,255,.55);
     box-shadow: none;
   }
-  .theme-toggle-btn {
+  .theme-toggle-wrap {
     position: static;
     transform: none;
     margin-left: 8px;
-    padding: 5px 10px;
   }
   .main-content { margin-left: 0; max-width: 100%; padding: 28px 20px; }
 }
