@@ -994,4 +994,12 @@ html.light .tag-cloud-link:hover .tag-cloud-name { color: #111111; }
   .blog-grid-wide .post-card-img-wrap { aspect-ratio: 16 / 9; }
   .blog-grid-wide .post-card-body     { padding: 16px 18px 18px; }
   .blog-grid-wide .post-card-title    { font-size: 15px; }
+
+  /* List view on mobile: single-line truncated title, no tags */
+  .blog-list .post-card-title {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .blog-list .post-card-tags { display: none; }
 }
