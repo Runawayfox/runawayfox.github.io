@@ -26,9 +26,9 @@
 
 /* ─────────────────── VARIABLES ─────────────────── */
 :root {
-  --bg:             #050508;
-  --surface:        #0f0f0f;
-  --border:         #2a2200;
+  --bg:             #04051c;
+  --surface:        #09102a;
+  --border:         #141840;
   --text-primary:   #ffffff;
   --text-secondary: #a0a0b0;
   --text-muted:     #606070;
