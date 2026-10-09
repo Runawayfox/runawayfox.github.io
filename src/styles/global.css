@@ -755,18 +755,23 @@ html.light .tag-cloud-link:hover .tag-cloud-name { color: #111111; }
 
 /* ─────────────────── BLOG POST ARTICLE ─────────────────── */
 .post-article-title {
-  font-size: 28px; font-weight: 800;
+  font-size: 36px; font-weight: 800;
   color: var(--text-primary); line-height: 1.3;
   margin-bottom: 12px;
 }
 
 .post-article-meta {
   display: flex; gap: 16px;
-  font-size: 13px; color: var(--text-muted);
+  font-size: 14px; color: var(--text-muted);
   letter-spacing: .5px; margin-bottom: 48px;
 }
 
 /* ─────────────────── PROSE DARK OVERRIDES ─────────────────── */
+.prose {
+  font-size: 18px;
+  line-height: 1.85;
+}
+
 .prose :where(h1,h2,h3,h4,h5,h6) { color: var(--text-primary); }
 
 .prose :where(h2) {
