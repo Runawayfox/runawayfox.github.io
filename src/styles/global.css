@@ -795,6 +795,20 @@ html.light .tag-cloud-link:hover .tag-cloud-name { color: #111111; }
   border: 1px solid var(--border);
 }
 
+/* Light mode: keep code blocks dark for readability */
+html.light .prose :where(pre) {
+  background: #1a1e38 !important;
+  border-color: #2e3460 !important;
+}
+html.light .prose :where(pre) code {
+  color: #cdd8f0;
+  background: transparent;
+}
+html.light .prose :where(code):not(:where(pre *)) {
+  background: #1a1e38;
+  color: #f0d060;
+}
+
 .prose :where(blockquote) {
   border-left-color: var(--accent);
   color: var(--text-secondary);
