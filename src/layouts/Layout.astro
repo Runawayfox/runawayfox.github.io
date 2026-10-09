@@ -38,13 +38,36 @@ const { title, description = 'Kitsune Hideout — 개발 블로그', wideContent
       #pg-load {
         position: fixed; inset: 0; z-index: 9999;
         display: flex; align-items: center; justify-content: center;
-        background: rgba(4, 5, 28, 0.58);
+        background: rgba(2, 3, 18, 0.82);
         backdrop-filter: blur(7px);
         -webkit-backdrop-filter: blur(7px);
         transition: opacity 0.52s ease, visibility 0.52s ease;
       }
       #pg-load.done { opacity: 0; visibility: hidden; pointer-events: none; }
-      .hg { animation: hgGlow 1.8s ease-in-out infinite; }
+
+      /* Deep blue mist behind the hourglass */
+      #pg-load-mist {
+        position: absolute;
+        width: 340px; height: 340px;
+        border-radius: 50%;
+        background: radial-gradient(ellipse at center,
+          rgba(28,  55, 160, 0.60) 0%,
+          rgba(18,  38, 110, 0.38) 32%,
+          rgba(10,  20,  68, 0.18) 62%,
+          transparent 100%
+        );
+        animation: mistPulse 2.8s ease-in-out infinite;
+        pointer-events: none;
+      }
+      @keyframes mistPulse {
+        0%,100% { opacity: .82; transform: scale(1);    }
+        50%      { opacity: 1;   transform: scale(1.08); }
+      }
+
+      .hg {
+        position: relative; z-index: 1;
+        animation: hgGlow 1.8s ease-in-out infinite;
+      }
       @keyframes hgGlow {
         0%,100% {
           filter:
@@ -80,6 +103,7 @@ const { title, description = 'Kitsune Hideout — 개발 블로그', wideContent
   <body>
     <!-- Gold hourglass loading overlay -->
     <div id="pg-load" role="status" aria-label="페이지 로딩 중">
+      <div id="pg-load-mist" aria-hidden="true"></div>
       <svg class="hg" width="60" height="90" viewBox="0 0 60 90"
            xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
         <defs>
