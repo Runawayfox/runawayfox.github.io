@@ -358,6 +358,7 @@ body {
   flex: 1; min-height: 100vh;
   padding: 60px 80px;
   max-width: 880px;
+  font-size: 17px;
   font-family: var(--font-content);
   background: var(--bg);
   position: relative;
@@ -368,7 +369,7 @@ body {
 
 /* ─────────────────── PAGE TITLE ─────────────────── */
 .page-title {
-  font-size: 20px; font-weight: 800;
+  font-size: 22px; font-weight: 800;
   letter-spacing: 4px; text-transform: uppercase;
   color: rgba(210, 222, 240, 0.88);
   margin-bottom: 36px;
@@ -483,7 +484,7 @@ html.light .blog-list .post-card:hover {
 
 .blog-list .post-card-title {
   flex: 1;
-  font-size: 14.5px;
+  font-size: 16px;
   font-weight: 600;
   line-height: 1.4;
 }
@@ -498,7 +499,7 @@ html.light .blog-list .post-card:hover {
   align-items: center;
 }
 
-.blog-list .post-card-date { font-size: 11px; white-space: nowrap; }
+.blog-list .post-card-date { font-size: 12px; white-space: nowrap; }
 
 /* ─────────────────── BLOG GRID (Home — 2 column) ─────────────────── */
 .blog-grid {
@@ -532,21 +533,21 @@ html.light .blog-list .post-card:hover {
 }
 
 .blog-grid-wide .post-card-title {
-  font-size: 19px;
+  font-size: 21px;
   line-height: 1.4;
 }
 
 .blog-grid-wide .post-card-desc {
-  font-size: 13.5px;
+  font-size: 15px;
   -webkit-line-clamp: 3;
 }
 
 .blog-grid-wide .post-card-date {
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .blog-grid-wide .post-card-tag {
-  font-size: 11px;
+  font-size: 12px;
 }
 
 /* ─────────────────── POST CARD ─────────────────── */
@@ -651,7 +652,7 @@ html.light .post-card::after {
 }
 
 .post-card-title {
-  font-size: 15px; font-weight: 700;
+  font-size: 16.5px; font-weight: 700;
   color: var(--text-primary);
   line-height: 1.45; margin: 0;
   transition: color 0.22s;
@@ -680,7 +681,7 @@ html.light .post-card-link:hover .post-card-title {
 }
 
 .post-card-desc {
-  color: var(--text-secondary); font-size: 12.5px;
+  color: var(--text-secondary); font-size: 14px;
   line-height: 1.6; margin: 0;
   display: -webkit-box; -webkit-line-clamp: 2;
   -webkit-box-orient: vertical; overflow: hidden;
@@ -693,13 +694,13 @@ html.light .post-card-link:hover .post-card-title {
 }
 
 .post-card-date {
-  color: var(--text-muted); font-size: 10px; letter-spacing: .4px;
+  color: var(--text-muted); font-size: 12px; letter-spacing: .4px;
 }
 
 .post-card-tags { display: flex; gap: 6px; flex-wrap: wrap; }
 
 .post-card-tag {
-  font-size: 10px; color: var(--text-muted);
+  font-size: 11.5px; color: var(--text-muted);
   letter-spacing: 0.2px; transition: color 0.22s;
 }
 
@@ -708,7 +709,7 @@ html.light .post-card-link:hover .post-card-title {
 /* ─────────────────── TAG PILL ─────────────────── */
 .tag-pill {
   display: inline-block; padding: 2px 9px;
-  font-size: 9.5px; font-weight: 700;
+  font-size: 11px; font-weight: 700;
   letter-spacing: 1.5px; text-transform: uppercase;
   border-radius: 2px; border: 1px solid var(--border);
   color: var(--text-secondary); text-decoration: none;
@@ -735,7 +736,7 @@ html.light .tag-pill:hover { color: #111111; }
   color: var(--text-secondary);
 }
 
-.tag-cloud-count { font-size: 10px; color: var(--text-muted); }
+.tag-cloud-count { font-size: 11.5px; color: var(--text-muted); }
 
 .tag-cloud-link:hover { border-color: var(--accent); }
 
@@ -745,7 +746,7 @@ html.light .tag-cloud-link:hover .tag-cloud-name { color: #111111; }
 /* ─────────────────── BACK LINK ─────────────────── */
 .back-link {
   display: inline-block;
-  font-size: 10.5px; font-weight: 600;
+  font-size: 12px; font-weight: 600;
   letter-spacing: 1.5px; text-transform: uppercase;
   color: var(--text-muted); text-decoration: none;
   margin-bottom: 24px; transition: color .3s;
@@ -754,14 +755,14 @@ html.light .tag-cloud-link:hover .tag-cloud-name { color: #111111; }
 
 /* ─────────────────── BLOG POST ARTICLE ─────────────────── */
 .post-article-title {
-  font-size: 24px; font-weight: 800;
+  font-size: 28px; font-weight: 800;
   color: var(--text-primary); line-height: 1.3;
   margin-bottom: 12px;
 }
 
 .post-article-meta {
   display: flex; gap: 16px;
-  font-size: 11px; color: var(--text-muted);
+  font-size: 13px; color: var(--text-muted);
   letter-spacing: .5px; margin-bottom: 48px;
 }
 
@@ -784,8 +785,8 @@ html.light .tag-cloud-link:hover .tag-cloud-name { color: #111111; }
 .prose :where(code):not(:where(pre *)) {
   color: var(--accent-light);
   background: var(--surface);
-  padding: 1px 5px; border-radius: 3px;
-  font-size: .88em;
+  padding: 2px 6px; border-radius: 3px;
+  font-size: .92em;
 }
 .prose :where(code):not(:where(pre *))::before,
 .prose :where(code):not(:where(pre *))::after { content: none; }
@@ -793,6 +794,12 @@ html.light .tag-cloud-link:hover .tag-cloud-name { color: #111111; }
 .prose :where(pre) {
   background: var(--surface) !important;
   border: 1px solid var(--border);
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+.prose :where(pre) code {
+  font-size: inherit;
 }
 
 /* Dark mode: pagefind UI text color overrides */
@@ -1016,7 +1023,7 @@ html.light .prose :where(code):not(:where(pre *)) {
   /* Wide card: revert cinematic ratio and sizing on mobile */
   .blog-grid-wide .post-card-img-wrap { aspect-ratio: 16 / 9; }
   .blog-grid-wide .post-card-body     { padding: 16px 18px 18px; }
-  .blog-grid-wide .post-card-title    { font-size: 15px; }
+  .blog-grid-wide .post-card-title    { font-size: 17px; }
 
   /* List view on mobile: single-line truncated title, no tags */
   .blog-list .post-card-title {
