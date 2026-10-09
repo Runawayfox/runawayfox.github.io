@@ -36,7 +36,7 @@
   --accent-light:   #e2b93b;
   --font: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
   --font-content: 'NanumHuman', -apple-system, BlinkMacSystemFont, 'Malgun Gothic', sans-serif;
-  --sidebar-w: 280px;
+  --sidebar-w: 340px;
 }
 
 /* ─────────────────── LIGHT MODE (content only) ─────────────────── */
@@ -93,8 +93,8 @@ body {
   flex-direction: column;
   align-items: flex-start;
   justify-content: center;
-  padding: 0 34px;
-  gap: 20px;
+  padding: 0 42px;
+  gap: 26px;
   z-index: 20;
   border-right: 1px solid #2a2200;
   background: #04041c;
@@ -124,8 +124,8 @@ body {
 .sidebar-search-wrap {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 8px 12px;
+  gap: 10px;
+  padding: 10px 14px;
   border: 1px solid rgba(180,190,210,0.22);
   border-radius: 6px;
   background: rgba(255,255,255,0.03);
@@ -139,7 +139,7 @@ body {
 }
 
 .sidebar-search-icon {
-  width: 13px; height: 13px;
+  width: 15px; height: 15px;
   color: rgba(180,195,215,0.55);
   flex-shrink: 0;
 }
@@ -149,7 +149,7 @@ body {
   border: none;
   outline: none;
   color: rgba(210,218,230,0.80);
-  font-size: 11px; font-weight: 500;
+  font-size: 12px; font-weight: 500;
   letter-spacing: 0.8px;
   font-family: var(--font);
   width: 100%;
@@ -178,7 +178,7 @@ body {
 }
 
 .fox-logo-img {
-  width: 82px; height: 82px;
+  width: 100px; height: 100px;
   background: linear-gradient(90deg,
     #c9a227 0%, #f5e080 30%, #fff8c0 50%, #f5e080 70%, #c9a227 100%);
   background-size: 200% 100%;
@@ -202,8 +202,8 @@ body {
 
 .brand-text {
   display: inline-block;
-  font-size: 15px; font-weight: 800;
-  letter-spacing: 9px; text-indent: 9px;
+  font-size: 18px; font-weight: 800;
+  letter-spacing: 10px; text-indent: 10px;
   background: linear-gradient(90deg,
     #c9a227 0%, #f5e080 30%, #fff8c0 50%, #f5e080 70%, #c9a227 100%);
   background-size: 200% 100%;
@@ -227,8 +227,8 @@ body {
 }
 
 .brand-sub {
-  font-size: 10px; font-weight: 600;
-  letter-spacing: 5.5px; text-indent: 5.5px;
+  font-size: 12px; font-weight: 600;
+  letter-spacing: 6px; text-indent: 6px;
   color: rgba(90,165,255,.82);
   cursor: default; margin-top: 1px;
   transition: color .3s, filter .3s;
@@ -246,9 +246,9 @@ body {
   display: block;
   border: none; border-left: 2px solid transparent;
   color: #7a6830;
-  font-size: 12px; font-weight: 700;
-  letter-spacing: 3px; text-transform: uppercase;
-  padding: 10px 16px;
+  font-size: 13px; font-weight: 700;
+  letter-spacing: 3.5px; text-transform: uppercase;
+  padding: 12px 20px;
   border-radius: 0 6px 6px 0;
   cursor: pointer; font-family: var(--font);
   text-align: left; text-decoration: none;

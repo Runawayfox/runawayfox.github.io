@@ -126,7 +126,7 @@ function isActive(href: string) {
         x:     Math.random(),
         y:     Math.random(),
         r:     Math.random() * 1.4 + 0.25,
-        speed: 0.000013 + Math.random() * 0.000022,
+        speed: 0.0000055 + Math.random() * 0.0000048,
         phase: Math.random() * 6.28,
         ti:    ti,
         base:  0.12 + Math.random() * 0.52,
@@ -149,6 +149,8 @@ function isActive(href: string) {
       H = canvas.height = canvas.offsetHeight;
     }
 
+    var SKY_DRIFT = 0.0000078;
+
     var prev = null;
     function frame(ts) {
       var dt = prev ? Math.min(ts - prev, 50) : 16;
@@ -169,10 +171,11 @@ function isActive(href: string) {
       ctx.fillStyle = skyGrad;
       ctx.fillRect(0, 0, W, H);
 
+      /* Drift nebulae left */
       for (var n = 0; n < nebulae.length; n++) {
         var nb = nebulae[n];
-        nb.ny -= nb.sp * dt;
-        if (nb.ny < -nb.nr * 0.6) nb.ny = 1 + nb.nr * 0.6;
+        nb.nx -= nb.sp * dt;
+        if (nb.nx < -(nb.nr * 0.6)) nb.nx = 1 + nb.nr * 0.6;
         var pulse = 0.46 + 0.54 * Math.sin(ts * 0.00022 + nb.ph);
         var ng = ctx.createRadialGradient(nb.nx*W, nb.ny*H, 0, nb.nx*W, nb.ny*H, nb.nr*W);
         ng.addColorStop(0,    'rgba('+nb.r+','+nb.g+','+nb.b+','+(0.082*pulse)+')');
@@ -184,10 +187,11 @@ function isActive(href: string) {
         ctx.fill();
       }
 
+      /* Drift stars left */
       for (var i = 0; i < stars.length; i++) {
         var s = stars[i];
-        s.y -= s.speed * dt;
-        if (s.y < 0) { s.y = 1; s.x = Math.random(); }
+        s.x -= s.speed * dt;
+        if (s.x < -0.02) { s.x = 1.02; s.y = Math.random(); }
 
         var flicker = 0.52 + 0.48 * Math.sin(ts * 0.0012 + s.phase);
         var a = s.base * flicker;
