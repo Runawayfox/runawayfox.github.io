@@ -32,8 +32,107 @@ const { title, description = 'Kitsune Hideout — 개발 블로그', wideContent
         document.documentElement.classList.add('light');
       }
     </script>
+
+    <!-- Loading overlay styles (inline so overlay appears before global.css) -->
+    <style>
+      #pg-load {
+        position: fixed; inset: 0; z-index: 9999;
+        display: flex; align-items: center; justify-content: center;
+        background: rgba(4, 5, 28, 0.58);
+        backdrop-filter: blur(7px);
+        -webkit-backdrop-filter: blur(7px);
+        transition: opacity 0.52s ease, visibility 0.52s ease;
+      }
+      #pg-load.done { opacity: 0; visibility: hidden; pointer-events: none; }
+      .hg { animation: hgGlow 1.8s ease-in-out infinite; }
+      @keyframes hgGlow {
+        0%,100% {
+          filter:
+            drop-shadow(0 0 8px  rgba(201,162,39,.65))
+            drop-shadow(0 0 22px rgba(201,162,39,.28));
+        }
+        50% {
+          filter:
+            drop-shadow(0 0 16px rgba(245,224,128,.95))
+            drop-shadow(0 0 42px rgba(201,162,39,.55));
+        }
+      }
+    </style>
+
+    <!-- Hide loader on window.load (min 400ms so animation is visible) -->
+    <script is:inline>
+      (function () {
+        var t0 = Date.now();
+        function hideLoader() {
+          var el = document.getElementById('pg-load');
+          if (!el) return;
+          var wait = Math.max(0, 400 - (Date.now() - t0));
+          setTimeout(function () {
+            el.classList.add('done');
+            setTimeout(function () { el.remove(); }, 540);
+          }, wait);
+        }
+        if (document.readyState === 'complete') hideLoader();
+        else window.addEventListener('load', hideLoader);
+      })();
+    </script>
   </head>
   <body>
+    <!-- Gold hourglass loading overlay -->
+    <div id="pg-load" role="status" aria-label="페이지 로딩 중">
+      <svg class="hg" width="60" height="90" viewBox="0 0 60 90"
+           xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <defs>
+          <linearGradient id="hg-g" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%"   stop-color="#f5e080"/>
+            <stop offset="100%" stop-color="#c9a227"/>
+          </linearGradient>
+          <!-- top triangle clip -->
+          <clipPath id="hg-tc"><polygon points="5,9 55,9 30,44"/></clipPath>
+          <!-- bottom triangle clip -->
+          <clipPath id="hg-bc"><polygon points="30,46 55,81 5,81"/></clipPath>
+        </defs>
+
+        <!-- Top cap -->
+        <rect x="3" y="2" width="54" height="8" rx="4" fill="url(#hg-g)"/>
+        <!-- Bottom cap -->
+        <rect x="3" y="80" width="54" height="8" rx="4" fill="url(#hg-g)"/>
+
+        <!-- Hourglass frame (two triangles meeting at waist) -->
+        <path d="M5,10 L55,10 L30,44 L55,82 L5,82 L30,44 Z"
+              fill="none" stroke="url(#hg-g)" stroke-width="2.2"
+              stroke-linejoin="round"/>
+
+        <!-- Top sand draining (height 35→1 over 2.6s) -->
+        <rect x="0" y="9" width="60" height="35"
+              fill="url(#hg-g)" opacity="0.42" clip-path="url(#hg-tc)">
+          <animate attributeName="height" from="35" to="1"
+                   dur="2.6s" repeatCount="indefinite"/>
+        </rect>
+
+        <!-- Bottom sand filling (y 79→46, height 3→36 over 2.6s) -->
+        <rect x="0" y="79" width="60" height="3"
+              fill="url(#hg-g)" opacity="0.58" clip-path="url(#hg-bc)">
+          <animate attributeName="y"      from="79" to="46"  dur="2.6s" repeatCount="indefinite"/>
+          <animate attributeName="height" from="3"  to="36" dur="2.6s" repeatCount="indefinite"/>
+        </rect>
+
+        <!-- Falling sand particles (3 staggered) -->
+        <circle cx="30" r="2.2" fill="#f5e080">
+          <animate attributeName="cy"      from="45" to="79"    dur="0.75s" repeatCount="indefinite" begin="0s"/>
+          <animate attributeName="opacity" values="0;1;1;0"     dur="0.75s" repeatCount="indefinite" begin="0s"/>
+        </circle>
+        <circle cx="30" r="1.8" fill="#f0d060">
+          <animate attributeName="cy"      from="45" to="79"    dur="0.75s" repeatCount="indefinite" begin="0.25s"/>
+          <animate attributeName="opacity" values="0;1;1;0"     dur="0.75s" repeatCount="indefinite" begin="0.25s"/>
+        </circle>
+        <circle cx="30" r="1.8" fill="#f0d060">
+          <animate attributeName="cy"      from="45" to="79"    dur="0.75s" repeatCount="indefinite" begin="0.50s"/>
+          <animate attributeName="opacity" values="0;1;1;0"     dur="0.75s" repeatCount="indefinite" begin="0.50s"/>
+        </circle>
+      </svg>
+    </div>
+
     <canvas id="bg-canvas"></canvas>
     <Sidebar />
     <main class:list={["main-content", { "main-wide": wideContent }]}>
