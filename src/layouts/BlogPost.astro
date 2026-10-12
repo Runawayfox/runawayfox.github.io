@@ -16,6 +16,28 @@ const formattedDate = pubDate.toLocaleDateString('ko-KR', {
 const updatedFormatted = updatedDate?.toLocaleDateString('ko-KR', {
   year: 'numeric', month: 'long', day: 'numeric',
 });
+
+/*
+ * 바이탈 사인 경로 (3주기 P-QRS-T 반복)
+ * ViewBox: 0 0 1200 120  /  베이스라인: y=68
+ * R 피크: (200,8) (530,8) (860,8) — 간격 330px
+ */
+const VITAL =
+  'M0,68 L90,68 ' +
+  'L130,68 C140,68 148,58 154,58 C160,58 168,68 178,68 ' +
+  'L183,74 L200,8 L217,78 L222,78 ' +
+  'C228,78 234,52 240,52 C246,52 255,68 265,68 ' +
+  'L420,68 ' +
+  'L460,68 C470,68 478,58 484,58 C490,58 498,68 508,68 ' +
+  'L513,74 L530,8 L547,78 L552,78 ' +
+  'C558,78 564,52 570,52 C576,52 585,68 595,68 ' +
+  'L750,68 ' +
+  'L790,68 C800,68 808,58 814,58 C820,58 828,68 838,68 ' +
+  'L843,74 L860,8 L877,78 L882,78 ' +
+  'C888,78 894,52 900,52 C906,52 915,68 925,68 ' +
+  'L1200,68';
+
+const VITAL_FILL = VITAL + ' L1200,120 L0,120 Z';
 ---
 
 <Layout title={title} description={description}>
@@ -43,8 +65,10 @@ const updatedFormatted = updatedDate?.toLocaleDateString('ko-KR', {
   </div>
 
   <!-- ── 바이탈 사인 경계선 ────────────────────────────────
-       채운 영역(본문 배경색)이 바이탈 사인 선 아래를 덮어,
-       히어로 사진이 바이탈 사인 모양대로 잘려 보이는 효과 생성
+       wave-fill: 본문 배경색이 바이탈 사인 선 아래를 덮어
+                  히어로 사진이 바이탈 모양대로 잘린 것처럼 표현
+       wave-glow / wave-stroke: 3주기 P-QRS-T 금색 선
+       wave-dot: 느린 shimmer 점이 선 위를 흐름
   ──────────────────────────────────────────────────────── -->
   <svg
     class="post-wave"
@@ -53,16 +77,44 @@ const updatedFormatted = updatedDate?.toLocaleDateString('ko-KR', {
     xmlns="http://www.w3.org/2000/svg"
     aria-hidden="true"
   >
-    <!-- 본문 배경으로 채운 영역: 바이탈 사인 선 아래 전부 -->
-    <path
-      class="wave-fill"
-      d="M0,68 L510,68 C518,68 524,54 530,54 C536,54 542,68 552,68 L563,76 L600,8 L637,80 L648,80 C654,80 660,52 668,52 C676,52 684,68 698,68 L1200,68 L1200,120 L0,120 Z"
-    />
-    <!-- 금색 바이탈 사인 윤곽선 -->
-    <path
-      class="wave-stroke"
-      d="M0,68 L510,68 C518,68 524,54 530,54 C536,54 542,68 552,68 L563,76 L600,8 L637,80 L648,80 C654,80 660,52 668,52 C676,52 684,68 698,68 L1200,68"
-    />
+    <defs>
+      <!-- 선 주변 글로우 필터 -->
+      <filter id="vt-line-glow" x="-5%" y="-200%" width="110%" height="500%">
+        <feGaussianBlur in="SourceGraphic" stdDeviation="2.5" result="blur"/>
+        <feMerge>
+          <feMergeNode in="blur"/>
+          <feMergeNode in="SourceGraphic"/>
+        </feMerge>
+      </filter>
+      <!-- shimmer 점 글로우 필터 -->
+      <filter id="vt-dot-glow" x="-500%" y="-500%" width="1100%" height="1100%">
+        <feGaussianBlur in="SourceGraphic" stdDeviation="4.5" result="blur"/>
+        <feMerge>
+          <feMergeNode in="blur"/>
+          <feMergeNode in="blur"/>
+          <feMergeNode in="SourceGraphic"/>
+        </feMerge>
+      </filter>
+    </defs>
+
+    <!-- 본문 배경으로 채운 영역 (바이탈 사인 아래) -->
+    <path class="wave-fill" d={VITAL_FILL}/>
+
+    <!-- 두꺼운 주변 글로우 (ambient) -->
+    <path class="wave-ambient" d={VITAL} filter="url(#vt-line-glow)"/>
+
+    <!-- 주 금색 바이탈 사인 선 -->
+    <path class="wave-stroke" d={VITAL} filter="url(#vt-line-glow)"/>
+
+    <!-- 느린 shimmer 점: 헤일로 -->
+    <circle r="6" class="wave-dot-halo" filter="url(#vt-dot-glow)">
+      <animateMotion path={VITAL} dur="10s" repeatCount="indefinite"/>
+    </circle>
+
+    <!-- 느린 shimmer 점: 밝은 중심 -->
+    <circle r="2.8" class="wave-dot">
+      <animateMotion path={VITAL} dur="10s" repeatCount="indefinite"/>
+    </circle>
   </svg>
 
   <!-- ── 본문 영역 ──────────────────────────────────────── -->
@@ -85,19 +137,14 @@ const updatedFormatted = updatedDate?.toLocaleDateString('ko-KR', {
 <style>
   /* ── 제목 영역 ──────────────────────────────────── */
   .post-hero {
-    /* 다크/라이트 무관하게 항상 어두운 배경 */
     background: #060822;
-
-    /* 자식 요소 텍스트를 항상 흰색 계열로 강제 */
     --text-primary:   #ffffff;
     --text-secondary: rgba(255, 255, 255, 0.75);
     --text-muted:     rgba(255, 255, 255, 0.50);
-    /* 태그 필 테두리도 어두운 배경에 맞게 */
     --border:         rgba(255, 255, 255, 0.22);
 
     position: relative;
     margin: -60px -80px 0;
-    /* padding-bottom: 120px — SVG가 이 영역을 덮음 */
     padding: 60px 80px 120px;
   }
 
@@ -119,8 +166,8 @@ const updatedFormatted = updatedDate?.toLocaleDateString('ko-KR', {
   }
 
   /* ── 바이탈 사인 SVG ─────────────────────────────
-     margin-top: -120px 으로 히어로의 padding-bottom 영역을 덮어,
-     사진이 바이탈 사인 모양의 경계선에서 잘린 것처럼 보임
+     margin-top: -120px → 히어로 padding-bottom 120px 위를 덮음
+     → 히어로 사진이 바이탈 사인 경계선 모양대로 잘린 효과
   ─────────────────────────────────────────────── */
   .post-wave {
     display: block;
@@ -131,22 +178,35 @@ const updatedFormatted = updatedDate?.toLocaleDateString('ko-KR', {
     z-index: 1;
   }
 
-  /* 본문 배경색(--bg)으로 채워 히어로를 덮음 */
+  /* 본문 배경으로 채운 영역 */
   .wave-fill { fill: var(--bg); }
 
-  .wave-stroke {
+  /* 두꺼운 ambient 글로우 */
+  .wave-ambient {
     fill: none;
     stroke: var(--accent);
-    stroke-width: 1.8;
-    stroke-opacity: 0.75;
+    stroke-width: 6;
+    stroke-opacity: 0.09;
     stroke-linecap: round;
     stroke-linejoin: round;
   }
 
-  /* ── 본문 ───────────────────────────────────────── */
-  .post-body {
-    padding-top: 40px;
+  /* 주 금색 선 */
+  .wave-stroke {
+    fill: none;
+    stroke: var(--accent);
+    stroke-width: 1.7;
+    stroke-opacity: 0.60;
+    stroke-linecap: round;
+    stroke-linejoin: round;
   }
+
+  /* shimmer 점 */
+  .wave-dot-halo { fill: var(--accent); fill-opacity: 0.30; }
+  .wave-dot      { fill: #fff8c0; }
+
+  /* ── 본문 ───────────────────────────────────────── */
+  .post-body { padding-top: 40px; }
 
   /* ── 하단 네비 ──────────────────────────────────── */
   .post-nav {

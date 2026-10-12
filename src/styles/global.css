@@ -382,7 +382,7 @@ html.light ::-webkit-scrollbar-thumb:hover { background: rgba(215, 175, 50, 0.80
   left: 0; top: 0; bottom: 0;
   width: 8px;
   pointer-events: none;
-  z-index: 0;
+  z-index: 10; /* above hero section and wave SVG */
   background: linear-gradient(90deg,
     rgba(192, 200, 218, 0.55)   0%,
     rgba(192, 200, 218, 0.18)  55%,
@@ -398,7 +398,7 @@ html.light ::-webkit-scrollbar-thumb:hover { background: rgba(215, 175, 50, 0.80
   right: 0; top: 0; bottom: 0;
   width: 8px;
   pointer-events: none;
-  z-index: 0;
+  z-index: 10; /* above hero section and wave SVG */
   background: linear-gradient(270deg,
     rgba(192, 200, 218, 0.45)   0%,
     rgba(192, 200, 218, 0.14)  55%,
