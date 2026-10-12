@@ -132,4 +132,6 @@ FPS의 변천사는 사실 **기술이 인간의 욕구를 어떻게 찾아가�
 
 ---
 
-*이 글은 KITSUNE Game Design Research Archive의 FPS 장르 변천사 분석보고서를 바탕으로, 일반 독자를 위해 재구성한 칼럼입니다.*
+## 참고 자료
+
+KITSUNE Game Design Research Archive. (2026). *FPS 장르 변천사 분석보고서*. KITSUNE.
