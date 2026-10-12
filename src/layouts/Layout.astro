@@ -260,12 +260,14 @@ const { title, description = 'Kitsune Hideout — 개발 블로그', wideContent
       function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
 
       function drawSky(ts) {
-        var t=ts*0.000013, c1=Math.max(0,Math.sin(t)), c2=Math.max(0,Math.sin(t*0.68+2.0)), c3=Math.max(0,Math.sin(t*0.45+4.1));
-        var br=Math.round(4+c1*22+c3*8), bg=Math.round(5+c2*14+c1*4), bb=Math.round(22+c2*24+c3*16);
+        // 주기 0.000042 ≈ 2.5분 (이전 8분에서 3.2× 가속)
+        var t=ts*0.000042, c1=Math.max(0,Math.sin(t)), c2=Math.max(0,Math.sin(t*0.68+2.0)), c3=Math.max(0,Math.sin(t*0.45+4.1));
+        // 붉은색: c1 피크 시 br≈95, bg≈11 — 명확한 크림슨. 파란색 진폭은 유지.
+        var br=Math.round(5+c1*90+c3*12), bg=Math.round(5+c2*18+c1*6), bb=Math.round(22+c2*24+c3*16);
         var sg=ctx.createLinearGradient(0,0,0,H);
-        sg.addColorStop(0,  'rgb('+(br+8)+','+(bg+3)+','+(bb+10)+')');
+        sg.addColorStop(0,  'rgb('+(br+10)+','+(bg+4)+','+(bb+12)+')');
         sg.addColorStop(0.5,'rgb('+br+','+bg+','+bb+')');
-        sg.addColorStop(1,  'rgb('+Math.max(br-2,2)+','+Math.max(bg-2,2)+','+Math.max(bb-4,16)+')');
+        sg.addColorStop(1,  'rgb('+Math.max(br-3,2)+','+Math.max(bg-2,2)+','+Math.max(bb-5,16)+')');
         ctx.fillStyle=sg; ctx.fillRect(0,0,W,H);
       }
 
