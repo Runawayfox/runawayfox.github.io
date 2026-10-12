@@ -361,11 +361,74 @@ body {
   max-width: 880px;
   font-size: 17px;
   font-family: var(--font-content);
-  background: var(--bg);
+  background: rgba(2, 4, 24, 0.74);
+  backdrop-filter: blur(10px) saturate(1.25);
+  -webkit-backdrop-filter: blur(10px) saturate(1.25);
   position: relative;
   z-index: 2;
-  border-right: 1px solid var(--border);
+  border-left:  1px solid rgba(155, 180, 235, 0.16);
+  border-right: 1px solid rgba(155, 180, 235, 0.13);
   transition: background-color 0.25s;
+}
+
+/* left glass bezel */
+.main-content::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+  pointer-events: none;
+  z-index: 0;
+  background: linear-gradient(180deg,
+    transparent                     0%,
+    rgba(190, 210, 255, 0.28)      12%,
+    rgba(210, 228, 255, 0.38)      50%,
+    rgba(190, 210, 255, 0.28)      88%,
+    transparent                    100%
+  );
+  box-shadow: 2px 0 18px rgba(150, 180, 240, 0.10);
+}
+
+/* right glass bezel */
+.main-content::after {
+  content: '';
+  position: absolute;
+  right: 0; top: 0; bottom: 0;
+  width: 3px;
+  pointer-events: none;
+  z-index: 0;
+  background: linear-gradient(180deg,
+    transparent                     0%,
+    rgba(190, 210, 255, 0.22)      12%,
+    rgba(210, 228, 255, 0.30)      50%,
+    rgba(190, 210, 255, 0.22)      88%,
+    transparent                    100%
+  );
+  box-shadow: -2px 0 14px rgba(150, 180, 240, 0.08);
+}
+
+html.light .main-content {
+  background: rgba(248, 248, 252, 0.88);
+  border-left:  1px solid rgba(100, 120, 180, 0.18);
+  border-right: 1px solid rgba(100, 120, 180, 0.14);
+}
+html.light .main-content::before {
+  background: linear-gradient(180deg,
+    transparent                    0%,
+    rgba(100, 130, 200, 0.15)     12%,
+    rgba(120, 150, 220, 0.22)     50%,
+    rgba(100, 130, 200, 0.15)     88%,
+    transparent                   100%
+  );
+}
+html.light .main-content::after {
+  background: linear-gradient(180deg,
+    transparent                    0%,
+    rgba(100, 130, 200, 0.12)     12%,
+    rgba(120, 150, 220, 0.18)     50%,
+    rgba(100, 130, 200, 0.12)     88%,
+    transparent                   100%
+  );
 }
 
 /* ─────────────────── PAGE TITLE ─────────────────── */
