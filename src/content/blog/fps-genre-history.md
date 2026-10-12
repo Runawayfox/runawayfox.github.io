@@ -130,8 +130,3 @@ FPS의 변천사는 사실 **기술이 인간의 욕구를 어떻게 찾아가�
 
 그리고 그것이야말로 장르가 살아있다는 증거일 것이다.
 
----
-
-## 참고 자료
-
-KITSUNE Game Design Research Archive. (2026). *FPS 장르 변천사 분석보고서*. KITSUNE.
