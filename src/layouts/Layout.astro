@@ -243,6 +243,20 @@ const { title, description = 'Kitsune Hideout — 개발 블로그', wideContent
           phase:Math.random()*6.28, dAmp:0.00010+Math.random()*0.00013,
           alpha:0.28+Math.random()*0.28 });
 
+      /* Wave layers — Stokes 2nd-order + chop (background→foreground) */
+      var WAVES = [
+        { speed:0.000062, amp:5,  freq:0.018,  yBase:0.800, alpha:0.18, steep:0.28, p2:1.15, p3:2.40 },
+        { speed:0.000094, amp:9,  freq:0.013,  yBase:0.822, alpha:0.22, steep:0.34, p2:2.55, p3:0.65 },
+        { speed:0.000138, amp:13, freq:0.009,  yBase:0.842, alpha:0.26, steep:0.39, p2:0.38, p3:3.05 },
+        { speed:0.000190, amp:17, freq:0.0064, yBase:0.860, alpha:0.27, steep:0.43, p2:1.88, p3:1.28 },
+        { speed:0.000258, amp:21, freq:0.0044, yBase:0.876, alpha:0.19, steep:0.46, p2:3.22, p3:0.48 },
+      ];
+      /* Foam spray — ride front-layer crests */
+      var foam = [];
+      for (var i = 0; i < 90; i++)
+        foam.push({ nx:Math.random(), li:2+(i%3), phase:Math.random()*6.28,
+          alpha:0.18+Math.random()*0.45, r:0.5+Math.random()*1.8 });
+
       function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
 
       function drawSky(ts) {
@@ -382,6 +396,63 @@ const { title, description = 'Kitsune Hideout — 개발 블로그', wideContent
         ctx.fillStyle=fg; ctx.fillRect(0,fogY-40,W,105);
       }
 
+      function waveY(layer, x, elp) {
+        var t=elp*layer.speed, A=layer.amp, k=layer.freq;
+        var s1=Math.sin(x*k-t*2.2);
+        var h1=A*(s1-layer.steep*s1*s1);                    // Stokes 비대칭 (날카로운 마루)
+        var h2=A*0.27*Math.sin(x*k*1.74+t*1.8+layer.p2);   // 역방향 간섭파
+        var h3=A*0.14*Math.sin(x*k*0.40-t*1.1+layer.p3);   // 장파 너울
+        var h4=A*0.20*Math.sin(x*k*3.8-t*4.5+layer.p2*0.7);// 고주파 잔물결
+        var h5=A*0.11*Math.sin(x*k*6.2+t*6.8+layer.p3*1.3);// 초고주파 파쇄 잡음
+        return layer.yBase*H + h1+h2+h3+h4+h5;
+      }
+
+      function drawSea(elp, dt) {
+        /* Sea base gradient */
+        var seaGrad=ctx.createLinearGradient(0,H*0.78,0,H);
+        seaGrad.addColorStop(0,   'rgba(4,5,22,0)');
+        seaGrad.addColorStop(0.05,'rgba(4,6,20,1)');
+        seaGrad.addColorStop(1,   'rgba(1,2,10,1)');
+        ctx.fillStyle=seaGrad; ctx.fillRect(0,H*0.78,W,H);
+
+        for (var li=0; li<WAVES.length; li++) {
+          var layer=WAVES[li], step=3;
+          /* Wave body fill */
+          ctx.beginPath();
+          for (var x=0; x<=W; x+=step) { var y=waveY(layer,x,elp); x===0?ctx.moveTo(x,y):ctx.lineTo(x,y); }
+          ctx.lineTo(W,H); ctx.lineTo(0,H); ctx.closePath();
+          var wg=ctx.createLinearGradient(0,layer.yBase*H-layer.amp,0,H);
+          wg.addColorStop(0,  'rgba(14,18,60,'+(layer.alpha*0.55)+')');
+          wg.addColorStop(0.3,'rgba(7,10,40,'+layer.alpha+')');
+          wg.addColorStop(1,  'rgba(2,2,14,0)');
+          ctx.fillStyle=wg; ctx.fill();
+
+          /* Crest: thick diffuse + thin bright ridge */
+          ctx.beginPath();
+          for (var x=0; x<=W; x+=step) { var y=waveY(layer,x,elp); x===0?ctx.moveTo(x,y):ctx.lineTo(x,y); }
+          var wt=li/(WAVES.length-1);
+          var cA=layer.alpha*(0.75+0.25*Math.sin(elp*0.00082+li*1.6));
+          ctx.strokeStyle='rgba(130,160,215,'+(cA*0.40)+')'; ctx.lineWidth=2.0+wt*3.8; ctx.stroke();
+          ctx.strokeStyle='rgba(185,208,255,'+cA+')';        ctx.lineWidth=0.65+wt*1.1; ctx.stroke();
+        }
+
+        /* Foam spray particles — track crest positions */
+        ctx.save(); ctx.fillStyle='rgba(195,215,255,1)';
+        for (var i=0; i<foam.length; i++) {
+          var f=foam[i], wl=WAVES[f.li];
+          var pv=wl.speed*2.2/(wl.freq*W); // phase velocity (normalized/ms)
+          f.nx+=pv*dt; if(f.nx>1.02) f.nx-=1.04;
+          var fx=f.nx*W, wy=waveY(wl,fx,elp);
+          var crestH=wl.yBase*H-wy; // positive near crest
+          if (crestH<wl.amp*0.38) continue;
+          var sprayOff=Math.abs(Math.sin(elp*0.0018+f.phase))*4;
+          var pulse=0.40+0.60*Math.abs(Math.sin(elp*0.0022+f.phase));
+          ctx.globalAlpha=f.alpha*pulse*Math.min(1,crestH/(wl.amp*0.8));
+          ctx.beginPath(); ctx.arc(fx, wy-sprayOff, f.r, 0, 6.28); ctx.fill();
+        }
+        ctx.globalAlpha=1; ctx.restore();
+      }
+
       var prev=null, elapsed=0;
       function frame(ts) {
         var dt=prev?Math.min(ts-prev,50):16; prev=ts; elapsed+=dt;
@@ -407,7 +478,7 @@ const { title, description = 'Kitsune Hideout — 개발 블로그', wideContent
         updateWX(dt, elapsed);
         ctx.clearRect(0,0,W,H);
         drawSky(ts); drawNebulae(ts); drawMoon(); drawPlanets(); drawStars(ts);
-        drawClouds(ts); drawFog(ts); drawRain(dt); drawSnow(dt,elapsed);
+        drawClouds(ts); drawFog(ts); drawSea(elapsed,dt); drawRain(dt); drawSnow(dt,elapsed);
         requestAnimationFrame(frame);
       }
 
