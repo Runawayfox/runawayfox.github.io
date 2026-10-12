@@ -1,7 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import PostCard from '../components/PostCard.astro';
-import QuoteCard from '../components/QuoteCard.astro';
 import { getCollection } from 'astro:content';
 
 const posts = (await getCollection('blog', ({ data }) => !data.draft))
@@ -10,7 +9,6 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
 ---
 
 <Layout title="Kitsune Hideout">
-  <QuoteCard />
   <section class="about-section">
     <h2 class="page-title">About Kitsune</h2>
     <div class="about-placeholder">

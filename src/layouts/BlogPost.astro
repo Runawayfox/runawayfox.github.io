@@ -1,6 +1,7 @@
 ---
 import Layout from './Layout.astro';
 import TagPill from '../components/TagPill.astro';
+import QuoteCard from '../components/QuoteCard.astro';
 import type { CollectionEntry } from 'astro:content';
 
 interface Props {
@@ -34,6 +35,8 @@ const formattedDate = pubDate.toLocaleDateString('ko-KR', {
         )}
       </div>
     </header>
+
+    <QuoteCard />
 
     <div class="prose prose-sm max-w-none">
       <slot />
