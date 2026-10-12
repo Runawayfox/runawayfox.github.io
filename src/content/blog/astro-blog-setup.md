@@ -1,7 +1,7 @@
 ---
 title: "Astro로 GitHub Pages 블로그 만들기"
 description: "Astro와 Tailwind CSS를 사용하여 GitHub Pages에 블로그를 배포하는 방법을 정리합니다."
-pubDate: 2026-10-08
+pubDate: 2026-10-08T14:00:00+09:00
 tags: ["astro", "blog", "web", "github-pages"]
 ---
 

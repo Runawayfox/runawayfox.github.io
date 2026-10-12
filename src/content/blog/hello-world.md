@@ -1,7 +1,7 @@
 ---
 title: "Hello, World!"
 description: "블로그를 시작하며 - 첫 번째 포스트입니다."
-pubDate: 2026-10-08
+pubDate: 2026-10-08T10:00:00+09:00
 tags: ["blog", "personal"]
 ---
 
