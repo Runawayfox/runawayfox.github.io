@@ -20,7 +20,7 @@ const updatedFormatted = updatedDate?.toLocaleDateString('ko-KR', {
 
 <Layout title={title} description={description}>
 
-  <!-- ── 제목 영역 (hero) ────────────────────────────────── -->
+  <!-- ── 제목 영역: 항상 어두운 배경 + 흰색 텍스트 ──────── -->
   <div class="post-hero">
     {image && (
       <div
@@ -29,40 +29,39 @@ const updatedFormatted = updatedDate?.toLocaleDateString('ko-KR', {
         aria-hidden="true"
       ></div>
     )}
-
     <a href="/blog" class="back-link">← Blog</a>
-
     {tags.length > 0 && (
       <div class="post-hero-tags">
         {tags.map(tag => <TagPill tag={tag} />)}
       </div>
     )}
-
     <h1 class="post-article-title">{title}</h1>
-
     <div class="post-article-meta">
       <time datetime={pubDate.toISOString()}>{formattedDate}</time>
       {updatedDate && <span>수정: {updatedFormatted}</span>}
     </div>
   </div>
 
-  <!-- ── 곡선 파도 구분선 ───────────────────────────────── -->
+  <!-- ── 바이탈 사인 경계선 ────────────────────────────────
+       채운 영역(본문 배경색)이 바이탈 사인 선 아래를 덮어,
+       히어로 사진이 바이탈 사인 모양대로 잘려 보이는 효과 생성
+  ──────────────────────────────────────────────────────── -->
   <svg
     class="post-wave"
-    viewBox="0 0 1200 72"
+    viewBox="0 0 1200 120"
     preserveAspectRatio="none"
     xmlns="http://www.w3.org/2000/svg"
     aria-hidden="true"
   >
-    <!-- 본문 배경색으로 채운 파도 -->
+    <!-- 본문 배경으로 채운 영역: 바이탈 사인 선 아래 전부 -->
     <path
-      class="post-wave-fill"
-      d="M0,72 L0,42 C200,72 480,10 660,44 C840,72 1060,16 1200,46 L1200,72 Z"
+      class="wave-fill"
+      d="M0,68 L510,68 C518,68 524,54 530,54 C536,54 542,68 552,68 L563,76 L600,8 L637,80 L648,80 C654,80 660,52 668,52 C676,52 684,68 698,68 L1200,68 L1200,120 L0,120 Z"
     />
-    <!-- 액센트 컬러 윤곽선 -->
+    <!-- 금색 바이탈 사인 윤곽선 -->
     <path
-      class="post-wave-stroke"
-      d="M0,42 C200,72 480,10 660,44 C840,72 1060,16 1200,46"
+      class="wave-stroke"
+      d="M0,68 L510,68 C518,68 524,54 530,54 C536,54 542,68 552,68 L563,76 L600,8 L637,80 L648,80 C654,80 660,52 668,52 C676,52 684,68 698,68 L1200,68"
     />
   </svg>
 
@@ -84,12 +83,22 @@ const updatedFormatted = updatedDate?.toLocaleDateString('ko-KR', {
 </Layout>
 
 <style>
-  /* ── 제목 영역 ───────────────────────────────────── */
+  /* ── 제목 영역 ──────────────────────────────────── */
   .post-hero {
+    /* 다크/라이트 무관하게 항상 어두운 배경 */
+    background: #060822;
+
+    /* 자식 요소 텍스트를 항상 흰색 계열로 강제 */
+    --text-primary:   #ffffff;
+    --text-secondary: rgba(255, 255, 255, 0.75);
+    --text-muted:     rgba(255, 255, 255, 0.50);
+    /* 태그 필 테두리도 어두운 배경에 맞게 */
+    --border:         rgba(255, 255, 255, 0.22);
+
     position: relative;
     margin: -60px -80px 0;
-    padding: 60px 80px 52px;
-    overflow: hidden;
+    /* padding-bottom: 120px — SVG가 이 영역을 덮음 */
+    padding: 60px 80px 120px;
   }
 
   /* 배경 이미지: 80% 투명도 (opacity 0.2) */
@@ -109,55 +118,52 @@ const updatedFormatted = updatedDate?.toLocaleDateString('ko-KR', {
     margin-bottom: 16px;
   }
 
-  /* ── 파도 SVG ────────────────────────────────────── */
+  /* ── 바이탈 사인 SVG ─────────────────────────────
+     margin-top: -120px 으로 히어로의 padding-bottom 영역을 덮어,
+     사진이 바이탈 사인 모양의 경계선에서 잘린 것처럼 보임
+  ─────────────────────────────────────────────── */
   .post-wave {
     display: block;
     width: calc(100% + 160px);
-    height: 72px;
-    margin: 0 -80px;
-    flex-shrink: 0;
+    height: 120px;
+    margin: -120px -80px 0;
+    position: relative;
+    z-index: 1;
   }
 
-  .post-wave-fill  { fill: var(--surface); }
-  .post-wave-stroke {
+  /* 본문 배경색(--bg)으로 채워 히어로를 덮음 */
+  .wave-fill { fill: var(--bg); }
+
+  .wave-stroke {
     fill: none;
     stroke: var(--accent);
-    stroke-width: 1.5;
-    stroke-opacity: 0.45;
+    stroke-width: 1.8;
+    stroke-opacity: 0.75;
+    stroke-linecap: round;
+    stroke-linejoin: round;
   }
 
-  /* ── 본문 패널 ───────────────────────────────────── */
+  /* ── 본문 ───────────────────────────────────────── */
   .post-body {
-    background: var(--surface);
-    margin: 0 -80px;
-    padding: 40px 80px;
+    padding-top: 40px;
   }
 
-  /* ── 하단 네비 ───────────────────────────────────── */
+  /* ── 하단 네비 ──────────────────────────────────── */
   .post-nav {
-    background: var(--surface);
-    margin: 0 -80px;
-    padding: 24px 80px;
+    margin-top: 60px;
+    padding-top: 24px;
     border-top: 1px solid var(--border);
   }
 
-  /* ── 모바일 (max 1024px) ─────────────────────────── */
+  /* ── 모바일 ─────────────────────────────────────── */
   @media (max-width: 1024px) {
     .post-hero {
       margin: -28px -16px 0;
-      padding: 28px 16px 52px;
+      padding: 28px 16px 120px;
     }
     .post-wave {
       width: calc(100% + 32px);
-      margin: 0 -16px;
-    }
-    .post-body {
-      margin: 0 -16px;
-      padding: 32px 16px;
-    }
-    .post-nav {
-      margin: 0 -16px;
-      padding: 24px 16px;
+      margin: -120px -16px 0;
     }
   }
 </style>
