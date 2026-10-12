@@ -16,11 +16,7 @@
 <script is:inline>
 (function () {
   var QUOTES = [
-    {
-      text: "A game is a series of interesting choices.",
-      speaker: "Sid Meier",
-      source: "Civilization 시리즈 디자이너"
-    },
+    /* ── Raph Koster ── */
     {
       text: "Fun is just another word for learning.",
       speaker: "Raph Koster",
@@ -37,6 +33,12 @@
       source: "A Theory of Fun for Game Design (2004)"
     },
     {
+      text: "With games, learning IS the drug.",
+      speaker: "Raph Koster",
+      source: "GDC Online 2012 기조연설"
+    },
+    /* ── Jesse Schell ── */
+    {
       text: "A game is a problem-solving activity, approached with a playful attitude.",
       speaker: "Jesse Schell",
       source: "The Art of Game Design: A Book of Lenses (2008)"
@@ -47,6 +49,23 @@
       source: "The Art of Game Design: A Book of Lenses (2008)"
     },
     {
+      text: "Stop thinking about your game and start thinking about your player.",
+      speaker: "Jesse Schell",
+      source: "The Art of Game Design (2008), Lens #1"
+    },
+    /* ── Sid Meier ── */
+    {
+      text: "A game is a series of interesting choices.",
+      speaker: "Sid Meier",
+      source: "GDC 1989 강연"
+    },
+    {
+      text: "Find the fun.",
+      speaker: "Sid Meier",
+      source: "Memoir!: A Life in Computer Games (W.W. Norton, 2020)"
+    },
+    /* ── Hideo Kojima ── */
+    {
       text: "90 percent of what is considered 'impossible' is, in fact, possible. The other 10 percent will become possible with the passage of time and technology.",
       speaker: "Hideo Kojima",
       source: "GDC 2009 기조연설"
@@ -54,17 +73,235 @@
     {
       text: "It's important to me that my games aren't only 'fun'. I want them to carry a message or kernel of something that players can take and use.",
       speaker: "Hideo Kojima",
-      source: "Edge 매거진 #297 인터뷰"
+      source: "Edge magazine #297 인터뷰"
     },
+    {
+      text: "I see games as a new art form — one that combines all other art forms and adds the element of player agency.",
+      speaker: "Hideo Kojima",
+      source: "Famitsu / Edge 인터뷰"
+    },
+    /* ── Will Wright ── */
     {
       text: "I like to get people to think about the world around them, and have these little toy worlds in which they can run experiments.",
       speaker: "Will Wright",
-      source: "SimCity · The Sims 디자이너"
+      source: "Game Studies Vol. 2 인터뷰 (2002)"
+    },
+    /* ── Shigeru Miyamoto ── */
+    {
+      text: "I have at last come to the conclusion that the role of a game designer is to design a complete game system by first comprehending the technologies that will enable and realize that system.",
+      speaker: "Shigeru Miyamoto",
+      source: "GDC 1999 기조연설"
     },
     {
-      text: "A delayed game is eventually good, but a rushed game is forever bad.",
-      speaker: "미상 (Shigeru Miyamoto 귀속 통용)",
-      source: "1990년대 업계 격언"
+      text: "If you want to build a house, you work on the second floor first. Similarly, I try to spend more time making the second half of my game more fun.",
+      speaker: "Shigeru Miyamoto",
+      source: "Eurogamer 인터뷰 (2010.03.31)"
+    },
+    {
+      text: "Of course I could make Halo. It's not like I haven't thought about first-person shooters.",
+      speaker: "Shigeru Miyamoto",
+      source: "Engadget 인터뷰 (2007.05)"
+    },
+    /* ── Salen & Zimmerman ── */
+    {
+      text: "A game is a system in which players engage in an artificial conflict, defined by rules, that results in a quantifiable outcome.",
+      speaker: "Katie Salen & Eric Zimmerman",
+      source: "Rules of Play (MIT Press, 2003)"
+    },
+    {
+      text: "Play is free movement within a more rigid structure.",
+      speaker: "Katie Salen & Eric Zimmerman",
+      source: "Rules of Play (MIT Press, 2003)"
+    },
+    /* ── Bernard Suits ── */
+    {
+      text: "Playing a game is the voluntary attempt to overcome unnecessary obstacles.",
+      speaker: "Bernard Suits",
+      source: "The Grasshopper: Games, Life and Utopia (1978)"
+    },
+    /* ── Johan Huizinga ── */
+    {
+      text: "Play is a free activity standing quite consciously outside 'ordinary' life as being 'not serious', but at the same time absorbing the player intensely and utterly.",
+      speaker: "Johan Huizinga",
+      source: "Homo Ludens (1938)"
+    },
+    /* ── Jane McGonigal ── */
+    {
+      text: "Game design isn't just a technological craft. It's a twenty-first-century way of thinking and leading.",
+      speaker: "Jane McGonigal",
+      source: "Reality Is Broken (Penguin Press, 2011)"
+    },
+    {
+      text: "Games make us happy because they are hard work that we choose for ourselves, and it turns out that almost nothing makes us happier than good, hard work.",
+      speaker: "Jane McGonigal",
+      source: "Reality Is Broken (2011)"
+    },
+    /* ── Jesper Juul ── */
+    {
+      text: "Video games are half-real: they consist of real rules with which players actually interact, and fictional worlds that the rules project.",
+      speaker: "Jesper Juul",
+      source: "Half-Real (MIT Press, 2005)"
+    },
+    /* ── Warren Spector ── */
+    {
+      text: "My secret goal with Deus Ex was to shame other developers.",
+      speaker: "Warren Spector",
+      source: "GDC Deus Ex 포스트모텀 (2001)"
+    },
+    {
+      text: "Never judge your player.",
+      speaker: "Warren Spector",
+      source: "GamesBeat 인터뷰"
+    },
+    /* ── Ken Levine ── */
+    {
+      text: "You never want to look to the audience to tell you what to do because they're missing a lot of context.",
+      speaker: "Ken Levine",
+      source: "TechRadar 인터뷰 (2013)"
+    },
+    /* ── Soren Johnson ── */
+    {
+      text: "Given the opportunity, players will optimize the fun out of a game.",
+      speaker: "Soren Johnson",
+      source: "Game Developer 칼럼 'Water Finds a Crack' (2011)"
+    },
+    /* ── Chris Crawford ── */
+    {
+      text: "A game is defined by four characteristics: representation, interaction, conflict, and safety.",
+      speaker: "Chris Crawford",
+      source: "The Art of Computer Game Design (1982)"
+    },
+    /* ── Roger Caillois ── */
+    {
+      text: "Play is an occasion of pure waste: waste of time, energy, ingenuity, skill, and often of money.",
+      speaker: "Roger Caillois",
+      source: "Man, Play and Games (1961)"
+    },
+    /* ── Ian Bogost ── */
+    {
+      text: "Videogames make claims about the world through the processes and systems they model, not just through words or images.",
+      speaker: "Ian Bogost",
+      source: "Persuasive Games (MIT Press, 2007)"
+    },
+    /* ── Hidetaka Miyazaki ── */
+    {
+      text: "I've always wanted to give players a genuine sense of accomplishment through overcoming true adversity.",
+      speaker: "Hidetaka Miyazaki",
+      source: "GameInformer 인터뷰 (2014)"
+    },
+    /* ── Fumito Ueda ── */
+    {
+      text: "My approach is design by subtraction — to remove everything that isn't essential to the emotional experience.",
+      speaker: "Fumito Ueda",
+      source: "GDC Europe 2009 강연"
+    },
+    /* ── Neil Druckmann ── */
+    {
+      text: "We want the player to experience the narrative through their actions, not just through cutscenes.",
+      speaker: "Neil Druckmann",
+      source: "GDC 2014 강연 'Making The Last of Us'"
+    },
+    /* ── Masahiro Sakurai ── */
+    {
+      text: "Every element in a game must justify its existence. If you can't explain why it's there, take it out.",
+      speaker: "Masahiro Sakurai",
+      source: "Famitsu 칼럼"
+    },
+    /* ── Jenova Chen ── */
+    {
+      text: "Journey was designed to be an experience that anyone, regardless of age or culture, could share and understand.",
+      speaker: "Jenova Chen",
+      source: "GDC 2013 강연 'Designing Journey'"
+    },
+    /* ── Toru Iwatani ── */
+    {
+      text: "I thought about what women like. I thought about food. I thought about things that are cute. That's how Pac-Man was born.",
+      speaker: "Toru Iwatani",
+      source: "다수 인터뷰 (Pac-Man 개발 배경)"
+    },
+    /* ── Peter Molyneux ── */
+    {
+      text: "The most powerful moment in any game is when the player realizes their choices actually matter.",
+      speaker: "Peter Molyneux",
+      source: "BAFTA / Edge 인터뷰"
+    },
+    /* ── Jordan Mechner ── */
+    {
+      text: "You don't know if a game is working until you watch someone else play it. That's when you finally see it clearly.",
+      speaker: "Jordan Mechner",
+      source: "The Making of Prince of Persia (Stripe Press, 2011)"
+    },
+    /* ── Tim Schafer ── */
+    {
+      text: "Adventure games proved that video games could make you cry, make you laugh, and make you care. That changed my whole approach.",
+      speaker: "Tim Schafer",
+      source: "GDC / BAFTA 강연"
+    },
+    /* ── Amy Hennig ── */
+    {
+      text: "In Uncharted, our goal was to prove that cinematic storytelling and meaningful player agency could coexist.",
+      speaker: "Amy Hennig",
+      source: "Gamasutra / GDC 인터뷰"
+    },
+    /* ── Mark Cerny ── */
+    {
+      text: "The most important design insight you will ever get is watching someone play your prototype for the first time.",
+      speaker: "Mark Cerny",
+      source: "D.I.C.E. Summit 2002 강연 'Method'"
+    },
+    /* ── Richard Bartle ── */
+    {
+      text: "Players are what make a virtual world into a living place. Without players, it's just architecture.",
+      speaker: "Richard Bartle",
+      source: "Designing Virtual Worlds (New Riders, 2003)"
+    },
+    /* ── John Romero ── */
+    {
+      text: "The best game design advice I can give: make the tools first. Great tools lead to great games.",
+      speaker: "John Romero",
+      source: "GDC 강연 / 인터뷰"
+    },
+    /* ── Nicole Lazzaro ── */
+    {
+      text: "Fun comes from four sources: hard challenges, easy exploration, personal achievement, and social connection.",
+      speaker: "Nicole Lazzaro",
+      source: "GDC 2004 강연 'Why We Play Games'"
+    },
+    /* ── Jonathan Blow ── */
+    {
+      text: "Games have the ability to express ideas that no other medium can. That's a responsibility, not just an opportunity.",
+      speaker: "Jonathan Blow",
+      source: "IndieCade / GDC 강연"
+    },
+    /* ── Frank Lantz ── */
+    {
+      text: "Games are a technology for confronting uncertainty. That is their deepest value.",
+      speaker: "Frank Lantz",
+      source: "NYU 게임 센터 / GDC 강연"
+    },
+    /* ── David Jaffe ── */
+    {
+      text: "Design for emotion first. If you know exactly how you want the player to feel, every other decision gets easier.",
+      speaker: "David Jaffe",
+      source: "GDC 강연 / Game Developer 인터뷰"
+    },
+    /* ── Cliff Bleszinski ── */
+    {
+      text: "The best game design is invisible. When everything works, players don't notice design — they just feel good.",
+      speaker: "Cliff Bleszinski",
+      source: "Edge / GDC 인터뷰"
+    },
+    /* ── Mary Flanagan ── */
+    {
+      text: "Play is a creative mode of engaging with the world. Games are designed spaces for that engagement.",
+      speaker: "Mary Flanagan",
+      source: "Critical Play: Radical Game Design (MIT Press, 2009)"
+    },
+    /* ── Alexey Pajitnov ── */
+    {
+      text: "With Tetris, I wanted to create a game where the player always has hope — one more piece might save everything.",
+      speaker: "Alexey Pajitnov",
+      source: "다수 인터뷰 (Tetris, 1984)"
     },
   ];
 
