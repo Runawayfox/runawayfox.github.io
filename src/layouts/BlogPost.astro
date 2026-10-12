@@ -9,41 +9,155 @@ interface Props {
 }
 
 const { post } = Astro.props;
-const { title, pubDate, updatedDate, description, tags } = post.data;
+const { title, pubDate, updatedDate, description, tags, image } = post.data;
 const formattedDate = pubDate.toLocaleDateString('ko-KR', {
+  year: 'numeric', month: 'long', day: 'numeric',
+});
+const updatedFormatted = updatedDate?.toLocaleDateString('ko-KR', {
   year: 'numeric', month: 'long', day: 'numeric',
 });
 ---
 
 <Layout title={title} description={description}>
-  <a href="/blog" class="back-link">← Blog</a>
 
-  <article>
-    <header>
-      {tags.length > 0 && (
-        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;">
-          {tags.map(tag => <TagPill tag={tag} />)}
-        </div>
-      )}
-      <h1 class="post-article-title">{title}</h1>
-      <div class="post-article-meta">
-        <time datetime={pubDate.toISOString()}>{formattedDate}</time>
-        {updatedDate && (
-          <span>
-            수정: {updatedDate.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' })}
-          </span>
-        )}
+  <!-- ── 제목 영역 (hero) ────────────────────────────────── -->
+  <div class="post-hero">
+    {image && (
+      <div
+        class="post-hero-bg"
+        style={`background-image: url('${image}');`}
+        aria-hidden="true"
+      ></div>
+    )}
+
+    <a href="/blog" class="back-link">← Blog</a>
+
+    {tags.length > 0 && (
+      <div class="post-hero-tags">
+        {tags.map(tag => <TagPill tag={tag} />)}
       </div>
-    </header>
+    )}
 
-    <QuoteCard />
+    <h1 class="post-article-title">{title}</h1>
 
-    <div class="prose prose-sm max-w-none">
-      <slot />
+    <div class="post-article-meta">
+      <time datetime={pubDate.toISOString()}>{formattedDate}</time>
+      {updatedDate && <span>수정: {updatedFormatted}</span>}
     </div>
-  </article>
+  </div>
 
-  <nav style="margin-top:60px;padding-top:24px;border-top:1px solid var(--border);">
-    <a href="/blog" class="back-link">← 모든 글 보기</a>
-  </nav>
+  <!-- ── 곡선 파도 구분선 ───────────────────────────────── -->
+  <svg
+    class="post-wave"
+    viewBox="0 0 1200 72"
+    preserveAspectRatio="none"
+    xmlns="http://www.w3.org/2000/svg"
+    aria-hidden="true"
+  >
+    <!-- 본문 배경색으로 채운 파도 -->
+    <path
+      class="post-wave-fill"
+      d="M0,72 L0,42 C200,72 480,10 660,44 C840,72 1060,16 1200,46 L1200,72 Z"
+    />
+    <!-- 액센트 컬러 윤곽선 -->
+    <path
+      class="post-wave-stroke"
+      d="M0,42 C200,72 480,10 660,44 C840,72 1060,16 1200,46"
+    />
+  </svg>
+
+  <!-- ── 본문 영역 ──────────────────────────────────────── -->
+  <div class="post-body">
+    <QuoteCard />
+    <article>
+      <div class="prose prose-sm max-w-none">
+        <slot />
+      </div>
+    </article>
+  </div>
+
+  <!-- ── 하단 네비 ─────────────────────────────────────── -->
+  <div class="post-nav">
+    <a href="/blog" class="back-link" style="margin-bottom:0">← 모든 글 보기</a>
+  </div>
+
 </Layout>
+
+<style>
+  /* ── 제목 영역 ───────────────────────────────────── */
+  .post-hero {
+    position: relative;
+    margin: -60px -80px 0;
+    padding: 60px 80px 52px;
+    overflow: hidden;
+  }
+
+  /* 배경 이미지: 80% 투명도 (opacity 0.2) */
+  .post-hero-bg {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    opacity: 0.2;
+    pointer-events: none;
+  }
+
+  .post-hero-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+
+  /* ── 파도 SVG ────────────────────────────────────── */
+  .post-wave {
+    display: block;
+    width: calc(100% + 160px);
+    height: 72px;
+    margin: 0 -80px;
+    flex-shrink: 0;
+  }
+
+  .post-wave-fill  { fill: var(--surface); }
+  .post-wave-stroke {
+    fill: none;
+    stroke: var(--accent);
+    stroke-width: 1.5;
+    stroke-opacity: 0.45;
+  }
+
+  /* ── 본문 패널 ───────────────────────────────────── */
+  .post-body {
+    background: var(--surface);
+    margin: 0 -80px;
+    padding: 40px 80px;
+  }
+
+  /* ── 하단 네비 ───────────────────────────────────── */
+  .post-nav {
+    background: var(--surface);
+    margin: 0 -80px;
+    padding: 24px 80px;
+    border-top: 1px solid var(--border);
+  }
+
+  /* ── 모바일 (max 1024px) ─────────────────────────── */
+  @media (max-width: 1024px) {
+    .post-hero {
+      margin: -28px -16px 0;
+      padding: 28px 16px 52px;
+    }
+    .post-wave {
+      width: calc(100% + 32px);
+      margin: 0 -16px;
+    }
+    .post-body {
+      margin: 0 -16px;
+      padding: 32px 16px;
+    }
+    .post-nav {
+      margin: 0 -16px;
+      padding: 24px 16px;
+    }
+  }
+</style>

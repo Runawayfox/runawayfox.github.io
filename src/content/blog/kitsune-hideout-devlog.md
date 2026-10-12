@@ -3,6 +3,9 @@ title: "Kitsune Hideout 블로그 UI 제작기"
 description: "우주 캔버스 애니메이션, CSS shimmer 효과, 파비콘 생성, 검색 버그 수정까지 — 이 블로그를 만들면서 겪은 기술적 도전들을 정리합니다."
 pubDate: 2026-10-08T20:00:00+09:00
 tags: ["astro", "web", "blog", "personal"]
+# image: "/images/posts/kitsune-hideout-devlog.jpg"
+# ↑ 제목 영역 배경 사진 (선택사항). /public/images/posts/ 에 이미지를 저장한 뒤 경로를 입력하세요.
+# 이미지는 자동으로 80% 투명도로 처리되어 제목 텍스트 가독성을 유지합니다.
 ---
 
 이 블로그를 만들면서 겪었던 기술적 도전들을 기록해두려고 합니다. 디자인 콘셉트 설정부터 세부 버그 수정까지, 꽤 많은 것을 배웠습니다.

@@ -3,6 +3,9 @@ title: "Hello, World!"
 description: "블로그를 시작하며 - 첫 번째 포스트입니다."
 pubDate: 2026-10-08T10:00:00+09:00
 tags: ["blog", "personal"]
+# image: "/images/posts/hello-world.jpg"
+# ↑ 제목 영역 배경 사진 (선택사항). /public/images/posts/ 에 이미지를 저장한 뒤 경로를 입력하세요.
+# 이미지는 자동으로 80% 투명도로 처리되어 제목 텍스트 가독성을 유지합니다.
 ---
 
 안녕하세요! RunawayFox의 블로그에 오신 것을 환영합니다.

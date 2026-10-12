@@ -3,6 +3,9 @@ title: "Astro로 GitHub Pages 블로그 만들기"
 description: "Astro와 Tailwind CSS를 사용하여 GitHub Pages에 블로그를 배포하는 방법을 정리합니다."
 pubDate: 2026-10-08T14:00:00+09:00
 tags: ["astro", "blog", "web", "github-pages"]
+# image: "/images/posts/astro-blog-setup.jpg"
+# ↑ 제목 영역 배경 사진 (선택사항). /public/images/posts/ 에 이미지를 저장한 뒤 경로를 입력하세요.
+# 이미지는 자동으로 80% 투명도로 처리되어 제목 텍스트 가독성을 유지합니다.
 ---
 
 이 블로그를 만드는 과정에서 사용한 기술 스택과 배포 방법을 정리합니다.
