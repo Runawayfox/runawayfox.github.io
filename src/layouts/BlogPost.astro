@@ -130,12 +130,18 @@ const WAVE_FILL   = WAVE_STROKE + ' L1200,80 L0,80 Z';
     <a href="/blog" class="back-link" style="margin-bottom:0">← 모든 글 보기</a>
   </div>
 
+  <!-- 읽기 진행 표시줄 -->
+  <div id="post-progress" aria-hidden="true"></div>
+
 </Layout>
 
 <style>
   /* ── 제목 영역 ──────────────────────────────────── */
   .post-hero {
-    background: #060822;
+    background:
+      radial-gradient(ellipse at 28% 65%, rgba(90,60,200,0.18) 0%, transparent 55%),
+      radial-gradient(ellipse at 78% 28%, rgba(201,162,39,0.10) 0%, transparent 48%),
+      #060822;
     --text-primary:   #ffffff;
     --text-secondary: rgba(255, 255, 255, 0.75);
     --text-muted:     rgba(255, 255, 255, 0.50);
@@ -204,6 +210,26 @@ const WAVE_FILL   = WAVE_STROKE + ' L1200,80 L0,80 Z';
     border-top: 1px solid var(--border);
   }
 
+  /* ── 읽기 진행 표시줄 ──────────────────────────────
+     scaleX(0→1) 로 왼쪽에서 오른쪽으로 채워짐
+  ─────────────────────────────────────────────── */
+  :global(#post-progress) {
+    position: fixed;
+    top: 0;
+    left: var(--sidebar-w);
+    right: 0;
+    height: 2px;
+    transform-origin: left center;
+    transform: scaleX(0);
+    background: linear-gradient(90deg,
+      rgba(201,162,39,0.55) 0%,
+      #fff8c0 50%,
+      rgba(201,162,39,0.55) 100%
+    );
+    z-index: 100;
+    pointer-events: none;
+  }
+
   /* ── 모바일 ─────────────────────────────────────── */
   @media (max-width: 1024px) {
     .post-hero {
@@ -213,6 +239,10 @@ const WAVE_FILL   = WAVE_STROKE + ' L1200,80 L0,80 Z';
     .post-wave {
       width: calc(100% + 32px);
       margin: -80px -16px 0;
+    }
+    :global(#post-progress) {
+      left: 0;
+      top: 56px;
     }
   }
 </style>
@@ -271,5 +301,16 @@ const WAVE_FILL   = WAVE_STROKE + ' L1200,80 L0,80 Z';
     }
 
     requestAnimationFrame(frame);
+  }
+
+  // ── 읽기 진행 표시줄 ──────────────────────────────
+  const progressBar = document.getElementById('post-progress') as HTMLElement | null;
+  if (progressBar) {
+    function updateProgress() {
+      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+      const scale = maxScroll > 0 ? window.scrollY / maxScroll : 0;
+      progressBar!.style.transform = `scaleX(${Math.min(1, scale)})`;
+    }
+    window.addEventListener('scroll', updateProgress, { passive: true });
   }
 </script>

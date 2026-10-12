@@ -11,6 +11,26 @@ const slug = post.id.replace(/\.mdx?$/, '');
 const formattedDate = pubDate.toLocaleDateString('ko-KR', {
   year: 'numeric', month: 'long', day: 'numeric',
 });
+
+// 슬러그 해시 → 5가지 성운 팔레트 중 하나 선택
+function hashSlug(s: string): number {
+  let h = 0;
+  for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) & 0xffff;
+  return h;
+}
+const PALETTES = [
+  // 0: gold + violet
+  'radial-gradient(ellipse at 28% 38%, rgba(201,162,39,0.18) 0%, transparent 55%), radial-gradient(ellipse at 74% 68%, rgba(90,60,200,0.14) 0%, transparent 50%), linear-gradient(135deg, #06050f 0%, #0e0b02 55%, #050413 100%)',
+  // 1: rose + cyan
+  'radial-gradient(ellipse at 65% 30%, rgba(220,55,120,0.17) 0%, transparent 52%), radial-gradient(ellipse at 25% 72%, rgba(45,170,215,0.13) 0%, transparent 50%), linear-gradient(135deg, #0a0508 0%, #060a0d 60%, #04040e 100%)',
+  // 2: teal + deep purple
+  'radial-gradient(ellipse at 35% 58%, rgba(45,185,148,0.16) 0%, transparent 55%), radial-gradient(ellipse at 72% 25%, rgba(130,50,205,0.14) 0%, transparent 50%), linear-gradient(135deg, #040a08 0%, #060410 55%, #040612 100%)',
+  // 3: indigo + gold
+  'radial-gradient(ellipse at 20% 42%, rgba(80,120,255,0.16) 0%, transparent 55%), radial-gradient(ellipse at 80% 65%, rgba(201,162,39,0.13) 0%, transparent 50%), linear-gradient(135deg, #040510 0%, #080614 55%, #030409 100%)',
+  // 4: emerald + rose
+  'radial-gradient(ellipse at 55% 25%, rgba(45,185,120,0.16) 0%, transparent 50%), radial-gradient(ellipse at 30% 75%, rgba(210,60,100,0.13) 0%, transparent 55%), linear-gradient(135deg, #040906 0%, #080408 60%, #040614 100%)',
+];
+const placeholderBg = PALETTES[hashSlug(slug) % PALETTES.length];
 ---
 
 <article class="post-card">
@@ -19,7 +39,7 @@ const formattedDate = pubDate.toLocaleDateString('ko-KR', {
       {image ? (
         <img src={image} alt={title} class="post-card-img" loading="lazy" />
       ) : (
-        <div class="post-card-img-placeholder"></div>
+        <div class="post-card-img-placeholder" style={`background: ${placeholderBg};`}></div>
       )}
     </div>
     <div class="post-card-body">

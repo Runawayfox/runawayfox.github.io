@@ -97,7 +97,7 @@ body {
   padding: 0 42px;
   gap: 26px;
   z-index: 20;
-  border-right: 1px solid rgba(42,34,0,0.5);
+  border-right: 1px solid rgba(201, 162, 39, 0.28);
   background: transparent;
   overflow: hidden;
 }
@@ -258,14 +258,19 @@ body {
   transition: box-shadow 0.25s;
 }
 
-/* reset before gradient-text override */
-.nav-btn:hover {
-  background-clip: unset;
+/* hover (non-active): warm muted tint — understated hint */
+.nav-btn:not(.active):hover {
   -webkit-text-fill-color: initial;
+  color: rgba(230, 220, 185, 0.80);
+  background: rgba(201,162,39,0.06);
+  box-shadow:
+    inset 0 0 0 1px rgba(201,162,39,0.16),
+    inset 0 0 18px rgba(201,162,39,0.06);
 }
 
-/* gold glass + shimmer on hover */
-.nav-btn:not(.active):hover {
+/* active: gold shimmer — brand color, most prominent */
+.nav-btn.active {
+  border-left-color: rgba(201, 162, 39, 0.65);
   background: linear-gradient(90deg,
     #c9a227 0%, #f5e080 30%, #fff8c0 50%, #f5e080 70%, #c9a227 100%);
   background-size: 200% 100%;
@@ -274,25 +279,9 @@ body {
   background-clip: text;
   animation: goldShine 3s ease-in-out infinite;
   box-shadow:
-    inset 0 0 0 1px rgba(201,162,39,0.24),
-    inset 0 0 22px rgba(201,162,39,0.10),
-    0 0 10px rgba(201,162,39,0.06);
-}
-
-/* silver glass + shimmer on active */
-.nav-btn.active {
-  border-left-color: rgba(200,230,255,.55);
-  background: linear-gradient(90deg,
-    #a0b0c0 0%, #ddeeff 30%, #ffffff 50%, #ddeeff 70%, #a0b0c0 100%);
-  background-size: 200% 100%;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  animation: silverShine 2.4s ease-in-out infinite;
-  box-shadow:
-    inset 0 0 0 1px rgba(200,230,255,0.24),
-    inset 0 0 22px rgba(200,230,255,0.10),
-    0 0 12px rgba(200,230,255,0.07);
+    inset 0 0 0 1px rgba(201,162,39,0.28),
+    inset 0 0 22px rgba(201,162,39,0.12),
+    0 0 12px rgba(201,162,39,0.08);
 }
 
 /* ─────────────────── THEME TOGGLE SWITCH ─────────────────── */
@@ -744,17 +733,23 @@ html.light .post-card-link:hover .post-card-title {
 
 /* ─────────────────── TAG PILL ─────────────────── */
 .tag-pill {
-  display: inline-block; padding: 2px 9px;
+  display: inline-block; padding: 3px 10px;
   font-size: 11px; font-weight: 700;
   letter-spacing: 1.5px; text-transform: uppercase;
-  border-radius: 2px; border: 1px solid var(--border);
-  color: var(--text-secondary); text-decoration: none;
-  transition: border-color .3s; background: transparent;
+  border-radius: 2px; border: 1px solid rgba(201, 162, 39, 0.30);
+  color: var(--text-muted); text-decoration: none;
+  transition: border-color .25s, color .25s, background .25s, box-shadow .25s;
+  background: transparent;
   font-family: var(--font);
 }
 
-.tag-pill:hover { border-color: var(--accent); color: var(--accent); }
-html.light .tag-pill:hover { color: #111111; }
+.tag-pill:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: rgba(201, 162, 39, 0.07);
+  box-shadow: 0 0 8px rgba(201,162,39,0.18), inset 0 0 6px rgba(201,162,39,0.04);
+}
+html.light .tag-pill:hover { color: #5a3e00; }
 
 /* ─────────────────── TAG CLOUD ─────────────────── */
 .tag-cloud { display: flex; flex-wrap: wrap; gap: 10px; }
@@ -871,7 +866,32 @@ html.light .prose :where(code):not(:where(pre *)) {
   color: var(--text-secondary);
 }
 
-.prose :where(hr) { border-color: var(--border); }
+.prose :where(hr) {
+  border: none;
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(201,162,39,0.20) 15%,
+    rgba(201,162,39,0.55) 50%,
+    rgba(201,162,39,0.20) 85%,
+    transparent 100%
+  );
+  position: relative;
+  overflow: visible;
+  margin: 2.5em 0;
+}
+.prose :where(hr)::after {
+  content: '◆';
+  position: absolute;
+  left: 50%;
+  top: -0.45em;
+  transform: translateX(-50%);
+  font-size: 7px;
+  line-height: 1;
+  color: rgba(201,162,39,0.80);
+  background: var(--bg);
+  padding: 0 10px;
+}
 .prose :where(strong) { color: var(--text-primary); }
 
 .prose :where(th) { color: var(--text-primary); }
@@ -946,10 +966,10 @@ html.light .prose :where(code):not(:where(pre *)) {
   transition: color 0.25s;
 }
 .mobile-nav-btn.active {
-  border-left-color: rgba(200,230,255,.55);
-  color: rgba(210,218,230,0.85);
+  border-left-color: rgba(201,162,39,0.65);
+  color: rgba(245, 220, 128, 0.90);
 }
-.mobile-nav-btn:hover:not(.active) { color: rgba(201,162,39,0.85); }
+.mobile-nav-btn:hover:not(.active) { color: rgba(230, 220, 185, 0.80); }
 
 /* ─────────────────── RESPONSIVE ─────────────────── */
 @media (max-width: 1024px) {
