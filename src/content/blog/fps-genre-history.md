@@ -3,8 +3,8 @@ title: "DOOM에서 Fortnite까지 — FPS는 어떻게 세상을 정복했나"
 description: "1인칭 슈팅 장르의 30년 변천사. 소수 마니아의 취미가 수억 명의 문화 현상이 되기까지, 기술·디자인·사람의 이야기."
 pubDate: 2026-10-09T10:00:00+09:00
 tags: ["게임", "fps", "역사", "칼럼"]
-# image: "/images/posts/fps-genre-history.jpg"
-# ↑ 제목 영역 배경 사진 (선택사항). /public/images/posts/ 에 이미지를 저장한 뒤 경로를 입력하세요.
+image: "/images/posts/MW4LP_BGHero_XL.jpg"
+# 제목 영역 배경 사진. /public/images/posts/ 에 이미지를 저장한 뒤 경로를 입력하세요.
 # 이미지는 자동으로 80% 투명도로 처리되어 제목 텍스트 가독성을 유지합니다.
 ---
 
