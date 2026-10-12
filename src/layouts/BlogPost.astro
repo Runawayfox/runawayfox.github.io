@@ -18,31 +18,18 @@ const updatedFormatted = updatedDate?.toLocaleDateString('ko-KR', {
 });
 
 /*
- * 바이탈 사인 경로 (3주기 P-QRS-T 반복)
- * ViewBox: 0 0 1200 120  /  베이스라인: y=68
- * R 피크: (200,8) (530,8) (860,8) — 간격 330px
+ * 완만한 S자 곡선 경계선
+ * ViewBox 0 0 1200 80  /  기준선 y=50
+ * 전반 (0→600): 아래로 볼록 (트로프 y≈67)
+ * 후반 (600→1200): 위로 볼록 (피크 y≈33)
  */
-const VITAL =
-  'M0,68 L90,68 ' +
-  'L130,68 C140,68 148,58 154,58 C160,58 168,68 178,68 ' +
-  'L183,74 L200,8 L217,78 L222,78 ' +
-  'C228,78 234,52 240,52 C246,52 255,68 265,68 ' +
-  'L420,68 ' +
-  'L460,68 C470,68 478,58 484,58 C490,58 498,68 508,68 ' +
-  'L513,74 L530,8 L547,78 L552,78 ' +
-  'C558,78 564,52 570,52 C576,52 585,68 595,68 ' +
-  'L750,68 ' +
-  'L790,68 C800,68 808,58 814,58 C820,58 828,68 838,68 ' +
-  'L843,74 L860,8 L877,78 L882,78 ' +
-  'C888,78 894,52 900,52 C906,52 915,68 925,68 ' +
-  'L1200,68';
-
-const VITAL_FILL = VITAL + ' L1200,120 L0,120 Z';
+const WAVE_STROKE = 'M0,50 C100,72 500,72 600,50 C700,28 1100,28 1200,50';
+const WAVE_FILL   = WAVE_STROKE + ' L1200,80 L0,80 Z';
 ---
 
 <Layout title={title} description={description}>
 
-  <!-- ── 제목 영역: 항상 어두운 배경 + 흰색 텍스트 ──────── -->
+  <!-- ── 제목 영역 ──────────────────────────────────────── -->
   <div class="post-hero">
     {image && (
       <div
@@ -64,60 +51,73 @@ const VITAL_FILL = VITAL + ' L1200,120 L0,120 Z';
     </div>
   </div>
 
-  <!-- ── 바이탈 사인 경계선 ────────────────────────────────
-       wave-fill: 본문 배경색이 바이탈 사인 선 아래를 덮어
-                  히어로 사진이 바이탈 모양대로 잘린 것처럼 표현
-       wave-glow / wave-stroke: 3주기 P-QRS-T 금색 선
-       wave-dot: 느린 shimmer 점이 선 위를 흐름
+  <!-- ── S자 곡선 경계선 + 느린 금색 Shimmer ──────────────
+       wave-fill : 본문 배경(--bg)으로 채워 히어로 사진을
+                   곡선 모양대로 자르는 효과
+       wave-ambient : 두꺼운 소프트 글로우 레이어
+       wave-stroke  : 주 금색 선 (shimmer 그라디언트 적용)
   ──────────────────────────────────────────────────────── -->
   <svg
     class="post-wave"
-    viewBox="0 0 1200 120"
+    viewBox="0 0 1200 80"
     preserveAspectRatio="none"
     xmlns="http://www.w3.org/2000/svg"
     aria-hidden="true"
   >
     <defs>
-      <!-- 선 주변 글로우 필터 -->
-      <filter id="vt-line-glow" x="-5%" y="-200%" width="110%" height="500%">
-        <feGaussianBlur in="SourceGraphic" stdDeviation="2.5" result="blur"/>
+      <!-- 글로우 블러 필터 -->
+      <filter id="wv-glow" x="-6%" y="-150%" width="112%" height="400%">
+        <feGaussianBlur in="SourceGraphic" stdDeviation="3.5" result="blur"/>
         <feMerge>
           <feMergeNode in="blur"/>
           <feMergeNode in="SourceGraphic"/>
         </feMerge>
       </filter>
-      <!-- shimmer 점 글로우 필터 -->
-      <filter id="vt-dot-glow" x="-500%" y="-500%" width="1100%" height="1100%">
-        <feGaussianBlur in="SourceGraphic" stdDeviation="4.5" result="blur"/>
-        <feMerge>
-          <feMergeNode in="blur"/>
-          <feMergeNode in="blur"/>
-          <feMergeNode in="SourceGraphic"/>
-        </feMerge>
-      </filter>
+
+      <!--
+        Shimmer 그라디언트:
+        - x1=-200 ~ x2=200 (400px 폭, 중심 x=0이 가장 밝음)
+        - animateTransform translate: -600→2000 (8초, 느린 스윕)
+        - 화면 밖 구간(총 8초 중 약 4.4초)에서는 기본 금색(35% 불투명)으로 표시
+      -->
+      <linearGradient
+        id="wv-shimmer"
+        gradientUnits="userSpaceOnUse"
+        x1="-200" y1="0"
+        x2="200"  y2="0"
+      >
+        <stop offset="0%"   stop-color="#c9a227" stop-opacity="0.35"/>
+        <stop offset="35%"  stop-color="#ddb830" stop-opacity="0.55"/>
+        <stop offset="50%"  stop-color="#fff8c0" stop-opacity="1.00"/>
+        <stop offset="65%"  stop-color="#ddb830" stop-opacity="0.55"/>
+        <stop offset="100%" stop-color="#c9a227" stop-opacity="0.35"/>
+        <animateTransform
+          attributeName="gradientTransform"
+          type="translate"
+          from="-600 0"
+          to="2000 0"
+          dur="8s"
+          repeatCount="indefinite"
+        />
+      </linearGradient>
     </defs>
 
-    <!-- 본문 배경으로 채운 영역 (바이탈 사인 아래) -->
-    <path class="wave-fill" d={VITAL_FILL}/>
+    <!-- 본문 배경으로 채운 영역 -->
+    <path class="wv-fill" d={WAVE_FILL}/>
 
-    <!-- 두꺼운 주변 글로우 (ambient) -->
-    <path class="wave-ambient" d={VITAL} filter="url(#vt-line-glow)"/>
+    <!-- 두꺼운 ambient 글로우 (입체감) -->
+    <path class="wv-ambient" d={WAVE_STROKE} filter="url(#wv-glow)"/>
 
-    <!-- 주 금색 바이탈 사인 선 -->
-    <path class="wave-stroke" d={VITAL} filter="url(#vt-line-glow)"/>
-
-    <!-- 느린 shimmer 점: 헤일로 -->
-    <circle r="6" class="wave-dot-halo" filter="url(#vt-dot-glow)">
-      <animateMotion path={VITAL} dur="10s" repeatCount="indefinite"/>
-    </circle>
-
-    <!-- 느린 shimmer 점: 밝은 중심 -->
-    <circle r="2.8" class="wave-dot">
-      <animateMotion path={VITAL} dur="10s" repeatCount="indefinite"/>
-    </circle>
+    <!-- 주 곡선 + Shimmer -->
+    <path
+      class="wv-stroke"
+      d={WAVE_STROKE}
+      stroke="url(#wv-shimmer)"
+      filter="url(#wv-glow)"
+    />
   </svg>
 
-  <!-- ── 본문 영역 ──────────────────────────────────────── -->
+  <!-- ── 본문 ──────────────────────────────────────────── -->
   <div class="post-body">
     <QuoteCard />
     <article>
@@ -145,10 +145,10 @@ const VITAL_FILL = VITAL + ' L1200,120 L0,120 Z';
 
     position: relative;
     margin: -60px -80px 0;
-    padding: 60px 80px 120px;
+    padding: 60px 80px 80px; /* 80px = SVG 높이만큼 overlap 여백 */
   }
 
-  /* 배경 이미지: 80% 투명도 (opacity 0.2) */
+  /* 배경 이미지: 80% 투명도 */
   .post-hero-bg {
     position: absolute;
     inset: 0;
@@ -165,45 +165,36 @@ const VITAL_FILL = VITAL + ' L1200,120 L0,120 Z';
     margin-bottom: 16px;
   }
 
-  /* ── 바이탈 사인 SVG ─────────────────────────────
-     margin-top: -120px → 히어로 padding-bottom 120px 위를 덮음
-     → 히어로 사진이 바이탈 사인 경계선 모양대로 잘린 효과
+  /* ── 경계선 SVG ─────────────────────────────────
+     margin-top: -80px → 히어로 padding-bottom 영역을 덮어
+     사진이 곡선 경계선 모양대로 잘린 효과 생성
   ─────────────────────────────────────────────── */
   .post-wave {
     display: block;
     width: calc(100% + 160px);
-    height: 120px;
-    margin: -120px -80px 0;
+    height: 80px;
+    margin: -80px -80px 0;
     position: relative;
     z-index: 1;
   }
 
-  /* 본문 배경으로 채운 영역 */
-  .wave-fill { fill: var(--bg); }
+  .wv-fill { fill: var(--bg); }
 
-  /* 두꺼운 ambient 글로우 */
-  .wave-ambient {
+  /* 두꺼운 소프트 글로우 */
+  .wv-ambient {
     fill: none;
-    stroke: var(--accent);
-    stroke-width: 6;
-    stroke-opacity: 0.09;
+    stroke: #c9a227;
+    stroke-width: 12;
+    stroke-opacity: 0.07;
     stroke-linecap: round;
-    stroke-linejoin: round;
   }
 
-  /* 주 금색 선 */
-  .wave-stroke {
+  /* 주 곡선 (두께 + shimmer) */
+  .wv-stroke {
     fill: none;
-    stroke: var(--accent);
-    stroke-width: 1.7;
-    stroke-opacity: 0.60;
+    stroke-width: 3.5;
     stroke-linecap: round;
-    stroke-linejoin: round;
   }
-
-  /* shimmer 점 */
-  .wave-dot-halo { fill: var(--accent); fill-opacity: 0.30; }
-  .wave-dot      { fill: #fff8c0; }
 
   /* ── 본문 ───────────────────────────────────────── */
   .post-body { padding-top: 40px; }
@@ -219,11 +210,11 @@ const VITAL_FILL = VITAL + ' L1200,120 L0,120 Z';
   @media (max-width: 1024px) {
     .post-hero {
       margin: -28px -16px 0;
-      padding: 28px 16px 120px;
+      padding: 28px 16px 80px;
     }
     .post-wave {
       width: calc(100% + 32px);
-      margin: -120px -16px 0;
+      margin: -80px -16px 0;
     }
   }
 </style>
