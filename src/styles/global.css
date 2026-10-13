@@ -1008,6 +1008,8 @@ html.light .prose :where(code):not(:where(pre *)) {
 
 /* ─────────────────── RESPONSIVE ─────────────────── */
 @media (max-width: 1024px) {
+  html { font-size: 15px; }
+
   /* Hide full-viewport cosmic on mobile — header bar has its own canvas */
   #bg-canvas { display: none; }
 

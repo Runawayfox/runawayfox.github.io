@@ -237,7 +237,14 @@ const WAVE_FILL   = WAVE_STROKE + ' L1200,80 L0,80 Z';
       width: calc(100% + 32px);
       margin: -80px -16px 0;
     }
-    .post-float-bar { left: 12px; right: 12px; }
+    .post-float-bar {
+      left: 0;
+      right: 0;
+      top: 0;
+      border-radius: 0;
+      border: none;
+      border-bottom: 1px solid rgba(201, 162, 39, 0.22);
+    }
   }
 
   /* ── 플로팅 바 ──────────────────────────────────── */
