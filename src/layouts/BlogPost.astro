@@ -130,6 +130,25 @@ const WAVE_FILL   = WAVE_STROKE + ' L1200,80 L0,80 Z';
     <a href="/blog" class="back-link" style="margin-bottom:0">← 모든 글 보기</a>
   </div>
 
+  <!-- ── 플로팅 바 ──────────────────────────────────────── -->
+  <div class="post-float-bar" id="post-float-bar" aria-hidden="true">
+    <a href="/" class="pfb-logo" aria-label="홈으로">
+      <div class="pfb-fox"></div>
+    </a>
+    <span class="pfb-title">{title}</span>
+    <div class="pfb-actions">
+      <button class="pfb-btn" id="pfb-up" aria-label="맨 위로 스크롤">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 15.75l7.5-7.5 7.5 7.5" />
+        </svg>
+      </button>
+      <button class="pfb-btn" id="pfb-down" aria-label="맨 아래로 스크롤">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+        </svg>
+      </button>
+    </div>
+  </div>
 
 </Layout>
 
@@ -218,7 +237,107 @@ const WAVE_FILL   = WAVE_STROKE + ' L1200,80 L0,80 Z';
       width: calc(100% + 32px);
       margin: -80px -16px 0;
     }
+    .post-float-bar { left: 0; }
   }
+
+  /* ── 플로팅 바 ──────────────────────────────────── */
+  .post-float-bar {
+    position: fixed;
+    top: 0;
+    left: var(--sidebar-w);
+    right: 0;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0 12px 0 6px;
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid rgba(201, 162, 39, 0.28);
+    z-index: 100;
+    transform: translateY(-100%);
+    opacity: 0;
+    pointer-events: none;
+    transition: transform 0.28s ease, opacity 0.28s ease;
+  }
+
+  .post-float-bar.is-visible {
+    transform: translateY(0);
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .pfb-logo {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 8px;
+    transition: background 0.18s;
+  }
+  .pfb-logo:hover { background: rgba(201, 162, 39, 0.12); }
+
+  .pfb-fox {
+    width: 28px;
+    height: 28px;
+    background: linear-gradient(90deg,
+      #c9a227 0%, #f5e080 30%, #fff8c0 50%, #f5e080 70%, #c9a227 100%);
+    background-size: 200% 100%;
+    -webkit-mask-image: url('/fox-mask.png');
+    mask-image: url('/fox-mask.png');
+    -webkit-mask-size: contain;    mask-size: contain;
+    -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
+    -webkit-mask-position: center;  mask-position: center;
+    animation: pfb-fox-shimmer 4s linear infinite;
+  }
+
+  @keyframes pfb-fox-shimmer {
+    from { background-position: 100% 0; }
+    to   { background-position: -100% 0; }
+  }
+
+  .pfb-title {
+    flex: 1;
+    font-family: var(--font);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-primary);
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0;
+    letter-spacing: 0.01em;
+  }
+
+  .pfb-actions {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 2px;
+  }
+
+  .pfb-btn {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.18s, color 0.18s;
+  }
+  .pfb-btn:hover {
+    background: rgba(201, 162, 39, 0.12);
+    color: var(--accent);
+  }
+  .pfb-btn svg { width: 18px; height: 18px; }
 </style>
 
 <script>
@@ -275,6 +394,30 @@ const WAVE_FILL   = WAVE_STROKE + ' L1200,80 L0,80 Z';
     }
 
     requestAnimationFrame(frame);
+  }
+
+  /* ── 플로팅 바 ── */
+  const floatBar = document.getElementById('post-float-bar');
+  const pfbUp    = document.getElementById('pfb-up');
+  const pfbDown  = document.getElementById('pfb-down');
+
+  if (floatBar) {
+    function updateBar() {
+      const visible = window.scrollY > 200;
+      floatBar.classList.toggle('is-visible', visible);
+      floatBar.setAttribute('aria-hidden', visible ? 'false' : 'true');
+    }
+
+    window.addEventListener('scroll', updateBar, { passive: true });
+    updateBar();
+
+    pfbUp?.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    pfbDown?.addEventListener('click', () => {
+      window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' });
+    });
   }
 
 </script>
