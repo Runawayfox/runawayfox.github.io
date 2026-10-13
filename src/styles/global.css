@@ -1191,6 +1191,8 @@ html.light .prose :where(code):not(:where(pre *)) {
     padding: 28px 0;
     padding-top: calc(56px + 28px);
   }
+  .main-content::before,
+  .main-content::after { display: none; }
 
   .blog-grid { grid-template-columns: 1fr; }
 
