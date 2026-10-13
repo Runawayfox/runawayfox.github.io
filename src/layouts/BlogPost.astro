@@ -237,14 +237,6 @@ const WAVE_FILL   = WAVE_STROKE + ' L1200,80 L0,80 Z';
       width: calc(100% + 32px);
       margin: -80px -16px 0;
     }
-    .post-float-bar {
-      left: 0;
-      right: 0;
-      top: 0;
-      border-radius: 0;
-      border: none;
-      border-bottom: 1px solid rgba(201, 162, 39, 0.22);
-    }
   }
 
   /* ── 플로팅 바 ──────────────────────────────────── */
@@ -305,6 +297,18 @@ const WAVE_FILL   = WAVE_STROKE + ' L1200,80 L0,80 Z';
     transform: translateY(0);
     opacity: 1;
     pointer-events: auto;
+  }
+
+  /* 모바일: 플로팅 바를 뷰포트 전체 너비로 상단에 고정 */
+  @media (max-width: 1024px) {
+    .post-float-bar {
+      left: 0;
+      right: 0;
+      top: 0;
+      border-radius: 0;
+      border: none;
+      border-bottom: 1px solid rgba(201, 162, 39, 0.22);
+    }
   }
 
   .pfb-logo {
