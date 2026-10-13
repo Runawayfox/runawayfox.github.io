@@ -245,8 +245,7 @@ const WAVE_FILL   = WAVE_STROKE + ' L1200,80 L0,80 Z';
     position: fixed;
     top: 14px;
     left: calc(var(--sidebar-w) + 24px);
-    /* 뷰포트가 본문 max-width를 초과할 때 우측 여백을 동적으로 늘려 센터 정렬 */
-    right: calc(max(0px, 100vw - var(--sidebar-w) - 880px) + 24px);
+    right: 24px;
     height: 52px;
     display: flex;
     align-items: center;
@@ -414,6 +413,20 @@ const WAVE_FILL   = WAVE_STROKE + ' L1200,80 L0,80 Z';
   const pfbDown  = document.getElementById('pfb-down');
 
   if (floatBar) {
+    /* 실제 .main-content bounding rect 기준으로 좌우 여백을 동적으로 맞춤 */
+    function positionBar() {
+      if (window.innerWidth <= 1024) return;
+      const main = document.querySelector('.main-content') as HTMLElement | null;
+      if (!main) return;
+      const rect = main.getBoundingClientRect();
+      const gap = 24;
+      floatBar.style.left  = Math.round(rect.left  + gap) + 'px';
+      floatBar.style.right = Math.round(window.innerWidth - rect.right + gap) + 'px';
+    }
+
+    positionBar();
+    window.addEventListener('resize', positionBar, { passive: true });
+
     function updateBar() {
       const visible = window.scrollY > 200;
       floatBar.classList.toggle('is-visible', visible);
