@@ -1110,11 +1110,11 @@ html.light .prose :where(code):not(:where(pre *)) {
   .mobile-search-form { width: 100%; }
   .mobile-nav { display: flex; flex-direction: column; gap: 2px; }
 
-  /* Content area: offset by fixed header height */
+  /* Content area: no side padding on mobile (bezels removed) */
   .main-content {
     margin-left: 0;
     max-width: 100%;
-    padding: 28px 16px;
+    padding: 28px 0;
     padding-top: calc(56px + 28px);
   }
 
@@ -1142,5 +1142,10 @@ html.light .prose :where(code):not(:where(pre *)) {
   }
   body.is-blog-post .main-content {
     padding-top: 28px;
+  }
+
+  /* 본문 prose 폰트: 18px(px 고정값)를 모바일에서 직접 오버라이드 */
+  .prose {
+    font-size: 16px;
   }
 }
