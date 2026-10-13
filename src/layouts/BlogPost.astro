@@ -97,7 +97,6 @@ const WAVE_FILL   = WAVE_STROKE + ' L1200,80 L0,80 Z';
           repeatCount="indefinite"
         />
       </linearGradient>
-
     </defs>
 
     <!-- 본문 배경으로 채운 영역 (JS가 매 프레임 갱신) -->
@@ -118,10 +117,7 @@ const WAVE_FILL   = WAVE_STROKE + ' L1200,80 L0,80 Z';
 
   <!-- ── 본문 ──────────────────────────────────────────── -->
   <div class="post-body">
-    <div class="post-entry-veil" aria-hidden="true"></div>
-    <div class="quote-card-wrap">
-      <QuoteCard />
-    </div>
+    <QuoteCard />
     <article>
       <div class="prose prose-sm max-w-none">
         <slot />
@@ -205,58 +201,7 @@ const WAVE_FILL   = WAVE_STROKE + ' L1200,80 L0,80 Z';
   }
 
   /* ── 본문 ───────────────────────────────────────── */
-  .post-body {
-    position: relative;
-    padding-top: 40px;
-  }
-
-  /*
-   * 은청색 그라디언트 오버레이 (다크모드)
-   * ────────────────────────────────────────────────
-   * 파도 경계선 바로 아래(top:0)에서 명언카드 섹션
-   * 끝까지 어둡게 덮었다가 투명으로 페이드 아웃.
-   * z-index:1 → 노멀 플로우(명언카드)보다 위에 그려지나
-   * pointer-events:none 으로 인터랙션은 그대로 통과.
-   * 베젤(z-index:10)보다는 낮아 베젤을 가리지 않음.
-   */
-  /*
-   * 은청색 진입 그라디언트
-   * — top:0 에서 투명 시작 → 파도 직하 45px 구간에서 피크 → 본문으로 서서히 소멸
-   * — z-index:1; QuoteCard 래퍼는 z-index:2 여서 카드는 항상 위에 렌더링됨
-   */
-  .post-entry-veil {
-    position: absolute;
-    top: 0;
-    left: -80px;
-    right: -80px;
-    height: 300px;
-    background: linear-gradient(180deg,
-      rgba(14, 28, 72, 0.00)   0%,
-      rgba(14, 28, 72, 0.38)  15%,
-      rgba(14, 28, 72, 0.18)  45%,
-      rgba(12, 24, 64, 0.05)  72%,
-      transparent             100%
-    );
-    pointer-events: none;
-    z-index: 1;
-  }
-
-  /* 라이트 모드: 어두운 은색 (역시 투명에서 시작) */
-  :global(html.light) .post-entry-veil {
-    background: linear-gradient(180deg,
-      rgba(70, 80, 100, 0.00)   0%,
-      rgba(70, 80, 100, 0.22)  15%,
-      rgba(65, 76,  96, 0.10)  45%,
-      rgba(60, 72,  90, 0.03)  72%,
-      transparent              100%
-    );
-  }
-
-  /* QuoteCard 를 veil 위에 렌더링 */
-  .quote-card-wrap {
-    position: relative;
-    z-index: 2;
-  }
+  .post-body { padding-top: 40px; }
 
   /* ── 하단 네비 ──────────────────────────────────── */
   .post-nav {
@@ -294,10 +239,6 @@ const WAVE_FILL   = WAVE_STROKE + ' L1200,80 L0,80 Z';
     .post-wave {
       width: calc(100% + 32px);
       margin: -80px -16px 0;
-    }
-    .post-entry-veil {
-      left: -16px;
-      right: -16px;
     }
     :global(#post-progress) {
       left: 0;
