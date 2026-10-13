@@ -1130,4 +1130,15 @@ html.light .prose :where(code):not(:where(pre *)) {
     text-overflow: ellipsis;
   }
   .blog-list .post-card-tags { display: none; }
+
+  /* Blog post pages: header scrolls with content instead of staying fixed */
+  body.is-blog-post {
+    flex-direction: column;
+  }
+  body.is-blog-post .app-brand {
+    position: relative;
+  }
+  body.is-blog-post .main-content {
+    padding-top: 28px;
+  }
 }
