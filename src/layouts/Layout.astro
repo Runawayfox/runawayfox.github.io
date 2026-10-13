@@ -246,17 +246,10 @@ const { title, description = 'Kitsune Hideout — 개발 블로그', wideContent
       var skyR=5, skyG=5, skyB=22;
 
       function drawSky(ts) {
-        var t=ts*0.000042;
-        var c1=Math.max(0,Math.sin(t));                  // 크림슨 (주기 ~2.5분)
-        var c2=Math.max(0,Math.sin(t*0.68+2.0));         // 딥블루/틸
-        var c3=Math.max(0,Math.sin(t*0.45+4.1));         // 바이올렛 액센트
-        var c4=Math.max(0,Math.sin(t*0.31+1.4));         // 금빛 황혼 (주기 ~8분)
-        var c5=Math.max(0,Math.sin(t*0.22+5.8));         // 암흑 위상 — 전체 dim (주기 ~11분)
-        // c4 피크: R≈150, G≈100, B≈14 → 금/호박색. c5 피크: dim→0.06 → 심우주 암흑.
-        var dim=1-c5*0.94;
-        var br=Math.round(Math.max(2,(5+c1*90+c3*12+c4*145)*dim));
-        var bg=Math.round(Math.max(2,(5+c2*18+c1*6 +c4*95 )*dim));
-        var bb=Math.round(Math.max(14,(22+c2*24+c3*16-c4*8 )*dim));
+        // 주기 0.000042 ≈ 2.5분 (이전 8분에서 3.2× 가속)
+        var t=ts*0.000042, c1=Math.max(0,Math.sin(t)), c2=Math.max(0,Math.sin(t*0.68+2.0)), c3=Math.max(0,Math.sin(t*0.45+4.1));
+        // 붉은색: c1 피크 시 br≈95, bg≈11 — 명확한 크림슨. 파란색 진폭은 유지.
+        var br=Math.round(5+c1*90+c3*12), bg=Math.round(5+c2*18+c1*6), bb=Math.round(22+c2*24+c3*16);
         skyR=br; skyG=bg; skyB=bb;  // expose to other draw functions
         var sg=ctx.createLinearGradient(0,0,0,H);
         sg.addColorStop(0,   'rgb('+(br+10)+','+(bg+4)+','+(bb+12)+')');
