@@ -237,24 +237,26 @@ const WAVE_FILL   = WAVE_STROKE + ' L1200,80 L0,80 Z';
       width: calc(100% + 32px);
       margin: -80px -16px 0;
     }
-    .post-float-bar { left: 0; }
+    .post-float-bar { left: 12px; right: 12px; }
   }
 
   /* ── 플로팅 바 ──────────────────────────────────── */
   .post-float-bar {
     position: fixed;
-    top: 0;
-    left: var(--sidebar-w);
-    right: 0;
+    top: 14px;
+    left: calc(var(--sidebar-w) + 24px);
+    right: 24px;
     height: 52px;
     display: flex;
     align-items: center;
     gap: 6px;
     padding: 0 12px 0 6px;
-    background: color-mix(in srgb, var(--bg) 88%, transparent);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-    border-bottom: 1px solid rgba(201, 162, 39, 0.28);
+    background: color-mix(in srgb, var(--bg) 97%, transparent);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(201, 162, 39, 0.22);
+    border-radius: 12px;
+    box-shadow: 0 4px 28px rgba(0, 0, 0, 0.40);
     z-index: 100;
     transform: translateY(-100%);
     opacity: 0;
@@ -284,7 +286,7 @@ const WAVE_FILL   = WAVE_STROKE + ' L1200,80 L0,80 Z';
     width: 28px;
     height: 28px;
     background: linear-gradient(90deg,
-      #c9a227 0%, #f5e080 30%, #fff8c0 50%, #f5e080 70%, #c9a227 100%);
+      #2e6bbf 0%, #6aaef5 30%, #c0e4ff 50%, #6aaef5 70%, #2e6bbf 100%);
     background-size: 200% 100%;
     -webkit-mask-image: url('/fox-mask.png');
     mask-image: url('/fox-mask.png');
