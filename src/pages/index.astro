@@ -41,20 +41,22 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
     </div>
   </div>
 
-  <section>
-    <h2 class="page-title">Recent</h2>
-    {posts.length > 0 ? (
-      <div class="blog-grid">
-        {posts.map(post => <PostCard post={post} />)}
-      </div>
-    ) : (
-      <p style="color:var(--text-muted);font-size:13px;">아직 작성된 글이 없습니다.</p>
-    )}
-    <a
-      href="/blog"
-      style="display:inline-block;margin-top:32px;font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--text-secondary);text-decoration:none;"
-    >
-      All Posts →
-    </a>
-  </section>
+  <div class="mhh-below">
+    <section>
+      <h2 class="page-title">Recent</h2>
+      {posts.length > 0 ? (
+        <div class="blog-grid">
+          {posts.map(post => <PostCard post={post} />)}
+        </div>
+      ) : (
+        <p style="color:var(--text-muted);font-size:13px;">아직 작성된 글이 없습니다.</p>
+      )}
+      <a
+        href="/blog"
+        style="display:inline-block;margin-top:32px;font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--text-secondary);text-decoration:none;"
+      >
+        All Posts →
+      </a>
+    </section>
+  </div>
 </Layout>

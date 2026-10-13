@@ -1234,10 +1234,14 @@ html.light .prose :where(code):not(:where(pre *)) {
   body.is-home .mobile-menu { display: none !important; }
   body.is-home .main-content {
     padding-top: 0;
-    /* hero 영역(첫 100vh)은 투명, 이후 콘텐츠는 불투명 전환 */
-    background: linear-gradient(to bottom, transparent 100vh, var(--bg) 100vh);
+    background: transparent;
     border-left: none;
     border-right: none;
+  }
+  /* 스크롤 후 등장하는 콘텐츠 영역: 자체 solid 배경 */
+  body.is-home .mhh-below {
+    background: var(--bg);
+    padding: 28px 0 0;
   }
 
   /* hero: 100vh 전면 레이아웃 */
