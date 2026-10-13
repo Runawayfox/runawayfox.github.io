@@ -245,8 +245,8 @@ const WAVE_FILL   = WAVE_STROKE + ' L1200,80 L0,80 Z';
     position: fixed;
     top: 14px;
     left: calc(var(--sidebar-w) + 24px);
-    right: 24px;
-    max-width: calc(880px - 48px);   /* 본문 max-width에 맞춰 제한 */
+    /* 뷰포트가 본문 max-width를 초과할 때 우측 여백을 동적으로 늘려 센터 정렬 */
+    right: calc(max(0px, 100vw - var(--sidebar-w) - 880px) + 24px);
     height: 52px;
     display: flex;
     align-items: center;
