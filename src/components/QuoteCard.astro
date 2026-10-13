@@ -74,6 +74,20 @@
 </script>
 
 <style>
+/* ── 폴리크롬 애니메이션용 CSS 커스텀 속성 ── */
+@property --qc-border {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+@property --qc-sheen {
+  syntax: '<angle>';
+  initial-value: 135deg;
+  inherits: false;
+}
+@keyframes qc-border-spin { to { --qc-border: 360deg; } }
+@keyframes qc-sheen-sweep { to { --qc-sheen: 495deg; } }
+
 .quote-section {
   margin-bottom: 48px;
   display: flex;
@@ -87,47 +101,65 @@
 .quote-card {
   position: relative;
   padding: 32px 36px 28px 52px;
-  background: rgba(9, 16, 42, 0.55);
+  background: rgba(9, 16, 42, 0.62);
   backdrop-filter: blur(14px) saturate(1.3);
   -webkit-backdrop-filter: blur(14px) saturate(1.3);
-  border: 1px solid rgba(192, 200, 218, 0.22);
-  border-left: 3px solid rgba(192, 200, 218, 0.55);
-  border-radius: 4px;
+  border: none;
+  border-radius: 6px;
   overflow: hidden;
-  box-shadow:
-    inset 0 1px 0 rgba(215, 225, 250, 0.10),
-    inset 0 -1px 0 rgba(150, 170, 220, 0.04),
-    0 4px 24px rgba(0, 0, 0, 0.35),
-    0 0 0 1px rgba(192, 200, 218, 0.06);
+  box-shadow: 0 6px 32px rgba(0, 0, 0, 0.42);
 }
 
-/* top-edge shimmer — light catching the glass surface */
+/* 은색 Shimmer 테두리 — conic-gradient + CSS mask 기법 */
 .quote-card::before {
   content: '';
   position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 1px;
-  background: linear-gradient(90deg,
-    transparent              0%,
-    rgba(220, 230, 255, 0.28) 20%,
-    rgba(235, 242, 255, 0.45) 50%,
-    rgba(220, 230, 255, 0.28) 80%,
-    transparent              100%
+  inset: 0;
+  border-radius: 6px;
+  padding: 1.5px;
+  background: conic-gradient(
+    from var(--qc-border),
+    rgba(145, 155, 200, 0.40),
+    rgba(200, 215, 255, 0.82),
+    rgba(255, 255, 255, 1.00),
+    rgba(190, 240, 255, 0.88),
+    rgba(210, 180, 255, 0.78),
+    rgba(255, 205, 240, 0.72),
+    rgba(255, 242, 192, 0.78),
+    rgba(175, 248, 228, 0.82),
+    rgba(200, 215, 255, 0.82),
+    rgba(255, 255, 255, 0.96),
+    rgba(145, 155, 200, 0.40)
   );
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: destination-out;
+  mask-composite: exclude;
+  animation: qc-border-spin 6s linear infinite;
   pointer-events: none;
 }
 
-/* inner glow along left bezel */
+/* 폴리크롬 내부 쉰 — 박스 전체에 은은한 무지개빛 */
 .quote-card::after {
   content: '';
   position: absolute;
-  top: 0; left: 0; bottom: 0;
-  width: 40px;
-  background: linear-gradient(90deg,
-    rgba(192, 200, 218, 0.08) 0%,
-    transparent              100%
+  inset: 0;
+  border-radius: 6px;
+  background: linear-gradient(
+    var(--qc-sheen),
+    rgba(110, 80,  225, 0.11),
+    rgba(65,  155, 245, 0.13),
+    rgba(45,  210, 195, 0.09),
+    rgba(75,  200, 90,  0.07),
+    rgba(215, 210, 50,  0.07),
+    rgba(245, 118, 58,  0.08),
+    rgba(238, 88,  182, 0.10),
+    rgba(158, 78,  238, 0.12),
+    rgba(110, 80,  225, 0.11)
   );
   pointer-events: none;
+  animation: qc-sheen-sweep 18s linear infinite;
 }
 
 .quote-mark {
@@ -169,30 +201,13 @@
   font-style: normal;
 }
 
-/* light mode */
+/* light mode — 테두리 shimmer 유지, 내부 쉰 살짝 억제 */
 html.light .quote-card {
-  background: rgba(255, 255, 252, 0.55);
-  border-color: rgba(201, 162, 39, 0.30);
-  border-left-color: rgba(201, 162, 39, 0.65);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 230, 120, 0.18),
-    0 4px 20px rgba(0, 0, 0, 0.10),
-    0 0 0 1px rgba(201, 162, 39, 0.08);
-}
-html.light .quote-card::before {
-  background: linear-gradient(90deg,
-    transparent              0%,
-    rgba(255, 220, 100, 0.30) 20%,
-    rgba(255, 235, 140, 0.48) 50%,
-    rgba(255, 220, 100, 0.30) 80%,
-    transparent              100%
-  );
+  background: rgba(248, 248, 252, 0.72);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.13);
 }
 html.light .quote-card::after {
-  background: linear-gradient(90deg,
-    rgba(201, 162, 39, 0.08) 0%,
-    transparent              100%
-  );
+  opacity: 0.55;
 }
 html.light .quote-mark {
   color: var(--accent);
