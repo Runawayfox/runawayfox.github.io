@@ -246,12 +246,13 @@ const WAVE_FILL   = WAVE_STROKE + ' L1200,80 L0,80 Z';
     top: 14px;
     left: calc(var(--sidebar-w) + 24px);
     right: 24px;
+    max-width: calc(880px - 48px);   /* 본문 max-width에 맞춰 제한 */
     height: 52px;
     display: flex;
     align-items: center;
     gap: 6px;
     padding: 0 12px 0 6px;
-    background: color-mix(in srgb, var(--bg) 97%, transparent);
+    background: color-mix(in srgb, var(--bg) 84%, transparent);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     border: 1px solid rgba(201, 162, 39, 0.22);
@@ -397,6 +398,15 @@ const WAVE_FILL   = WAVE_STROKE + ' L1200,80 L0,80 Z';
 
     requestAnimationFrame(frame);
   }
+
+  /* ── 모바일: 상단바 고정 해제 (블로그 게시글에서만) ── */
+  (function () {
+    if (window.innerWidth > 1024) return;
+    const sidebar = document.querySelector('.app-brand') as HTMLElement | null;
+    const main    = document.querySelector('.main-content') as HTMLElement | null;
+    if (sidebar) sidebar.style.position = 'relative';
+    if (main)    main.style.paddingTop  = '28px';
+  })();
 
   /* ── 플로팅 바 ── */
   const floatBar = document.getElementById('post-float-bar');
