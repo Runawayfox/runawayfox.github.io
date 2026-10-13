@@ -117,6 +117,8 @@ const WAVE_FILL   = WAVE_STROKE + ' L1200,80 L0,80 Z';
 
   <!-- ── 본문 ──────────────────────────────────────────── -->
   <div class="post-body">
+    <!-- 파도~명언카드 구간 은청색 어둠 그라디언트 (다크모드 전용) -->
+    <div class="post-entry-veil" aria-hidden="true"></div>
     <QuoteCard />
     <article>
       <div class="prose prose-sm max-w-none">
@@ -201,7 +203,38 @@ const WAVE_FILL   = WAVE_STROKE + ' L1200,80 L0,80 Z';
   }
 
   /* ── 본문 ───────────────────────────────────────── */
-  .post-body { padding-top: 40px; }
+  .post-body {
+    position: relative;
+    padding-top: 40px;
+  }
+
+  /*
+   * 은청색 그라디언트 오버레이 (다크모드)
+   * ────────────────────────────────────────────────
+   * 파도 경계선 바로 아래(top:0)에서 명언카드 섹션
+   * 끝까지 어둡게 덮었다가 투명으로 페이드 아웃.
+   * z-index:1 → 노멀 플로우(명언카드)보다 위에 그려지나
+   * pointer-events:none 으로 인터랙션은 그대로 통과.
+   * 베젤(z-index:10)보다는 낮아 베젤을 가리지 않음.
+   */
+  .post-entry-veil {
+    position: absolute;
+    top: 0;
+    left: -80px;
+    right: -80px;
+    height: 420px;
+    background: linear-gradient(180deg,
+      rgba(28, 52, 108, 0.70)   0%,
+      rgba(22, 42, 90, 0.42)   28%,
+      rgba(16, 30, 72, 0.14)   62%,
+      transparent              100%
+    );
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* 라이트 모드: 비활성화 */
+  :global(html.light) .post-entry-veil { display: none; }
 
   /* ── 하단 네비 ──────────────────────────────────── */
   .post-nav {
@@ -239,6 +272,10 @@ const WAVE_FILL   = WAVE_STROKE + ' L1200,80 L0,80 Z';
     .post-wave {
       width: calc(100% + 32px);
       margin: -80px -16px 0;
+    }
+    .post-entry-veil {
+      left: -16px;
+      right: -16px;
     }
     :global(#post-progress) {
       left: 0;
