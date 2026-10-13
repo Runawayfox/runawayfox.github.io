@@ -9,13 +9,6 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
 ---
 
 <Layout title="Kitsune Hideout">
-  <section class="about-section">
-    <h2 class="page-title">About Kitsune</h2>
-    <div class="about-placeholder">
-      <!-- 소개 내용을 이후에 작성합니다 -->
-    </div>
-  </section>
-
   <section>
     <h2 class="page-title">Recent</h2>
     {posts.length > 0 ? (
