@@ -873,6 +873,79 @@ html.light .tag-cloud-link:hover .tag-cloud-name { color: #111111; }
   font-size: inherit;
 }
 
+/* ── Code block: macOS-style header wrapper ────────────── */
+.code-block-wrap {
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  margin: 1.6em 0;
+}
+
+.code-header {
+  display: flex;
+  align-items: center;
+  height: 38px;
+  padding: 0 16px;
+  background: #1a1f35;
+  border-bottom: 1px solid rgba(201, 162, 39, 0.14);
+  user-select: none;
+}
+
+.code-dots {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  flex-shrink: 0;
+}
+.code-dots span {
+  display: block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+.code-dots span:nth-child(1) { background: #ff5f57; box-shadow: 0 0 5px rgba(255,80,70,0.45); }
+.code-dots span:nth-child(2) { background: #febc2e; box-shadow: 0 0 5px rgba(254,188,46,0.45); }
+.code-dots span:nth-child(3) { background: #28c840; box-shadow: 0 0 5px rgba(40,200,64,0.45); }
+
+.code-name {
+  flex: 1;
+  text-align: center;
+  font-family: ui-monospace, 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 12px;
+  color: rgba(180, 200, 240, 0.38);
+  letter-spacing: 0.05em;
+}
+
+.code-lang {
+  flex-shrink: 0;
+  font-family: var(--font);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: rgba(130, 175, 255, 0.82);
+  background: rgba(80, 130, 255, 0.10);
+  border: 1px solid rgba(80, 130, 255, 0.24);
+  border-radius: 4px;
+  padding: 2px 8px;
+}
+
+/* Pre inside wrapper: strip redundant border/radius/margin */
+.code-block-wrap > pre {
+  border: none !important;
+  border-radius: 0 !important;
+  margin: 0 !important;
+}
+
+/* Light mode: keep the dark code look, tint header slightly */
+html.light .code-block-wrap {
+  border-color: #2a3060;
+}
+html.light .code-header {
+  background: #101628;
+  border-bottom-color: rgba(201, 162, 39, 0.20);
+}
+
 /* Dark mode: pagefind UI text color overrides */
 :root:not(.light) .pagefind-ui {
   --pagefind-ui-text: #c8d4f0;

@@ -487,4 +487,49 @@ const WAVE_FILL   = WAVE_STROKE + ' L1200,80 L0,80 Z';
     });
   }
 
+  /* ── 코드블럭: macOS 스타일 헤더 주입 ── */
+  {
+    const LANG_NAMES: Record<string, string> = {
+      js: 'JavaScript', javascript: 'JavaScript',
+      ts: 'TypeScript', typescript: 'TypeScript',
+      css: 'CSS', scss: 'SCSS', sass: 'Sass',
+      html: 'HTML', astro: 'Astro',
+      py: 'Python', python: 'Python',
+      sh: 'Shell', bash: 'Shell', shell: 'Shell', zsh: 'Shell',
+      json: 'JSON', yaml: 'YAML', yml: 'YAML', toml: 'TOML',
+      md: 'Markdown', markdown: 'Markdown',
+      sql: 'SQL', go: 'Go', rust: 'Rust',
+      java: 'Java', kotlin: 'Kotlin', swift: 'Swift',
+      jsx: 'JSX', tsx: 'TSX', vue: 'Vue', svelte: 'Svelte',
+      diff: 'Diff', text: 'Text', plaintext: 'Text',
+    };
+    const EXT_MAP: Record<string, string> = {
+      javascript: 'js', typescript: 'ts', python: 'py',
+      bash: 'sh', shell: 'sh', zsh: 'sh', yaml: 'yml', markdown: 'md',
+    };
+
+    document.querySelectorAll<HTMLPreElement>('.prose pre').forEach(pre => {
+      const code = pre.querySelector('code');
+      const langClass = Array.from(code?.classList ?? []).find(c => c.startsWith('language-'));
+      const langKey   = langClass?.replace('language-', '') ?? '';
+      const langLabel = LANG_NAMES[langKey] ?? (langKey ? langKey.toUpperCase() : '');
+      const ext       = EXT_MAP[langKey] ?? langKey;
+      const fileName  = ext ? `snippet.${ext}` : 'snippet';
+
+      const wrap = document.createElement('div');
+      wrap.className = 'code-block-wrap';
+
+      const hdr = document.createElement('div');
+      hdr.className = 'code-header';
+      hdr.innerHTML =
+        '<span class="code-dots"><span></span><span></span><span></span></span>' +
+        `<span class="code-name">${fileName}</span>` +
+        (langLabel ? `<span class="code-lang">${langLabel}</span>` : '');
+
+      pre.parentNode!.insertBefore(wrap, pre);
+      wrap.appendChild(pre);
+      wrap.insertBefore(hdr, pre);
+    });
+  }
+
 </script>
