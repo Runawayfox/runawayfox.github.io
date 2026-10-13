@@ -7,9 +7,10 @@ interface Props {
   title: string;
   description?: string;
   wideContent?: boolean;
+  isHome?: boolean;
 }
 
-const { title, description = 'Kitsune Hideout — 개발 블로그', wideContent = true } = Astro.props;
+const { title, description = 'Kitsune Hideout — 개발 블로그', wideContent = true, isHome = false } = Astro.props;
 ---
 
 <!doctype html>
@@ -103,7 +104,7 @@ const { title, description = 'Kitsune Hideout — 개발 블로그', wideContent
       })();
     </script>
   </head>
-  <body>
+  <body class:list={[{ 'is-home': isHome }]}>
     <!-- Gold hourglass loading overlay -->
     <div id="pg-load" role="status" aria-label="페이지 로딩 중">
       <div id="pg-load-mist" aria-hidden="true"></div>

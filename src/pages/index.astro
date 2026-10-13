@@ -8,7 +8,39 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
   .slice(0, 5);
 ---
 
-<Layout title="Kitsune Hideout">
+<Layout title="Kitsune Hideout" isHome={true}>
+  <!-- 모바일 전용 hero (canvas 위에 오버레이) — 데스크탑에서는 display:none -->
+  <div class="mobile-home-hero" aria-hidden="true">
+    <a href="/" class="fox-logo-wrap">
+      <div class="fox-logo-img"></div>
+      <div class="brand-text-group">
+        <span class="brand-text">KITSUNE</span>
+        <span class="brand-sub">HIDEOUT</span>
+      </div>
+    </a>
+
+    <form class="mhh-search-form" action="/search" method="get" role="search">
+      <div class="sidebar-search-wrap">
+        <svg class="sidebar-search-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+        </svg>
+        <input type="text" name="q" class="sidebar-search-input" placeholder="Search..." autocomplete="off" spellcheck="false" aria-hidden="true" tabindex="-1" />
+      </div>
+    </form>
+
+    <nav class="mhh-nav">
+      <a href="/" class="nav-btn active">Home</a>
+      <a href="/blog" class="nav-btn">Blog</a>
+      <a href="/tags" class="nav-btn">Tags</a>
+    </nav>
+
+    <div class="hero-scroll-hint" aria-hidden="true">
+      <svg width="16" height="20" viewBox="0 0 16 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M8 1v14M2 10l6 6 6-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+  </div>
+
   <section>
     <h2 class="page-title">Recent</h2>
     {posts.length > 0 ? (
