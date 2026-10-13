@@ -1232,7 +1232,13 @@ html.light .prose :where(code):not(:where(pre *)) {
   body.is-home #bg-canvas { display: block; }
   body.is-home .app-brand { display: none; }
   body.is-home .mobile-menu { display: none !important; }
-  body.is-home .main-content { padding-top: 0; }
+  body.is-home .main-content {
+    padding-top: 0;
+    /* hero 영역(첫 100vh)은 투명, 이후 콘텐츠는 불투명 전환 */
+    background: linear-gradient(to bottom, transparent 100vh, var(--bg) 100vh);
+    border-left: none;
+    border-right: none;
+  }
 
   /* hero: 100vh 전면 레이아웃 */
   .mobile-home-hero {

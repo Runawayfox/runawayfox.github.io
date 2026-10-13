@@ -469,6 +469,10 @@ const { title, description = 'Kitsune Hideout — 개발 블로그', wideContent
 
       window.addEventListener('resize', resize);
       resize();
+      /* ResizeObserver: display:none → block 전환 시에도 정확한 크기 반영 */
+      if (typeof ResizeObserver !== 'undefined') {
+        new ResizeObserver(function() { if (canvas.offsetWidth > 0) resize(); }).observe(canvas);
+      }
       requestAnimationFrame(frame);
     })();
   </script>
