@@ -87,6 +87,16 @@ body {
 ::-webkit-scrollbar-thumb:hover { background: rgba(215, 175, 50, 0.80); }
 
 /* ─────────────────── SIDEBAR (always dark) ─────────────────── */
+#sidebar-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  display: none; /* 모바일에서만 표시 */
+}
+
 .app-brand {
   position: fixed;
   left: 0; top: 0;
@@ -1085,12 +1095,30 @@ html.light .prose :where(code):not(:where(pre *)) {
 }
 .mobile-nav-btn:hover:not(.active) { color: rgba(230, 220, 185, 0.80); }
 
+/* 테마 텍스트 버튼 (버튼 기본값 초기화 + 구분선) */
+button.mobile-nav-btn {
+  background: none;
+  border: none;
+  border-left: 2px solid transparent;
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+}
+.theme-text-btn {
+  margin-top: 6px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(201,162,39,0.14) !important;
+  color: rgba(130, 118, 72, 0.85);
+}
+.theme-text-btn:hover { color: rgba(230, 220, 185, 0.85); }
+
 /* ─────────────────── RESPONSIVE ─────────────────── */
 @media (max-width: 1024px) {
   html { font-size: 15px; }
 
   /* Hide full-viewport cosmic on mobile — header bar has its own canvas */
   #bg-canvas { display: none; }
+  #sidebar-canvas { display: block; }
 
   .app-brand {
     width: 100%;
@@ -1104,8 +1132,8 @@ html.light .prose :where(code):not(:where(pre *)) {
     padding: 0 16px;
     gap: 10px;
     border-right: none;
-    border-bottom: 1px solid #2a2200;
-    background: #04041c;
+    border-bottom: 1px solid rgba(201,162,39,0.22);
+    background: #04041c; /* canvas 로드 전 fallback */
     overflow: hidden;
     z-index: 20;
   }

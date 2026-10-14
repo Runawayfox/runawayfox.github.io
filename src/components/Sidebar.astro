@@ -14,6 +14,7 @@ function isActive(href: string) {
 ---
 
 <aside class="app-brand">
+  <canvas id="sidebar-canvas"></canvas>
   <a href="/" class="fox-logo-wrap">
     <div class="fox-logo-img"></div>
     <div class="brand-text-group">
@@ -60,15 +61,6 @@ function isActive(href: string) {
 
 <!-- Mobile dropdown (sibling of aside, outside overflow:hidden) -->
 <div class="mobile-menu" id="mobile-menu" aria-hidden="true">
-  <!-- Theme toggle (mobile, inside dropdown) -->
-  <div class="theme-toggle-wrap mobile-toggle">
-    <span class="toggle-label-ko active" id="label-light-m">라이트</span>
-    <button id="theme-toggle-m" class="theme-switch is-light" aria-label="테마 전환" aria-checked="true">
-      <span class="theme-switch-thumb"></span>
-    </button>
-    <span class="toggle-label-ko" id="label-dark-m">다크</span>
-  </div>
-
   <form class="mobile-search-form" action="/search" method="get" role="search">
     <div class="sidebar-search-wrap">
       <svg class="sidebar-search-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
@@ -83,6 +75,9 @@ function isActive(href: string) {
         {item.label}
       </a>
     ))}
+    <button id="theme-toggle-text-m" type="button" class="mobile-nav-btn theme-text-btn">
+      다크 모드로 전환
+    </button>
   </nav>
 </div>
 
@@ -225,36 +220,34 @@ function isActive(href: string) {
 </script>
 
 <script is:inline>
-  /* ── Theme toggle (syncs desktop + mobile instances) ── */
+  /* ── Theme toggle (desktop switch + mobile text button) ── */
   (function () {
     var html = document.documentElement;
 
     var btn      = document.getElementById('theme-toggle');
     var lblLight = document.getElementById('label-light');
     var lblDark  = document.getElementById('label-dark');
-
-    var btnM      = document.getElementById('theme-toggle-m');
-    var lblLightM = document.getElementById('label-light-m');
-    var lblDarkM  = document.getElementById('label-dark-m');
+    var textBtnM = document.getElementById('theme-toggle-text-m');
 
     function applyUI(isLight) {
-      var buttons = [btn, btnM];
-      buttons.forEach(function (b) {
-        if (!b) return;
-        b.setAttribute('aria-checked', isLight ? 'true' : 'false');
-        if (isLight) b.classList.add('is-light');
-        else b.classList.remove('is-light');
-      });
-
+      /* 데스크탑 토글 스위치 */
+      if (btn) {
+        btn.setAttribute('aria-checked', isLight ? 'true' : 'false');
+        if (isLight) btn.classList.add('is-light');
+        else btn.classList.remove('is-light');
+      }
       function setLabel(lbl, active) {
         if (!lbl) return;
         if (active) lbl.classList.add('active');
         else lbl.classList.remove('active');
       }
-      setLabel(lblLight,  isLight);
-      setLabel(lblDark,   !isLight);
-      setLabel(lblLightM, isLight);
-      setLabel(lblDarkM,  !isLight);
+      setLabel(lblLight, isLight);
+      setLabel(lblDark,  !isLight);
+
+      /* 모바일 텍스트 버튼 */
+      if (textBtnM) {
+        textBtnM.textContent = isLight ? '다크 모드로 전환' : '라이트 모드로 전환';
+      }
     }
 
     applyUI(html.classList.contains('light'));
@@ -265,8 +258,8 @@ function isActive(href: string) {
       applyUI(nowLight);
     }
 
-    if (btn)  btn.addEventListener('click', handleClick);
-    if (btnM) btnM.addEventListener('click', handleClick);
+    if (btn)     btn.addEventListener('click', handleClick);
+    if (textBtnM) textBtnM.addEventListener('click', handleClick);
   })();
 </script>
 
