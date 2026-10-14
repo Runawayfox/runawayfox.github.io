@@ -218,7 +218,7 @@ const WAVE_FILL   = WAVE_STROKE + ' L1200,80 L0,80 Z';
   }
 
   /* ── 본문 ───────────────────────────────────────── */
-  .post-body { padding-top: 40px; }
+  .post-body { padding-top: 72px; }
 
   /* ── 하단 네비 ──────────────────────────────────── */
   .post-nav {
@@ -412,9 +412,9 @@ const WAVE_FILL   = WAVE_STROKE + ' L1200,80 L0,80 Z';
     function getY(x: number, t: number): number {
       return (
         BASELINE
-        + 13 * Math.sin(0.0072 * x + 0.32 * t)        // 주 파도 (좌행)
-        +  5 * Math.sin(0.0140 * x - 0.21 * t + 1.3)  // 교차 파도 (우행)
-        +  3 * Math.sin(0.0031 * x + 0.18 * t + 2.7)  // 장파 배경 (좌행)
+        +  7 * Math.sin(0.0072 * x + 0.44 * t)        // 주 파도 (좌행)
+        +  3 * Math.sin(0.0140 * x - 0.28 * t + 1.3)  // 교차 파도 (우행)
+        +  2 * Math.sin(0.0031 * x + 0.24 * t + 2.7)  // 장파 배경 (좌행)
       );
     }
 
