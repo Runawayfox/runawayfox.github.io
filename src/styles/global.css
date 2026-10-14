@@ -1371,7 +1371,7 @@ html.light .prose :where(code):not(:where(pre *)) {
     position: relative;
     width: 100%;
     max-width: 280px;
-    height: 110px;
+    height: 220px;
     flex-shrink: 0;
   }
 
@@ -1380,12 +1380,9 @@ html.light .prose :where(code):not(:where(pre *)) {
     inset: 0;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    gap: 8px;
-    padding: 16px 18px;
-    background: rgba(5, 8, 24, 0.80);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
+    justify-content: flex-end;
+    padding: 0;
+    background: rgba(5, 8, 24, 0.88);
     border: 1px solid rgba(201,162,39,0.18);
     border-radius: 12px;
     text-decoration: none;
@@ -1394,6 +1391,42 @@ html.light .prose :where(code):not(:where(pre *)) {
     pointer-events: none;
     overflow: hidden;
   }
+
+  /* 이미지 레이어 */
+  .mpp-img {
+    position: absolute;
+    inset: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  /* 하단 페이드 오버레이 — 텍스트 가독성 */
+  .mhh-post-preview::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to bottom,
+      rgba(3,5,18,0.04) 0%,
+      rgba(3,5,18,0.70) 52%,
+      rgba(3,5,18,0.97) 100%
+    );
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  /* 태그+제목 컨테이너 */
+  .mpp-content {
+    position: relative;
+    z-index: 2;
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+  }
+
   /* shimmer 테두리 — gradient mask 기법 (post-card::after와 동일) */
   .mhh-post-preview::after {
     content: '';
@@ -1416,6 +1449,7 @@ html.light .prose :where(code):not(:where(pre *)) {
     opacity: 0;
     transition: opacity 0.38s;
     pointer-events: none;
+    z-index: 10;
   }
   .mhh-post-preview.active {
     opacity: 1;
@@ -1425,7 +1459,7 @@ html.light .prose :where(code):not(:where(pre *)) {
     opacity: 1;
     animation: cardBorderShine 5s linear infinite;
   }
-  /* 활성 카드 제목 gold shimmer (post-card-link:hover .post-card-title와 동일) */
+  /* 활성 카드 제목 gold shimmer */
   .mhh-post-preview.active .mpp-title {
     background: linear-gradient(90deg,
       #c9a227 0%, #f5e080 30%, #fff8c0 50%, #f5e080 70%, #c9a227 100%);
@@ -1446,20 +1480,10 @@ html.light .prose :where(code):not(:where(pre *)) {
     border-radius: 4px; padding: 2px 7px;
   }
   .mpp-title {
-    font-size: 17px; font-weight: 800; line-height: 1.35;
+    font-size: 15px; font-weight: 800; line-height: 1.35;
     color: rgba(230,235,248,0.96);
     letter-spacing: -0.01em; margin: 0;
   }
-  .mpp-desc {
-    font-size: 13px; line-height: 1.6;
-    color: rgba(180,190,215,0.72);
-    margin: 0;
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-  .mpp-date { font-size: 11px; color: rgba(150,165,200,0.55); letter-spacing: 0.04em; margin-top: 4px; }
 
   /* 스크롤 드라이버 — 카드 스왑용 스크롤 공간 */
   body.is-home #mhh-scroll-driver { display: block; }
@@ -1479,18 +1503,20 @@ html.light .prose :where(code):not(:where(pre *)) {
     transform: translateY(0);
   }
 
-  /* 카드 dot indicator */
+  /* 카드 dot indicator — 카드 왼쪽 세로 배치 */
   .mhh-dots {
     position: absolute;
-    bottom: 32px;
-    left: 50%;
-    transform: translateX(-50%);
+    left: -18px;
+    top: 50%;
+    transform: translateY(-50%);
     display: flex;
+    flex-direction: column;
     gap: 7px;
     align-items: center;
+    z-index: 5;
   }
   .mhh-dot {
-    width: 6px; height: 6px;
+    width: 5px; height: 5px;
     border-radius: 50%;
     background: rgba(200,215,240,0.28);
     transition: background 0.25s, transform 0.25s;
@@ -1498,6 +1524,6 @@ html.light .prose :where(code):not(:where(pre *)) {
   }
   .mhh-dot.active {
     background: rgba(201,162,39,0.82);
-    transform: scale(1.3);
+    transform: scale(1.35);
   }
 }
