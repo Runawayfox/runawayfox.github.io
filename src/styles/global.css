@@ -1217,12 +1217,16 @@ button.mobile-nav-btn {
   .mobile-search-form { width: 100%; }
   .mobile-nav { display: flex; flex-direction: column; gap: 2px; }
 
-  /* Content area: no side padding on mobile (bezels removed) */
+  /* Content area: side padding on mobile (홈 제외) */
   .main-content {
     margin-left: 0;
     max-width: 100%;
-    padding: 28px 0;
+    padding: 28px 18px;
     padding-top: calc(56px + 28px);
+  }
+  body.is-home .main-content {
+    padding-left: 0;
+    padding-right: 0;
   }
   .main-content::before,
   .main-content::after { display: none; }
