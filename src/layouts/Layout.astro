@@ -241,7 +241,13 @@ const { title, description = 'Kitsune Hideout — 개발 블로그', wideContent
         foam.push({ nx:Math.random(), li:2+(i%3), phase:Math.random()*6.28,
           alpha:0.18+Math.random()*0.45, r:0.5+Math.random()*1.8 });
 
-      function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+      function resize() {
+        /* canvas.width = N always clears the canvas; only assign when size truly changed */
+        var nw = canvas.offsetWidth, nh = canvas.offsetHeight;
+        if (nw === W && nh === H) return;
+        W = canvas.width  = nw;
+        H = canvas.height = nh;
+      }
 
       /* shared sky color — updated each frame by drawSky, read by drawFog + drawSea */
       var skyR=5, skyG=5, skyB=22;
@@ -442,11 +448,19 @@ const { title, description = 'Kitsune Hideout — 개발 블로그', wideContent
         ctx.globalAlpha=1; ctx.restore();
       }
 
+      /* Scroll pause: skip repaints during scroll to prevent compositor tearing */
+      var scrolling = false, scrollTimer;
+      window.addEventListener('scroll', function() {
+        scrolling = true;
+        clearTimeout(scrollTimer);
+        scrollTimer = setTimeout(function() { scrolling = false; }, 200);
+      }, { passive: true });
+
       var prev=null, elapsed=0;
       function frame(ts) {
         var dt=prev?Math.min(ts-prev,50):16; prev=ts; elapsed+=dt;
 
-        /* Drift everything left */
+        /* Drift updates always run — so position is current when drawing resumes */
         for (var i=0; i<stars.length; i++) {
           stars[i].x-=stars[i].speed*dt;
           if(stars[i].x<-0.02){stars[i].x=1.02;stars[i].y=Math.random();}
@@ -459,11 +473,14 @@ const { title, description = 'Kitsune Hideout — 개발 블로그', wideContent
         for (var c=0; c<clouds.length; c++) {
           clouds[c].x-=clouds[c].speed*dt; if(clouds[c].x<-0.30)clouds[c].x+=1.60;
         }
-
         updateWX(dt, elapsed);
-        ctx.clearRect(0,0,W,H);
-        drawSky(ts); drawNebulae(ts); drawMoon(); drawStars(ts);
-        drawClouds(ts); drawFog(ts); drawSea(elapsed,dt); drawRain(dt); drawSnow(dt,elapsed);
+
+        /* Only repaint when not scrolling — prevents clearRect flash during scroll */
+        if (!scrolling) {
+          ctx.clearRect(0,0,W,H);
+          drawSky(ts); drawNebulae(ts); drawMoon(); drawStars(ts);
+          drawClouds(ts); drawFog(ts); drawSea(elapsed,dt); drawRain(dt); drawSnow(dt,elapsed);
+        }
         requestAnimationFrame(frame);
       }
 
