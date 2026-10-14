@@ -62,10 +62,7 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
             )}
             <h3 class="mpp-title">{post.data.title}</h3>
             <p class="mpp-desc">{post.data.description}</p>
-            <footer class="mpp-foot">
-              <time class="mpp-date">{dateStr}</time>
-              <span class="mpp-read">읽기 →</span>
-            </footer>
+            <time class="mpp-date">{dateStr}</time>
           </a>
         );
       })}
