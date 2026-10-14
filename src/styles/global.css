@@ -1246,15 +1246,15 @@ html.light .prose :where(code):not(:where(pre *)) {
     padding: 28px 0 0;
   }
 
-  /* hero: 100vh 전면 레이아웃 (svh만 사용 — min-height:100vh 제거로 iOS 레이아웃 시프트 방지) */
+  /* hero: 상단 배치 (justify-content: flex-start + padding-top) */
   .mobile-home-hero {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     gap: 32px;
     height: 100svh;
-    padding: 0 40px;
+    padding: 14vh 40px 0;
     position: relative;
     z-index: 2;
   }
@@ -1283,6 +1283,17 @@ html.light .prose :where(code):not(:where(pre *)) {
     border-radius: 6px;
     text-align: center;
     padding: 11px 20px;
+  }
+
+  /* 포스트 카드 슬라이드업 애니메이션 (IntersectionObserver로 .is-visible 부여) */
+  body.is-home .mhh-card-wrap {
+    opacity: 0;
+    transform: translateY(48px);
+    transition: opacity 0.52s ease, transform 0.56s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  body.is-home .mhh-card-wrap.is-visible {
+    opacity: 1;
+    transform: translateY(0);
   }
 
   /* scroll hint */
