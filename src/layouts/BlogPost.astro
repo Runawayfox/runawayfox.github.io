@@ -303,15 +303,14 @@ const WAVE_FILL   = WAVE_STROKE + ' L1200,80 L0,80 Z';
     pointer-events: auto;
   }
 
-  /* 모바일: 플로팅 바를 뷰포트 전체 너비로 상단에 고정 */
+  /* 모바일: 상단바(56px) 아래에 여백을 두고 떠 있는 형태 */
   @media (max-width: 1024px) {
     .post-float-bar {
-      left: 0;
-      right: 0;
-      top: 0;
-      border-radius: 0;
-      border: none;
-      border-bottom: 1px solid rgba(201, 162, 39, 0.22);
+      left: 12px;
+      right: 12px;
+      top: calc(56px + 8px); /* 상단바 높이 + 간격 */
+      border-radius: 12px;
+      border: 1px solid rgba(201, 162, 39, 0.22);
     }
   }
 
