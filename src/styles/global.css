@@ -1396,7 +1396,7 @@ html.light .prose :where(code):not(:where(pre *)) {
     justify-content: flex-end;
     padding: 0;
     background: rgba(5, 8, 24, 0.88);
-    border: 1px solid rgba(201,162,39,0.18);
+    border: 1px solid rgba(185, 205, 228, 0.38);
     border-radius: 12px;
     text-decoration: none;
     opacity: 0;
@@ -1520,7 +1520,7 @@ html.light .prose :where(code):not(:where(pre *)) {
   /* 카드 dot indicator — card-area 내 좌측, 카드 상단과 높이 맞춤 */
   .mhh-dots {
     flex-shrink: 0;
-    padding-top: 25px; /* PEEK_TOP과 동일 — 현재 카드 상단 기준 */
+    padding-top: 37px; /* PEEK_TOP(25) + dot 1칸(5+7=12) — 두번째 점 위치에서 시작 */
     display: flex;
     flex-direction: column;
     gap: 7px;
