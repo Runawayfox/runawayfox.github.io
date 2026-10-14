@@ -198,10 +198,12 @@ const PALETTES = [
       if (!isSwiping) return;
       e.preventDefault();
       var rawY = e.touches[0].clientY - touchStartY;
-      /* 경계 저항: 첫/마지막 카드에서 반대 방향 드래그는 25%만 전달 */
+      /* 경계 하드캡: 첫/마지막 카드에서 빈 공간이 생기는 방향은 최대 12px로 제한 */
       var dragY = rawY;
-      if (curIdx === 0 && rawY > 0) dragY = rawY * 0.25;
-      if (curIdx === heroCards.length - 1 && rawY < 0) dragY = rawY * 0.25;
+      if (curIdx === 0 && rawY > 0)
+        dragY = Math.min(rawY * 0.2, 12);
+      if (curIdx === heroCards.length - 1 && rawY < 0)
+        dragY = Math.max(rawY * 0.2, -12);
       heroCards.forEach(function (c, i) {
         var dist = i - curIdx;
         c.style.transform = 'translateY(' + (slotY(dist) + dragY) + 'px) scaleX(' + slotScale(dist) + ')';
