@@ -1010,8 +1010,9 @@ html.light .prose :where(code):not(:where(pre *)) {
 /* ─────────────────── HOME SECTIONS ─────────────────── */
 .about-section { margin-bottom: 60px; }
 .about-placeholder { min-height: 60px; }
-/* 모바일 hero — 데스크탑에서 완전히 숨김 */
+/* 모바일 hero / 스크롤 드라이버 — 데스크탑에서 완전히 숨김 */
 .mobile-home-hero { display: none; }
+#mhh-scroll-driver { display: none; }
 
 /* ─────────────────── FOOTER ─────────────────── */
 .site-footer {
@@ -1240,23 +1241,26 @@ html.light .prose :where(code):not(:where(pre *)) {
     border-left: none;
     border-right: none;
   }
-  /* 스크롤 후 등장하는 콘텐츠 영역: 자체 solid 배경 */
+  /* 스크롤 후 등장하는 콘텐츠 영역: solid 배경 + sticky hero 위에 렌더링 */
   body.is-home .mhh-below {
     background: var(--bg);
     padding: 28px 0 0;
+    position: relative;
+    z-index: 5;
   }
 
-  /* hero: 상단 배치 (justify-content: flex-start + padding-top) */
+  /* hero: sticky로 고정 — 스크롤 시 로고+바 유지 */
   .mobile-home-hero {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    gap: 32px;
+    gap: 24px;
     height: 100svh;
-    padding: 14vh 40px 0;
-    position: relative;
-    z-index: 2;
+    padding: 14vh 40px 60px;
+    position: sticky;
+    top: 0;
+    z-index: 3;
   }
 
   /* hero 내 fox-logo: 세로 중앙 정렬로 복원 */
@@ -1304,19 +1308,19 @@ html.light .prose :where(code):not(:where(pre *)) {
     letter-spacing: 2px;
   }
 
-  /* 검색 아이콘 토글 버튼 */
+  /* 검색 아이콘 토글 버튼 — 기본: borderless, 비활성 탭과 같은 톤 */
   .mhh-search-btn {
     flex-shrink: 0;
     width: 40px; height: 40px;
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(180,195,215,0.22);
+    background: transparent;
+    border: none;
     border-radius: 6px;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     color: rgba(180,195,215,0.65);
-    transition: background 0.22s, color 0.22s, border-color 0.22s;
+    transition: background 0.22s, color 0.22s;
     position: relative;
     z-index: 1;
   }
@@ -1358,6 +1362,80 @@ html.light .prose :where(code):not(:where(pre *)) {
     flex: 1;
     min-width: 0;
   }
+
+  /* ── 히어로 포스트 카드 영역 ── */
+  .mhh-hero-card {
+    flex: 1;
+    position: relative;
+    width: 100%;
+    min-height: 0;
+    align-self: stretch;
+  }
+
+  .mhh-post-preview {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 12px;
+    padding: 24px 22px;
+    background: rgba(5, 8, 24, 0.80);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(201,162,39,0.18);
+    border-radius: 12px;
+    text-decoration: none;
+    opacity: 0;
+    transition: opacity 0.38s ease;
+    pointer-events: none;
+    overflow: hidden;
+  }
+  .mhh-post-preview.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .mpp-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+  .mpp-tag {
+    font-size: 9px; font-weight: 700;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: rgba(201,162,39,0.85);
+    background: rgba(201,162,39,0.10);
+    border: 1px solid rgba(201,162,39,0.22);
+    border-radius: 4px; padding: 2px 7px;
+  }
+  .mpp-title {
+    font-size: 17px; font-weight: 800; line-height: 1.35;
+    color: rgba(230,235,248,0.96);
+    letter-spacing: -0.01em; margin: 0;
+  }
+  .mpp-desc {
+    font-size: 13px; line-height: 1.6;
+    color: rgba(180,190,215,0.72);
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .mpp-foot {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-top: 4px;
+  }
+  .mpp-date { font-size: 11px; color: rgba(150,165,200,0.55); letter-spacing: 0.04em; }
+  .mpp-read {
+    font-size: 11px; font-weight: 700;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: rgba(201,162,39,0.82);
+  }
+
+  /* 스크롤 드라이버 — 카드 스왑용 스크롤 공간 */
+  body.is-home #mhh-scroll-driver { display: block; }
+  .mhh-scroll-space { height: 100svh; }
+
+  /* 모바일 홈에서 mhh-below blog-grid 숨김 (카드는 hero 내부에 있음) */
+  body.is-home .mhh-below .blog-grid { display: none; }
 
   /* 포스트 카드 슬라이드업 애니메이션 (IntersectionObserver로 .is-visible 부여) */
   body.is-home .mhh-card-wrap {

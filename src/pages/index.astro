@@ -43,11 +43,44 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
       </button>
     </div>
 
+    <!-- 히어로 포스트 카드 (스크롤로 교체됨) -->
+    <div class="mhh-hero-card" id="mhh-hero-card">
+      {posts.map((post, i) => {
+        const slug = post.id.replace(/\.mdx?$/, '');
+        const dateStr = post.data.pubDate.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' });
+        return (
+          <a
+            href={`/blog/${slug}`}
+            class:list={['mhh-post-preview', { active: i === 0 }]}
+            aria-hidden={i !== 0 ? 'true' : undefined}
+            tabindex={i !== 0 ? -1 : undefined}
+          >
+            {post.data.tags && post.data.tags.length > 0 && (
+              <div class="mpp-tags">
+                {post.data.tags.slice(0, 3).map(t => <span class="mpp-tag">{t}</span>)}
+              </div>
+            )}
+            <h3 class="mpp-title">{post.data.title}</h3>
+            <p class="mpp-desc">{post.data.description}</p>
+            <footer class="mpp-foot">
+              <time class="mpp-date">{dateStr}</time>
+              <span class="mpp-read">읽기 →</span>
+            </footer>
+          </a>
+        );
+      })}
+    </div>
+
     <div class="hero-scroll-hint" aria-hidden="true">
       <svg width="16" height="20" viewBox="0 0 16 20" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M8 1v14M2 10l6 6 6-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
     </div>
+  </div>
+
+  <!-- 카드 스왑용 스크롤 공간 (posts.length-1 만큼) — 모바일 is-home only -->
+  <div id="mhh-scroll-driver" aria-hidden="true">
+    {posts.slice(1).map(() => <div class="mhh-scroll-space"></div>)}
   </div>
 
   <div class="mhh-below">
@@ -77,22 +110,28 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
   if (window.innerWidth > 1024) return;
   if (!document.body.classList.contains('is-home')) return;
 
-  /* ── 포스트 카드 슬라이드업 ── */
-  var cards = document.querySelectorAll('.mhh-card-wrap');
-  if (cards.length) {
-    if (!('IntersectionObserver' in window)) {
-      cards.forEach(function (c) { c.classList.add('is-visible'); });
-    } else {
-      var io = new IntersectionObserver(function (entries) {
-        entries.forEach(function (entry) {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('is-visible');
-            io.unobserve(entry.target);
-          }
-        });
-      }, { threshold: 0.08 });
-      cards.forEach(function (c) { io.observe(c); });
-    }
+  /* ── 히어로 포스트 카드 스크롤 스왑 ── */
+  var heroCards = document.querySelectorAll('.mhh-post-preview');
+  var curIdx = 0;
+  var lastScrollTs = 0;
+
+  if (heroCards.length > 1) {
+    window.addEventListener('scroll', function () {
+      var now = Date.now();
+      if (now - lastScrollTs < 40) return;
+      lastScrollTs = now;
+      var idx = Math.max(0, Math.min(heroCards.length - 1,
+        Math.floor(window.scrollY / window.innerHeight)));
+      if (idx !== curIdx) {
+        heroCards[curIdx].classList.remove('active');
+        heroCards[curIdx].setAttribute('aria-hidden', 'true');
+        heroCards[curIdx].setAttribute('tabindex', '-1');
+        heroCards[idx].classList.add('active');
+        heroCards[idx].removeAttribute('aria-hidden');
+        heroCards[idx].removeAttribute('tabindex');
+        curIdx = idx;
+      }
+    }, { passive: true });
   }
 
   /* ── 검색 바 확장 토글 ── */
@@ -107,7 +146,6 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
     btn.setAttribute('aria-expanded', 'true');
     expand.setAttribute('aria-hidden', 'false');
     input.setAttribute('tabindex', '0');
-    /* 애니메이션(0.38s) 후 포커스 */
     setTimeout(function () { input.focus(); }, 380);
   }
 
