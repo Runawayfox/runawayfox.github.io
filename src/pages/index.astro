@@ -57,39 +57,43 @@ const PALETTES = [
       </button>
     </div>
 
-    <!-- 히어로 포스트 카드 + dot indicator -->
-    <div class="mhh-hero-card" id="mhh-hero-card">
-      {posts.map((post, i) => {
-        const slug = post.id.replace(/\.mdx?$/, '');
-        const placeholder = PALETTES[hashSlug(slug) % PALETTES.length];
-        return (
-          <a
-            href={`/blog/${slug}`}
-            class:list={['mhh-post-preview', { active: i === 0 }]}
-            aria-hidden={i !== 0 ? 'true' : undefined}
-            tabindex={i !== 0 ? -1 : undefined}
-          >
-            {post.data.image
-              ? <img src={post.data.image} alt={post.data.title} class="mpp-img" loading="lazy" />
-              : <div class="mpp-img" style={`background: ${placeholder};`}></div>
-            }
-            <div class="mpp-content">
-              {post.data.tags && post.data.tags.length > 0 && (
-                <div class="mpp-tags">
-                  {post.data.tags.slice(0, 3).map(t => <span class="mpp-tag">{t}</span>)}
-                </div>
-              )}
-              <h3 class="mpp-title">{post.data.title}</h3>
-            </div>
-          </a>
-        );
-      })}
-      <!-- dot indicator: 카드 왼쪽에 세로 배치 -->
+    <!-- dots + 카드 래퍼 -->
+    <div class="mhh-card-area">
+      <!-- dot indicator: 카드 좌측, 카드 상단 기준 세로 배치 -->
       {posts.length > 1 && (
         <div class="mhh-dots" id="mhh-dots" aria-hidden="true">
           {posts.map((_, i) => <span class:list={['mhh-dot', { active: i === 0 }]}></span>)}
         </div>
       )}
+
+      <!-- 히어로 포스트 카드 (스와이프로 교체) -->
+      <div class="mhh-hero-card" id="mhh-hero-card">
+        {posts.map((post, i) => {
+          const slug = post.id.replace(/\.mdx?$/, '');
+          const placeholder = PALETTES[hashSlug(slug) % PALETTES.length];
+          return (
+            <a
+              href={`/blog/${slug}`}
+              class="mhh-post-preview"
+              aria-hidden="true"
+              tabindex={-1}
+            >
+              {post.data.image
+                ? <img src={post.data.image} alt={post.data.title} class="mpp-img" loading="lazy" />
+                : <div class="mpp-img" style={`background: ${placeholder};`}></div>
+              }
+              <div class="mpp-content">
+                {post.data.tags && post.data.tags.length > 0 && (
+                  <div class="mpp-tags">
+                    {post.data.tags.slice(0, 3).map(t => <span class="mpp-tag">{t}</span>)}
+                  </div>
+                )}
+                <h3 class="mpp-title">{post.data.title}</h3>
+              </div>
+            </a>
+          );
+        })}
+      </div>
     </div>
   </div>
 
@@ -120,56 +124,105 @@ const PALETTES = [
   if (window.innerWidth > 1024) return;
   if (!document.body.classList.contains('is-home')) return;
 
-  /* ── 페이지 스크롤 잠금 (JS fallback for older browsers) ── */
+  /* ── 페이지 스크롤 잠금 ── */
   document.documentElement.style.overflow = 'hidden';
   document.body.style.overflow = 'hidden';
 
-  /* ── 히어로 포스트 카드 스와이프 내비게이션 ── */
+  /* ── 카드 슬롯 상수 ── */
+  var PEEK_TOP  = 25;   /* px: 이전 카드가 위쪽으로 노출되는 양 */
+  var CARD_H    = 220;  /* px: 카드 높이 (CSS height와 동기) */
+  var FULL_STEP = 220;  /* px: 슬롯 간격 (CARD_H와 동일 → 카드 맞닿음) */
+
+  function slotY(dist)   { return PEEK_TOP + dist * FULL_STEP; }
+  function slotScale(dist) { return dist === 0 ? 1 : 0.87; }
+  function slotOpacity(dist) {
+    if (dist === 0) return 1;
+    if (Math.abs(dist) === 1) return 0.62;
+    return 0;
+  }
+
+  /* ── DOM ── */
   var heroCards = document.querySelectorAll('.mhh-post-preview');
-  var dots = document.querySelectorAll('.mhh-dot');
-  var curIdx = 0;
-  var touchStartY = 0;
-  var isSwiping = false;
+  var dots      = document.querySelectorAll('.mhh-dot');
+  var curIdx    = 0;
+
+  function applySlot(card, dist, noTransition) {
+    if (noTransition) card.style.transition = 'none';
+    card.style.transform    = 'translateY(' + slotY(dist) + 'px) scaleX(' + slotScale(dist) + ')';
+    card.style.opacity      = slotOpacity(dist);
+    card.style.pointerEvents = dist === 0 ? 'auto' : 'none';
+    if (dist === 0) {
+      card.classList.add('active');
+      card.removeAttribute('aria-hidden');
+      card.removeAttribute('tabindex');
+    } else {
+      card.classList.remove('active');
+      card.setAttribute('aria-hidden', 'true');
+      card.setAttribute('tabindex', '-1');
+    }
+  }
+
+  function updateAll(idx, noTransition) {
+    heroCards.forEach(function (c, i) { applySlot(c, i - idx, noTransition); });
+    dots.forEach(function (d, i) { d.classList.toggle('active', i === idx); });
+  }
 
   function goToCard(newIdx) {
     if (newIdx < 0 || newIdx >= heroCards.length || newIdx === curIdx) return;
-    heroCards[curIdx].classList.remove('active');
-    heroCards[curIdx].setAttribute('aria-hidden', 'true');
-    heroCards[curIdx].setAttribute('tabindex', '-1');
-    if (dots.length) {
-      dots[curIdx].classList.remove('active');
-      dots[newIdx].classList.add('active');
-    }
-    heroCards[newIdx].classList.add('active');
-    heroCards[newIdx].removeAttribute('aria-hidden');
-    heroCards[newIdx].removeAttribute('tabindex');
     curIdx = newIdx;
+    updateAll(curIdx, false);
   }
 
-  if (heroCards.length > 1) {
-    var heroEl = document.querySelector('.mobile-home-hero');
-    if (heroEl) {
-      heroEl.addEventListener('touchstart', function (e) {
-        touchStartY = e.touches[0].clientY;
-        isSwiping = true;
-      }, { passive: true });
+  /* 초기 배치 — 트랜지션 없이 */
+  updateAll(0, true);
+  requestAnimationFrame(function () {
+    requestAnimationFrame(function () {
+      heroCards.forEach(function (c) { c.style.transition = ''; });
+    });
+  });
 
-      heroEl.addEventListener('touchmove', function (e) {
-        /* 수직 스와이프 중 페이지 스크롤 방지 */
-        if (isSwiping) e.preventDefault();
-      }, { passive: false });
+  /* ── 스와이프 (드래그 추적 포함) ── */
+  var touchStartY = 0;
+  var isSwiping   = false;
+  var heroEl = document.querySelector('.mobile-home-hero');
 
-      heroEl.addEventListener('touchend', function (e) {
-        if (!isSwiping) return;
-        isSwiping = false;
-        var delta = touchStartY - e.changedTouches[0].clientY;
-        if (Math.abs(delta) > 48) {
-          goToCard(delta > 0 ? curIdx + 1 : curIdx - 1);
-        }
-      }, { passive: true });
+  if (heroEl && heroCards.length > 1) {
+    heroEl.addEventListener('touchstart', function (e) {
+      touchStartY = e.touches[0].clientY;
+      isSwiping   = true;
+      /* 드래그 중 트랜지션 제거 → 손가락 추적 */
+      heroCards.forEach(function (c) { c.style.transition = 'none'; });
+    }, { passive: true });
 
-      heroEl.addEventListener('touchcancel', function () { isSwiping = false; }, { passive: true });
-    }
+    heroEl.addEventListener('touchmove', function (e) {
+      if (!isSwiping) return;
+      e.preventDefault();
+      var dragY = e.touches[0].clientY - touchStartY;
+      heroCards.forEach(function (c, i) {
+        var dist = i - curIdx;
+        c.style.transform = 'translateY(' + (slotY(dist) + dragY) + 'px) scaleX(' + slotScale(dist) + ')';
+      });
+    }, { passive: false });
+
+    heroEl.addEventListener('touchend', function (e) {
+      if (!isSwiping) return;
+      isSwiping = false;
+      var dy = touchStartY - e.changedTouches[0].clientY;
+      /* 트랜지션 복원 후 스냅 */
+      heroCards.forEach(function (c) { c.style.transition = ''; });
+      if (Math.abs(dy) > 48) {
+        goToCard(dy > 0 ? curIdx + 1 : curIdx - 1);
+      } else {
+        updateAll(curIdx, false); /* 제자리 스냅백 */
+      }
+    }, { passive: true });
+
+    heroEl.addEventListener('touchcancel', function () {
+      if (!isSwiping) return;
+      isSwiping = false;
+      heroCards.forEach(function (c) { c.style.transition = ''; });
+      updateAll(curIdx, false);
+    }, { passive: true });
   }
 
   /* ── 검색 바 확장 토글 ── */
@@ -199,11 +252,9 @@ const PALETTES = [
   btn.addEventListener('click', function () {
     bar.classList.contains('search-open') ? closeSearch() : openSearch();
   });
-
   input.addEventListener('keydown', function (e) {
     if (e.key === 'Escape') closeSearch();
   });
-
   document.addEventListener('click', function (e) {
     if (bar.classList.contains('search-open') && !bar.contains(e.target)) closeSearch();
   });

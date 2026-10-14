@@ -1366,18 +1366,31 @@ html.light .prose :where(code):not(:where(pre *)) {
     min-width: 0;
   }
 
+  /* ── 히어로 카드 + dot 래퍼 ── */
+  .mhh-card-area {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 10px;
+    margin-top: 16px;
+    width: 100%;
+    max-width: 300px;
+  }
+
   /* ── 히어로 포스트 카드 영역 ── */
   .mhh-hero-card {
     position: relative;
-    width: 100%;
+    flex: 1;
     max-width: 280px;
-    height: 220px;
+    height: 270px;
     flex-shrink: 0;
+    overflow: hidden;
   }
 
   .mhh-post-preview {
     position: absolute;
-    inset: 0;
+    top: 0; left: 0; right: 0;
+    height: 220px;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
@@ -1387,9 +1400,10 @@ html.light .prose :where(code):not(:where(pre *)) {
     border-radius: 12px;
     text-decoration: none;
     opacity: 0;
-    transition: opacity 0.38s ease;
+    transition: transform 0.40s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.38s ease;
     pointer-events: none;
     overflow: hidden;
+    will-change: transform, opacity;
   }
 
   /* 이미지 레이어 */
@@ -1503,27 +1517,24 @@ html.light .prose :where(code):not(:where(pre *)) {
     transform: translateY(0);
   }
 
-  /* 카드 dot indicator — 카드 왼쪽 세로 배치 */
+  /* 카드 dot indicator — card-area 내 좌측, 카드 상단과 높이 맞춤 */
   .mhh-dots {
-    position: absolute;
-    left: -18px;
-    top: 50%;
-    transform: translateY(-50%);
+    flex-shrink: 0;
+    padding-top: 25px; /* PEEK_TOP과 동일 — 현재 카드 상단 기준 */
     display: flex;
     flex-direction: column;
     gap: 7px;
     align-items: center;
-    z-index: 5;
   }
   .mhh-dot {
     width: 5px; height: 5px;
     border-radius: 50%;
-    background: rgba(200,215,240,0.28);
+    background: rgba(210,225,248,0.58);
     transition: background 0.25s, transform 0.25s;
     flex-shrink: 0;
   }
   .mhh-dot.active {
-    background: rgba(201,162,39,0.82);
+    background: rgba(201,162,39,0.88);
     transform: scale(1.35);
   }
 }
