@@ -1270,19 +1270,93 @@ html.light .prose :where(code):not(:where(pre *)) {
   .mobile-home-hero .brand-text { font-size: 16px; letter-spacing: 9px; }
   .mobile-home-hero .brand-sub  { font-size: 10px; letter-spacing: 5px; }
 
-  /* hero 검색 + nav */
-  .mhh-search-form { width: 100%; max-width: 280px; }
-  .mhh-nav {
+  /* ── hero 탭 + 검색 한 줄 바 ── */
+  .mhh-bar {
+    position: relative;
     display: flex;
-    flex-direction: column;
+    align-items: center;
+    gap: 6px;
     width: 100%;
     max-width: 280px;
+    height: 40px;
+  }
+
+  /* 탭 nav: 수평 행, 검색 열릴 때 fade out */
+  .mhh-nav {
+    flex: 1;
+    display: flex;
+    flex-direction: row;
     gap: 4px;
+    transition: opacity 0.22s, visibility 0.22s;
+  }
+  .mhh-bar.search-open .mhh-nav {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
   }
   .mhh-nav .nav-btn {
+    flex: 1;
+    border-left: none !important;
     border-radius: 6px;
     text-align: center;
-    padding: 11px 20px;
+    padding: 8px 4px;
+    font-size: 10px;
+    letter-spacing: 2px;
+  }
+
+  /* 검색 아이콘 토글 버튼 */
+  .mhh-search-btn {
+    flex-shrink: 0;
+    width: 40px; height: 40px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(180,195,215,0.22);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: rgba(180,195,215,0.65);
+    transition: background 0.22s, color 0.22s, border-color 0.22s;
+    position: relative;
+    z-index: 1;
+  }
+  .mhh-bar.search-open .mhh-search-btn,
+  .mhh-search-btn:hover {
+    background: rgba(201,162,39,0.12);
+    border-color: rgba(201,162,39,0.38);
+    color: rgba(245,224,128,0.88);
+  }
+
+  /* 검색 확장 영역: clip-path로 좌측 방향 슬라이드인 */
+  .mhh-search-expand {
+    position: absolute;
+    left: 0;
+    right: 48px;
+    top: 0; bottom: 0;
+    clip-path: inset(0 0 0 100%);
+    transition: clip-path 0.38s cubic-bezier(0.22, 1, 0.36, 1);
+    z-index: 2;
+  }
+  .mhh-bar.search-open .mhh-search-expand {
+    clip-path: inset(0 0 0 0%);
+  }
+  .mhh-search-inner {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    padding: 0 12px;
+    gap: 8px;
+    background: rgba(6, 9, 28, 0.92);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(180,195,215,0.26);
+    border-radius: 6px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .mhh-search-inner .sidebar-search-input {
+    flex: 1;
+    min-width: 0;
   }
 
   /* 포스트 카드 슬라이드업 애니메이션 (IntersectionObserver로 .is-visible 부여) */

@@ -19,20 +19,29 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
       </div>
     </a>
 
-    <form class="mhh-search-form" action="/search" method="get" role="search">
-      <div class="sidebar-search-wrap">
-        <svg class="sidebar-search-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
-        </svg>
-        <input type="text" name="q" class="sidebar-search-input" placeholder="Search..." autocomplete="off" spellcheck="false" aria-hidden="true" tabindex="-1" />
-      </div>
-    </form>
+    <!-- 탭 + 검색 한 줄 바 -->
+    <div class="mhh-bar" id="mhh-bar">
+      <nav class="mhh-nav">
+        <a href="/" class="nav-btn active">Home</a>
+        <a href="/blog" class="nav-btn">Blog</a>
+        <a href="/tags" class="nav-btn">Tags</a>
+      </nav>
 
-    <nav class="mhh-nav">
-      <a href="/" class="nav-btn active">Home</a>
-      <a href="/blog" class="nav-btn">Blog</a>
-      <a href="/tags" class="nav-btn">Tags</a>
-    </nav>
+      <!-- 좌측 확장 검색 영역 (clip-path 애니메이션) -->
+      <div class="mhh-search-expand" id="mhh-search-expand" aria-hidden="true">
+        <form class="mhh-search-inner" action="/search" method="get" role="search">
+          <input id="mhh-search-input" type="text" name="q" class="sidebar-search-input"
+            placeholder="Search..." autocomplete="off" spellcheck="false" tabindex="-1" />
+        </form>
+      </div>
+
+      <!-- 검색 아이콘 버튼 (우측 고정) -->
+      <button class="mhh-search-btn" id="mhh-search-btn" type="button" aria-label="검색 열기" aria-expanded="false">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+        </svg>
+      </button>
+    </div>
 
     <div class="hero-scroll-hint" aria-hidden="true">
       <svg width="16" height="20" viewBox="0 0 16 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -67,21 +76,61 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
 (function () {
   if (window.innerWidth > 1024) return;
   if (!document.body.classList.contains('is-home')) return;
+
+  /* ── 포스트 카드 슬라이드업 ── */
   var cards = document.querySelectorAll('.mhh-card-wrap');
-  if (!cards.length) return;
-  if (!('IntersectionObserver' in window)) {
-    cards.forEach(function (c) { c.classList.add('is-visible'); });
-    return;
+  if (cards.length) {
+    if (!('IntersectionObserver' in window)) {
+      cards.forEach(function (c) { c.classList.add('is-visible'); });
+    } else {
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            io.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.08 });
+      cards.forEach(function (c) { io.observe(c); });
+    }
   }
-  var io = new IntersectionObserver(function (entries) {
-    entries.forEach(function (entry) {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('is-visible');
-        io.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.08 });
-  cards.forEach(function (c) { io.observe(c); });
+
+  /* ── 검색 바 확장 토글 ── */
+  var bar    = document.getElementById('mhh-bar');
+  var btn    = document.getElementById('mhh-search-btn');
+  var expand = document.getElementById('mhh-search-expand');
+  var input  = document.getElementById('mhh-search-input');
+  if (!bar || !btn || !expand || !input) return;
+
+  function openSearch() {
+    bar.classList.add('search-open');
+    btn.setAttribute('aria-expanded', 'true');
+    expand.setAttribute('aria-hidden', 'false');
+    input.setAttribute('tabindex', '0');
+    /* 애니메이션(0.38s) 후 포커스 */
+    setTimeout(function () { input.focus(); }, 380);
+  }
+
+  function closeSearch() {
+    bar.classList.remove('search-open');
+    btn.setAttribute('aria-expanded', 'false');
+    expand.setAttribute('aria-hidden', 'true');
+    input.setAttribute('tabindex', '-1');
+    input.value = '';
+    input.blur();
+  }
+
+  btn.addEventListener('click', function () {
+    bar.classList.contains('search-open') ? closeSearch() : openSearch();
+  });
+
+  input.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') closeSearch();
+  });
+
+  document.addEventListener('click', function (e) {
+    if (bar.classList.contains('search-open') && !bar.contains(e.target)) closeSearch();
+  });
 })();
 </script>
 </Layout>
