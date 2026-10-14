@@ -1385,24 +1385,14 @@ html.light .prose :where(code):not(:where(pre *)) {
     height: 270px;
     flex-shrink: 0;
     overflow: hidden;
-  }
-
-  /* 이전 카드(하단 25px 노출): 카드 밑단 페이드 강화 */
-  .mhh-post-preview.peek-prev::before {
-    background: linear-gradient(to bottom,
-      rgba(3,5,18,0.04) 0%,
-      rgba(3,5,18,0.68) 50%,
-      rgba(3,5,18,0.96) 78%,
-      rgba(3,5,18,0.99) 100%
+    /* 위아래 28px peek 영역을 컨테이너 마스크로 페이드 */
+    -webkit-mask-image: linear-gradient(to bottom,
+      transparent 0px, black 28px,
+      black calc(100% - 28px), transparent 100%
     );
-  }
-  /* 다음 카드(상단 25px 노출): 카드 윗단 페이드 추가 */
-  .mhh-post-preview.peek-next::before {
-    background: linear-gradient(to bottom,
-      rgba(3,5,18,0.97) 0%,
-      rgba(3,5,18,0.86) 28%,
-      rgba(3,5,18,0.70) 52%,
-      rgba(3,5,18,0.97) 100%
+    mask-image: linear-gradient(to bottom,
+      transparent 0px, black 28px,
+      black calc(100% - 28px), transparent 100%
     );
   }
 
