@@ -99,7 +99,7 @@
 }
 
 .quote-section .quote-card {
-  width: 67%;
+  width: 50%; /* 67% × 0.75 */
 }
 
 .quote-card {
@@ -255,8 +255,13 @@ html.light .quote-speaker { color: #333333; }
 html.light .quote-attribution { border-top-color: rgba(201, 162, 39, 0.20); }
 
 @media (max-width: 1024px) {
-  .quote-section .quote-card { width: 100%; }
+  .quote-section .quote-card {
+    width: calc(100% - 32px);
+    margin: 0 auto;
+  }
   .quote-card { padding: 22px 22px 20px 36px; }
   .quote-mark { font-size: 36px; top: 8px; left: 10px; }
+  .quote-text   { font-size: 13px; }
+  .quote-speaker { font-size: 12px; }
 }
 </style>
