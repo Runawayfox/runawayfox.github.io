@@ -151,6 +151,7 @@ const PALETTES = [
     card.style.transform    = 'translateY(' + slotY(dist) + 'px) scaleX(' + slotScale(dist) + ')';
     card.style.opacity      = slotOpacity(dist);
     card.style.pointerEvents = dist === 0 ? 'auto' : 'none';
+    card.classList.remove('peek-prev', 'peek-next');
     if (dist === 0) {
       card.classList.add('active');
       card.removeAttribute('aria-hidden');
@@ -159,6 +160,8 @@ const PALETTES = [
       card.classList.remove('active');
       card.setAttribute('aria-hidden', 'true');
       card.setAttribute('tabindex', '-1');
+      if (dist === -1) card.classList.add('peek-prev');
+      if (dist === 1)  card.classList.add('peek-next');
     }
   }
 
