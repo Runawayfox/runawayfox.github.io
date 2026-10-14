@@ -197,7 +197,11 @@ const PALETTES = [
     heroEl.addEventListener('touchmove', function (e) {
       if (!isSwiping) return;
       e.preventDefault();
-      var dragY = e.touches[0].clientY - touchStartY;
+      var rawY = e.touches[0].clientY - touchStartY;
+      /* 경계 저항: 첫/마지막 카드에서 반대 방향 드래그는 25%만 전달 */
+      var dragY = rawY;
+      if (curIdx === 0 && rawY > 0) dragY = rawY * 0.25;
+      if (curIdx === heroCards.length - 1 && rawY < 0) dragY = rawY * 0.25;
       heroCards.forEach(function (c, i) {
         var dist = i - curIdx;
         c.style.transform = 'translateY(' + (slotY(dist) + dragY) + 'px) scaleX(' + slotScale(dist) + ')';
