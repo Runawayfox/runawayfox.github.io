@@ -1231,6 +1231,9 @@ html.light .prose :where(code):not(:where(pre *)) {
   }
 
   /* ── 모바일 홈 hero ── */
+  /* 페이지 스크롤 잠금 (스와이프 카드 내비게이션 사용) */
+  html:has(body.is-home) { overflow: hidden; }
+  body.is-home { overflow: hidden; height: 100svh; }
   /* canvas 표시, 고정 헤더 숨김, main-content 상단 여백 제거 */
   body.is-home #bg-canvas { display: block; }
   body.is-home .app-brand { display: none; }
@@ -1249,7 +1252,7 @@ html.light .prose :where(code):not(:where(pre *)) {
     z-index: 5;
   }
 
-  /* hero: sticky로 고정 — 스크롤 시 로고+바 유지 */
+  /* hero: sticky로 고정 — 스와이프 카드 내비게이션 */
   .mobile-home-hero {
     display: flex;
     flex-direction: column;
@@ -1257,7 +1260,7 @@ html.light .prose :where(code):not(:where(pre *)) {
     justify-content: flex-start;
     gap: 24px;
     height: 100svh;
-    padding: 14vh 40px 60px;
+    padding: 14vh 40px 0;
     position: sticky;
     top: 0;
     z-index: 3;
@@ -1365,11 +1368,11 @@ html.light .prose :where(code):not(:where(pre *)) {
 
   /* ── 히어로 포스트 카드 영역 ── */
   .mhh-hero-card {
-    flex: 1;
     position: relative;
     width: 100%;
     max-width: 280px;
-    min-height: 0;
+    height: 110px;
+    flex-shrink: 0;
   }
 
   .mhh-post-preview {
@@ -1378,8 +1381,8 @@ html.light .prose :where(code):not(:where(pre *)) {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    gap: 12px;
-    padding: 24px 22px;
+    gap: 8px;
+    padding: 16px 18px;
     background: rgba(5, 8, 24, 0.80);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
@@ -1476,17 +1479,25 @@ html.light .prose :where(code):not(:where(pre *)) {
     transform: translateY(0);
   }
 
-  /* scroll hint */
-  .hero-scroll-hint {
+  /* 카드 dot indicator */
+  .mhh-dots {
     position: absolute;
-    bottom: 28px;
+    bottom: 32px;
     left: 50%;
     transform: translateX(-50%);
-    color: rgba(200, 215, 240, 0.40);
-    animation: heroScrollBounce 2.2s ease-in-out infinite;
+    display: flex;
+    gap: 7px;
+    align-items: center;
   }
-  @keyframes heroScrollBounce {
-    0%, 100% { transform: translateX(-50%) translateY(0);  opacity: 0.40; }
-    50%       { transform: translateX(-50%) translateY(7px); opacity: 0.75; }
+  .mhh-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: rgba(200,215,240,0.28);
+    transition: background 0.25s, transform 0.25s;
+    flex-shrink: 0;
+  }
+  .mhh-dot.active {
+    background: rgba(201,162,39,0.82);
+    transform: scale(1.3);
   }
 }

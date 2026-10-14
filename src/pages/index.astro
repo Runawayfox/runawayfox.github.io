@@ -43,11 +43,10 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
       </button>
     </div>
 
-    <!-- 히어로 포스트 카드 (스크롤로 교체됨) -->
+    <!-- 히어로 포스트 카드 (스와이프로 교체) — 태그+제목만 표시 -->
     <div class="mhh-hero-card" id="mhh-hero-card">
       {posts.map((post, i) => {
         const slug = post.id.replace(/\.mdx?$/, '');
-        const dateStr = post.data.pubDate.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' });
         return (
           <a
             href={`/blog/${slug}`}
@@ -61,23 +60,17 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
               </div>
             )}
             <h3 class="mpp-title">{post.data.title}</h3>
-            <p class="mpp-desc">{post.data.description}</p>
-            <time class="mpp-date">{dateStr}</time>
           </a>
         );
       })}
     </div>
 
-    <div class="hero-scroll-hint" aria-hidden="true">
-      <svg width="16" height="20" viewBox="0 0 16 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M8 1v14M2 10l6 6 6-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-    </div>
-  </div>
-
-  <!-- 카드 스왑용 스크롤 공간 (posts.length-1 만큼) — 모바일 is-home only -->
-  <div id="mhh-scroll-driver" aria-hidden="true">
-    {posts.slice(1).map(() => <div class="mhh-scroll-space"></div>)}
+    <!-- dot indicator: 현재 카드 위치 표시 -->
+    {posts.length > 1 && (
+      <div class="mhh-dots" id="mhh-dots" aria-hidden="true">
+        {posts.map((_, i) => <span class:list={['mhh-dot', { active: i === 0 }]}></span>)}
+      </div>
+    )}
   </div>
 
   <div class="mhh-below">
@@ -107,28 +100,56 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
   if (window.innerWidth > 1024) return;
   if (!document.body.classList.contains('is-home')) return;
 
-  /* ── 히어로 포스트 카드 스크롤 스왑 ── */
+  /* ── 페이지 스크롤 잠금 (JS fallback for older browsers) ── */
+  document.documentElement.style.overflow = 'hidden';
+  document.body.style.overflow = 'hidden';
+
+  /* ── 히어로 포스트 카드 스와이프 내비게이션 ── */
   var heroCards = document.querySelectorAll('.mhh-post-preview');
+  var dots = document.querySelectorAll('.mhh-dot');
   var curIdx = 0;
-  var lastScrollTs = 0;
+  var touchStartY = 0;
+  var isSwiping = false;
+
+  function goToCard(newIdx) {
+    if (newIdx < 0 || newIdx >= heroCards.length || newIdx === curIdx) return;
+    heroCards[curIdx].classList.remove('active');
+    heroCards[curIdx].setAttribute('aria-hidden', 'true');
+    heroCards[curIdx].setAttribute('tabindex', '-1');
+    if (dots.length) {
+      dots[curIdx].classList.remove('active');
+      dots[newIdx].classList.add('active');
+    }
+    heroCards[newIdx].classList.add('active');
+    heroCards[newIdx].removeAttribute('aria-hidden');
+    heroCards[newIdx].removeAttribute('tabindex');
+    curIdx = newIdx;
+  }
 
   if (heroCards.length > 1) {
-    window.addEventListener('scroll', function () {
-      var now = Date.now();
-      if (now - lastScrollTs < 40) return;
-      lastScrollTs = now;
-      var idx = Math.max(0, Math.min(heroCards.length - 1,
-        Math.floor(window.scrollY / window.innerHeight)));
-      if (idx !== curIdx) {
-        heroCards[curIdx].classList.remove('active');
-        heroCards[curIdx].setAttribute('aria-hidden', 'true');
-        heroCards[curIdx].setAttribute('tabindex', '-1');
-        heroCards[idx].classList.add('active');
-        heroCards[idx].removeAttribute('aria-hidden');
-        heroCards[idx].removeAttribute('tabindex');
-        curIdx = idx;
-      }
-    }, { passive: true });
+    var heroEl = document.querySelector('.mobile-home-hero');
+    if (heroEl) {
+      heroEl.addEventListener('touchstart', function (e) {
+        touchStartY = e.touches[0].clientY;
+        isSwiping = true;
+      }, { passive: true });
+
+      heroEl.addEventListener('touchmove', function (e) {
+        /* 수직 스와이프 중 페이지 스크롤 방지 */
+        if (isSwiping) e.preventDefault();
+      }, { passive: false });
+
+      heroEl.addEventListener('touchend', function (e) {
+        if (!isSwiping) return;
+        isSwiping = false;
+        var delta = touchStartY - e.changedTouches[0].clientY;
+        if (Math.abs(delta) > 48) {
+          goToCard(delta > 0 ? curIdx + 1 : curIdx - 1);
+        }
+      }, { passive: true });
+
+      heroEl.addEventListener('touchcancel', function () { isSwiping = false; }, { passive: true });
+    }
   }
 
   /* ── 검색 바 확장 토글 ── */
