@@ -448,19 +448,10 @@ const { title, description = 'Kitsune Hideout — 개발 블로그', wideContent
         ctx.globalAlpha=1; ctx.restore();
       }
 
-      /* Scroll pause: skip repaints during scroll to prevent compositor tearing */
-      var scrolling = false, scrollTimer;
-      window.addEventListener('scroll', function() {
-        scrolling = true;
-        clearTimeout(scrollTimer);
-        scrollTimer = setTimeout(function() { scrolling = false; }, 200);
-      }, { passive: true });
-
       var prev=null, elapsed=0;
       function frame(ts) {
         var dt=prev?Math.min(ts-prev,50):16; prev=ts; elapsed+=dt;
 
-        /* Drift updates always run — so position is current when drawing resumes */
         for (var i=0; i<stars.length; i++) {
           stars[i].x-=stars[i].speed*dt;
           if(stars[i].x<-0.02){stars[i].x=1.02;stars[i].y=Math.random();}
@@ -475,12 +466,9 @@ const { title, description = 'Kitsune Hideout — 개발 블로그', wideContent
         }
         updateWX(dt, elapsed);
 
-        /* Only repaint when not scrolling — prevents clearRect flash during scroll */
-        if (!scrolling) {
-          ctx.clearRect(0,0,W,H);
-          drawSky(ts); drawNebulae(ts); drawMoon(); drawStars(ts);
-          drawClouds(ts); drawFog(ts); drawSea(elapsed,dt); drawRain(dt); drawSnow(dt,elapsed);
-        }
+        ctx.clearRect(0,0,W,H);
+        drawSky(ts); drawNebulae(ts); drawMoon(); drawStars(ts);
+        drawClouds(ts); drawFog(ts); drawSea(elapsed,dt); drawRain(dt); drawSnow(dt,elapsed);
         requestAnimationFrame(frame);
       }
 
